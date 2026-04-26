@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this template to question or extend a decision captured in [`DESIGN.md`](../../DESIGN.md), particularly the locked decisions in §10.7 (ADRs).
+        Use this template to question or extend a decision captured in [`docs/design/DESIGN.md`](../../docs/design/DESIGN.md), particularly the locked decisions in §10.7 (ADRs).
 
         If you're proposing reversal of a locked ADR, the path forward is a new ADR that supersedes the old one. This issue is the place to gather the rationale before writing it.
 

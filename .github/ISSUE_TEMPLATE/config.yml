@@ -1,7 +1,7 @@
 blank_issues_enabled: false
 contact_links:
   - name: Game design reference
-    url: https://github.com/chrisdpurcell/star-trek-retro-remake/blob/main/DESIGN.md
+    url: https://github.com/chrisdpurcell/star-trek-retro-remake/blob/main/docs/design/DESIGN.md
     about: The canonical Game Design Document. Many "feature" or "discussion" questions are already answered here.
   - name: Security vulnerability
     url: https://github.com/chrisdpurcell/star-trek-retro-remake/security/advisories/new
