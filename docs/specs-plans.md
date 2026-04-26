@@ -39,6 +39,7 @@ ADRs are not in `docs/superpowers/`; they live at `docs/adr/NNNN-kebab-title.md`
 | [0010](adr/0010-hybrid-autosave.md) | Accepted | Hybrid auto-save: mode transitions plus N-turn fallback |
 | [0011](adr/0011-v01-dock-target.md) | Accepted | v0.1 scope includes the starbase Dock action target |
 | [0012](adr/0012-ai-generated-assets.md) | Accepted | AI-generated visual assets via ChatGPT Images 2.0 |
+| [0013](adr/0013-ruleset-protection-with-admin-bypass.md) | Accepted | Branch protection via ruleset with admin bypass, not classic protection |
 
 ## Conventions
 

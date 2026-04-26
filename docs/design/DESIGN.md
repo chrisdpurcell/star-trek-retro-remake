@@ -1202,6 +1202,7 @@ The "model has zero Qt imports" rule is enforced by `import-linter`, run in CI a
 ```ini
 [importlinter]
 root_package = stmrr
+include_external_packages = True
 
 [importlinter:contract:model-is-qt-free]
 name = Model layer must not import Qt or PySide6
@@ -1214,6 +1215,8 @@ forbidden_modules =
 ```
 
 CI fails on any violation. This is the single most important architectural rule in the project — convention is not enough; mechanical enforcement keeps the layer pure even under time pressure or refactor churn.
+
+`include_external_packages = True` is required at the top-level `[importlinter]` section because `PySide6` and `shiboken6` sit outside the `stmrr` root package. Without it, import-linter 2.11+ refuses to evaluate forbidden contracts that reference external modules.
 
 A secondary contract enforces controller-as-seam:
 
@@ -1788,6 +1791,7 @@ ADRs are not living documents. Once an ADR is marked `Accepted`, the decision is
 | 0010 | Hybrid auto-save: mode transitions plus N-turn fallback | Accepted |
 | 0011 | v0.1 scope includes the starbase Dock action target | Accepted |
 | 0012 | AI-generated visual assets via ChatGPT Images 2.0, prompts archived per-asset | Accepted |
+| 0013 | Branch protection via ruleset with admin bypass, not classic protection | Accepted |
 
 Each ADR is short — half a page typically, one page maximum. The `docs/adr/template.md` provides the format. New ADRs are added when a non-trivial architectural choice is made; trivial implementation choices stay out of the ADR log.
 
