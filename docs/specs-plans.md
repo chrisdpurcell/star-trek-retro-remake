@@ -16,6 +16,7 @@ Adversarial-review specs gating implementation. Authored before code lands; revi
 | Path | Status | Purpose |
 |---|---|---|
 | [`specs/v0.1-step-3-grid-position-and-game-object.md`](specs/v0.1-step-3-grid-position-and-game-object.md) | Draft — pending adversarial review | Module-level spec for v0.1 scaffold step 3: `GridPosition` (immutable 3-D coord) and `GameObject` (entity base class). |
+| [`specs/v0.1-model-layer.md`](specs/v0.1-model-layer.md) | Draft — pending adversarial review | Cross-cutting spec for the v0.1 pure-Python model layer: events, ID lifecycle, state-machine contract, dependency graph, invariants. |
 
 ## Specs (`docs/superpowers/specs/`)
 

@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Local development section in `CONTRIBUTING.md` covering the `uv` bootstrap and the full check-suite invocation.
 - Branch and commit rules section in `CONTRIBUTING.md` documenting the trunk-based, direct-to-`main` workflow.
 - `docs/specs/v0.1-step-3-grid-position-and-game-object.md` — module-level spec for the v0.1 step 3 foundation pair (`GridPosition`, `GameObject`); pending Codex adversarial review before implementation.
+- `docs/specs/v0.1-model-layer.md` — cross-cutting spec for the v0.1 pure-Python model layer (events, ID lifecycle, state-machine contract, dependency graph, invariants); pending Codex adversarial review before implementation.
 
 ### Changed
 
