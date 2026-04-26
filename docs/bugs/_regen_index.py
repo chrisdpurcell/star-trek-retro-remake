@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Regenerate docs/bugs/INDEX.md from frontmatter of all bug files."""
+
 import re
 from pathlib import Path
 

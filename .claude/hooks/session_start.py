@@ -7,6 +7,7 @@ Exit codes:
   0 — always. Errors are embedded in the additionalContext payload as
       "(unavailable)" / "(failed)" markers; we never block session start.
 """
+
 import json
 import subprocess
 import sys
@@ -32,9 +33,7 @@ def read_state() -> str:
 
 def run(cmd: list[str]) -> str:
     try:
-        return subprocess.check_output(
-            cmd, text=True, stderr=subprocess.DEVNULL, timeout=5
-        ).strip()
+        return subprocess.check_output(cmd, text=True, stderr=subprocess.DEVNULL, timeout=5).strip()
     except Exception:
         return ""
 
@@ -50,8 +49,7 @@ def working_tree() -> str:
         return "(clean)"
     lines = out.splitlines()
     if len(lines) > MAX_STATUS_LINES:
-        return "\n".join(lines[:MAX_STATUS_LINES]) + \
-               f"\n... +{len(lines) - MAX_STATUS_LINES} more"
+        return "\n".join(lines[:MAX_STATUS_LINES]) + f"\n... +{len(lines) - MAX_STATUS_LINES} more"
     return out
 
 
