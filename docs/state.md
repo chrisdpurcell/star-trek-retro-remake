@@ -4,9 +4,9 @@
 
 ## State at a glance
 
-- Pre-scaffold. `DESIGN.md` (canonical, 105 KB) + `tech-stack-pyside6.md` committed.
-- Handoff system landed 2026-04-26 per `/mnt/share/claude-handoff-system.md` §2.1. Decision 3 = PER-REPO; Decision 1 implicitly YES; Decision 2 deferred until `src/` exists.
-- Public-facing repo prep landed 2026-04-26: `README.md` (expanded), `CONTRIBUTING.md`, `SECURITY.md`, `NOTICE.md`, `CHANGELOG.md`, `.github/ISSUE_TEMPLATE/{bug,feature,design-discussion,config}.yml`, `.github/PULL_REQUEST_TEMPLATE.md`. LICENSE normalized to "Chris Purcell". GitHub repo configured (description, 7 topics, wiki/projects off). Branch protection deferred until CI lands.
+- Pre-scaffold. `DESIGN.md` + `tech-stack-pyside6.md` committed.
+- Handoff system per `/mnt/share/claude-handoff-system.md` §2.1. Decision 3 = PER-REPO; Decision 2 deferred until `src/` exists.
+- Public-facing repo live at https://github.com/chrisdpurcell/star-trek-retro-remake — README/CONTRIBUTING/SECURITY/NOTICE/CHANGELOG + `.github/` templates committed; description, 7 topics, secret scanning, Private Vulnerability Reporting configured. Branch protection deferred until CI lands.
 - Next milestone: scaffold step 1 of `tech-stack-pyside6.md` §11 — `pyproject.toml`, `uv` lockfile, `src/stmrr/` skeleton, then ADRs 0001–0012.
 
 ## Session Instructions
