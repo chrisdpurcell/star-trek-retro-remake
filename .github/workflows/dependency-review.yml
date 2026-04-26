@@ -1,0 +1,21 @@
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write  # let the action post a summary comment
+
+jobs:
+  review:
+    name: GitHub dependency-review-action
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Review added/changed dependencies
+        uses: actions/dependency-review-action@v4

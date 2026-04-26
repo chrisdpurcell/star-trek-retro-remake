@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+      - "v*.*.*-*"  # prerelease tags like v0.1.0-alpha
+
+permissions:
+  contents: write  # required by softprops/action-gh-release
+
+jobs:
+  release:
+    name: Build sdist + wheel and publish GitHub Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # CHANGELOG section extraction may want full history
+
+      - name: Install uv with cache
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+
+      - name: Install Python 3.14
+        run: uv python install 3.14
+
+      - name: Sync project (locked, all extras)
+        run: uv sync --all-extras --frozen
+
+      - name: Build sdist + wheel
+        run: uv build
+
+      - name: Extract CHANGELOG section for this tag
+        id: changelog
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          # Strip the leading 'v' to match `## [0.1.0]` headings in CHANGELOG.md.
+          # Falls back to a generic message if no section matches; releases
+          # never block on missing changelog text.
+          version="${TAG#v}"
+          body=$(awk -v version="$version" '
+            $0 ~ "^## \\[" version "\\]" { capture = 1; next }
+            capture && /^## \[/ { exit }
+            capture { print }
+          ' CHANGELOG.md)
+          if [ -z "$body" ]; then
+            body="Release ${TAG}. See CHANGELOG.md for details."
+          fi
+          {
+            echo "body<<EOF_CHANGELOG"
+            echo "$body"
+            echo "EOF_CHANGELOG"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          # Tags containing a hyphen are prerelease (v0.1.0-alpha, v1.0.0-rc1).
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            dist/*.tar.gz
+            dist/*.whl
+
+      # AppImage build steps will land here when the v1.0 distribution
+      # work begins — see DESIGN.md §9.3. Bundles the Python interpreter
+      # plus PySide6 plus the game into a single-file Linux binary via
+      # python-appimage or briefcase. Out of scope for v0.1.
