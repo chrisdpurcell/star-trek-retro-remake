@@ -31,24 +31,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Moved `DESIGN.md` and `tech-stack-pyside6.md` from the repo root into `docs/design/`. All cross-references in `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CLAUDE.md`, the LLM-internal `docs/` tree, and the GitHub issue templates updated to the new paths.
 
-### Post-Session Tasks
+### Repository Configuration (applied via gh API after first CI run)
 
-These steps must be done manually on github.com after this changelog entry lands; they cannot be automated from the repo because the required CI checks don't exist until the workflow runs at least once.
+Applied 2026-04-26 once the first CI run on `main` produced a check name to require. The chicken-and-egg with required status checks is unavoidable on a fresh repo — the workflow has to run once before its job name can be referenced as a required check.
 
-1. **Settings → General → Pull Requests:**
-   - Disable "Allow merge commits".
-   - Enable "Allow squash merging" (default to "Pull request title and description").
-   - Enable "Allow rebase merging".
-   - Enable "Always suggest updating pull request branches".
-   - Enable "Automatically delete head branches".
-2. **Settings → Branches → Branch protection rule for `main`:**
-   - Require status checks to pass before merging. Add the CI job names once they appear after the first push (`ruff format`, `ruff check`, `mypy`, `lint-imports`, `pytest` — actual names follow the `ci.yml` job IDs).
-   - Require branches to be up to date before merging.
-   - Require linear history.
-   - Do **not** require a pull request before merging — direct pushes to `main` are intended for the solo workflow.
-   - Disallow force pushes and deletions.
-   - Apply rules to administrators (no bypass).
-3. **Settings → Actions → General:**
-   - Workflow permissions: Read and write (needed for the release workflow to create releases).
-   - Enable "Allow GitHub Actions to create and approve pull requests" (for Dependabot).
-4. **Repo topics:** `python`, `pyside6`, `qt`, `turn-based-strategy`, `star-trek`, `fan-game`, `linux`.
+1. **Repo settings (via `PATCH /repos/{owner}/{repo}`):**
+   - `allow_merge_commit: false`
+   - `allow_squash_merge: true`, `squash_merge_commit_title: PR_TITLE`, `squash_merge_commit_message: PR_BODY` (default to "Pull request title and description")
+   - `allow_rebase_merge: true`
+   - `allow_update_branch: true` ("Always suggest updating pull request branches")
+   - `delete_branch_on_merge: true`
+2. **Branch protection on `main` via repository ruleset** (rulesets, not classic protection, because the desired model is "external contributors must PR; maintainer commits direct" — admin bypass is a first-class concept on rulesets only):
+   - Target: `~DEFAULT_BRANCH`. Enforcement: `active`. Ruleset ID: `15570954`, name `main protection`.
+   - Bypass actors: `RepositoryRole` actor_id=5 (admin), bypass_mode=`always` — lets the maintainer push direct to `main` while requiring a PR from anyone else.
+   - Rules: `deletion` (no branch delete), `non_fast_forward` (no force-push), `required_linear_history`, `pull_request` (`required_approving_review_count=0`, dismiss stale reviews on push), `required_status_checks` with `strict=true` and the `"ruff + mypy + import-linter + pytest"` job context (the actual job name from `.github/workflows/ci.yml`, not the per-step labels).
+3. **Actions permissions (via `PUT /repos/{owner}/{repo}/actions/permissions/workflow`):**
+   - `default_workflow_permissions: write` (so `release.yml` can create releases)
+   - `can_approve_pull_request_reviews: true` (for Dependabot's auto-approval flow)
+4. **Repo topics (via `PUT /repos/{owner}/{repo}/topics`):** `python`, `pyside6`, `qt`, `turn-based-strategy`, `star-trek`, `fan-game`, `linux`.
+
+The maintainer's bypass is verified by the push of this very commit landing directly on `main` without a PR. Future external contributors will be required to open a PR that passes the `ruff + mypy + import-linter + pytest` job before merge.
