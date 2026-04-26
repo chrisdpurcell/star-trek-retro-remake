@@ -1,0 +1,20 @@
+[importlinter]
+root_package = stmrr
+include_external_packages = True
+
+[importlinter:contract:model-is-qt-free]
+name = Model layer must not import Qt or PySide6
+type = forbidden
+source_modules =
+    stmrr.model
+forbidden_modules =
+    PySide6
+    shiboken6
+
+[importlinter:contract:view-does-not-import-model-events]
+name = View must not subscribe to model events directly
+type = forbidden
+source_modules =
+    stmrr.view
+forbidden_modules =
+    stmrr.model.events
