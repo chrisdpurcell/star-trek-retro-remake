@@ -391,7 +391,7 @@ The mirror clone preserves all branches, tags, refs, and history in a bare repo.
 
 ### 13.2 LICENSE
 
-Standard MIT at repo root, copyright `Christopher Purcell`. Personal copyright fits the personal-repo location and keeps the project cleanly separated from L3Digital LLC's business IP.
+Standard MIT at repo root, copyright `Chris Purcell`. Personal copyright fits the personal-repo location and keeps the project cleanly separated from L3Digital LLC's business IP.
 
 ### 13.3 Star Trek IP posture
 
@@ -418,7 +418,7 @@ Required:
 ├── .gitignore                  # Python + uv + IDE
 ├── .importlinter               # Layer-enforcement contracts — see DESIGN.md §9.1
 ├── .pre-commit-config.yaml     # ruff format/check + mypy + import-linter
-├── LICENSE                     # MIT, © Christopher Purcell
+├── LICENSE                     # MIT, © Chris Purcell
 ├── NOTICE.md                   # IP boundary + bundled font licenses
 ├── README.md                   # With IP disclaimer (§13.3)
 ├── DESIGN.md                   # Canonical design + tech doc

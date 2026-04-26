@@ -1,0 +1,48 @@
+name: Feature request
+description: Suggest a feature that fits within the scope of DESIGN.md
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening, please skim [`DESIGN.md`](../../DESIGN.md) — particularly §10.1 (Phased Roadmap), §13.1 (Post-Launch Features), and §13.2 (Long-term Vision) — to see whether your idea is already on the map.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: What player problem or design goal does this feature serve?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the feature. Reference specific DESIGN.md sections if it extends or modifies existing scope.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Targeted milestone
+      description: From DESIGN.md §10.1 — be honest about whether this is v0.1, v1.0, or post-launch.
+      options:
+        - v0.1 (Starbase Dock target)
+        - v0.2 (Combat foundation)
+        - v0.3 (Resources / missions / difficulty modes)
+        - v0.4 (Procedural galaxy)
+        - v0.5 (Progression)
+        - v1.0 (Polish)
+        - v1.1+ (post-launch)
+        - v2.0+ (long-term vision)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you weighed and why you discarded them.

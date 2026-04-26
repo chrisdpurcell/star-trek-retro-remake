@@ -1817,7 +1817,7 @@ The repository is public and accepts issues and PRs. The v0.1 scaffold includes 
 
 This is an unofficial, non-commercial fan project. The legal posture has the following layers.
 
-**Code:** MIT license, copyright Christopher Purcell. The MIT license covers all original code in the repository.
+**Code:** MIT license, copyright Chris Purcell. The MIT license covers all original code in the repository.
 
 **Star Trek IP:** Names, ships, factions, characters, and visual designs are intellectual property of CBS Studios Inc. / Paramount Global, including trademarks and copyrights. The MIT license **does not** cover this material. Non-commercial fan projects in the Trek space are generally tolerated under fair-use and unofficial-fan-work principles, but the boundary is real and explicit.
 

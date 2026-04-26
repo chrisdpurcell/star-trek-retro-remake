@@ -1,0 +1,61 @@
+name: Bug report
+description: Report a defect in the game or its tooling
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug. Bug reports are most useful once the game has actual builds — in the pre-scaffold phase, design issues should use the *Design discussion* template instead.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Tag, release name, or commit SHA. Use `git rev-parse HEAD` if running from source.
+      placeholder: "v0.1.0 / abc1234"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe what you observed, what you expected, and how to reproduce.
+      placeholder: |
+        Steps to reproduce:
+        1. ...
+        2. ...
+
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: distro
+    attributes:
+      label: Linux distribution
+      description: AppImage should work everywhere; build-from-source is tested on Debian/Ubuntu LTS.
+      options:
+        - Debian 13
+        - Ubuntu 24.04 LTS
+        - Ubuntu 24.10 or newer
+        - Fedora 41+
+        - Arch / Manjaro
+        - Other (please specify in the description)
+    validations:
+      required: true
+
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      description: Output of `python --version`. Only relevant when running from source.
+      placeholder: "3.14.0"
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log output (if any)
+      description: Paste relevant `loguru` log lines or stderr output. Code blocks render automatically.
+      render: text

@@ -1,0 +1,39 @@
+name: Design discussion
+description: Open a discussion about an architectural or game-design decision in DESIGN.md
+labels: ["design", "discussion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to question or extend a decision captured in [`DESIGN.md`](../../DESIGN.md), particularly the locked decisions in §10.7 (ADRs).
+
+        If you're proposing reversal of a locked ADR, the path forward is a new ADR that supersedes the old one. This issue is the place to gather the rationale before writing it.
+
+  - type: input
+    id: section
+    attributes:
+      label: DESIGN.md section
+      description: Which section, ADR, or paragraph is the discussion anchored to?
+      placeholder: "§5.2 Combat / ADR-0008"
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question or proposal
+      description: What's at stake? What's the alternative? What would change if the decision were reversed?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options:
+        - Clarification (current decision is unclear)
+        - Extension (add a new ADR within current scope)
+        - Reversal (replace an existing ADR)
+        - Out-of-scope query (something DESIGN.md doesn't address)
+    validations:
+      required: true
