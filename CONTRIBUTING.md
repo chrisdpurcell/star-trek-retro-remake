@@ -4,7 +4,7 @@ Thanks for your interest in *Star Trek Retro Remake*. The project is a personal 
 
 ## Project status
 
-The repository is currently pre-scaffold: the canonical game design lives in [`docs/design/DESIGN.md`](docs/design/DESIGN.md) and the technical scaffold plan in [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md), but `src/` does not yet exist. The standards below take effect when the scaffold lands (`v0.1`).
+The canonical game design lives in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); the scaffold-phase operational notes live in [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md). The v0.1 scaffold (`pyproject.toml`, `src/stmrr/` package skeleton, ADRs 0001–0012, CI/CD workflows) has landed; the standards below are in effect.
 
 ## Reporting issues
 
@@ -23,6 +23,41 @@ This is a non-commercial fan project with explicit IP boundaries — see [`NOTIC
 - No copied assets from official Star Trek media (sprites, audio, screenshots, lifted text).
 - No AI-generated visual assets that reproduce canonical Trek designs. Prompts must describe styling and silhouette.
 - No commercial monetization, donation links, or upsells.
+
+## Local development
+
+Python 3.14 is not packaged in Debian 13 / Ubuntu 24.04 default repositories. The project bootstraps its own interpreter via [`uv`](https://docs.astral.sh/uv/) (see `docs/design/DESIGN.md` §9.3).
+
+```bash
+# One-time per machine
+curl -LsSf https://astral.sh/uv/install.sh | sh
+uv python install 3.14
+
+# Per repo clone
+cd star-trek-retro-remake
+uv sync --all-extras
+uv run pre-commit install   # arm the local hooks
+```
+
+After that, run the project with:
+
+```bash
+uv run python -m stmrr      # (post-scaffold; entry point lands with v0.1 view shell)
+```
+
+### Running the full check suite locally
+
+Pre-commit hooks cover most of this, but the explicit run catches anything skipped:
+
+```bash
+uv run ruff format --check . \
+  && uv run ruff check . \
+  && uv run mypy src/stmrr \
+  && uv run lint-imports \
+  && uv run pytest
+```
+
+CI (`.github/workflows/ci.yml`) re-runs the same five steps on every push and PR. A push to `main` should be CI-green locally before it leaves your machine.
 
 ## Coding standards
 
@@ -86,29 +121,32 @@ The project enforces strict layer boundaries — the model layer must have **zer
 
 If you find yourself wanting to import `PySide6` in `src/stmrr/model/`, you've identified a missing seam in `controller/model_bridge.py` — don't bypass the rule, raise it as a design discussion issue. Full rationale in `docs/design/DESIGN.md` §9.1.
 
-## Commit messages
+## Branch and commit rules
 
-Conventional-commit style:
+The project is single-developer and uses a trunk-based workflow. Direct commits to `main` are the default; feature branches are the exception.
 
-```
-<type>(<scope>): <subject>
-
-<optional body>
-```
-
-Types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`, `perf`, `ci`. Subject line under 70 characters.
+- **Default to direct commits on `main`.** Pull latest before starting; push when each logical unit is complete and CI-green locally.
+- **Use a feature branch only when** (a) the work spans multiple sessions and shouldn't land partially, (b) the change is risky enough to throw away cleanly if it doesn't work out, or (c) explicitly requested. When in doubt, commit to `main`.
+- **Branch naming when needed:** `<type>/<phase>-<description>` (e.g. `feat/v0.1-combat-prototype`). Rebase on `main` before merging. Squash to a single commit on merge unless commits are independently meaningful. Delete the branch after merge.
+- **Commit in logical units, not one mega-commit per session.** Each commit message stands alone. Use [Conventional Commits](https://www.conventionalcommits.org/) prefixes: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `style`, `perf`, `ci`. Subject line under 70 characters.
+- **Run the full local check suite before every push to `main`** (see "Running the full check suite locally" above). Don't push red builds.
+- **Never force-push `main`.** Force-push is acceptable on personal feature branches before merge.
+- **If a push is rejected by branch protection, fix locally and re-push.** Don't weaken protection to land a broken commit.
+- **At session end, update `CHANGELOG.md`** under `## [Unreleased]` capturing what landed, any deviations from spec, and follow-ups.
 
 Maintainer commits are GPG-signed. External contributors do not need signed commits.
 
 ## Pull requests
 
-Once `v0.1` lands, PRs should:
+PRs are welcome for documentation fixes, typos, and external contributions. PRs should:
 
-- Reference an issue (one of the templates in `.github/ISSUE_TEMPLATE/`)
-- Pass CI (ruff, mypy, import-linter, pytest)
-- Stay focused — one PR per logical change
+- Reference an issue (one of the templates in `.github/ISSUE_TEMPLATE/`) when fixing a tracked problem.
+- Pass CI (`ruff`, `mypy`, `import-linter`, `pytest`).
+- Stay focused — one PR per logical change.
 
-Until then, PRs are welcome for documentation fixes and typos in `docs/design/DESIGN.md` / `docs/design/tech-stack-pyside6.md` / this file.
+## Architecture Decision Records
+
+Locked architectural decisions live in [`docs/adr/`](docs/adr/) as one-page Markdown files (Context / Decision / Consequences / Status). Read the relevant ADR before proposing a change that contradicts a settled decision; the path forward in that case is a new ADR that supersedes the old one explicitly. See `docs/adr/template.md` for the format and `docs/design/DESIGN.md` §10.7 for the full rationale.
 
 ## License
 

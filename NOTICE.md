@@ -36,6 +36,8 @@ The following fonts will be bundled with the game once the asset pipeline lands.
 
 The SIL Open Font License 1.1 permits bundling, modification, and redistribution. Full license text will be added under `assets/fonts/<font>/LICENSE` when fonts are committed.
 
+> **TODO:** license text on first font commit. Drop a verbatim copy of the SIL OFL 1.1 text plus each font's individual `OFL.txt` (as shipped upstream) into `assets/fonts/<font>/LICENSE` in the same commit that adds the font binary. Update this section to swap the placeholder for the actual paths.
+
 ## Other third-party content
 
 None at present. Add entries above as third-party assets, libraries, or content are bundled.
