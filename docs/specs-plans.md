@@ -9,6 +9,14 @@ Pointer index. Storage is `docs/superpowers/{specs,plans}/`. The canonical desig
 | `docs/design/DESIGN.md` | Living, canonical | Game Design Document — gameplay, world, mechanics, UX, narrative, technical architecture. Updates in place. |
 | `docs/design/tech-stack-pyside6.md` | Living, supplementary | Scaffold-phase operational notes (repo prep §13, library exploration §15, scaffold step order §11). `docs/design/DESIGN.md` wins where they disagree. |
 
+## Specs (`docs/specs/`)
+
+Adversarial-review specs gating implementation. Authored before code lands; reviewed by a separate LLM (Codex) and a human (Chris) before the implementation session begins. Status of `Draft — pending adversarial review` means the spec is locked in shape but not yet cleared to implement.
+
+| Path | Status | Purpose |
+|---|---|---|
+| [`specs/v0.1-step-3-grid-position-and-game-object.md`](specs/v0.1-step-3-grid-position-and-game-object.md) | Draft — pending adversarial review | Module-level spec for v0.1 scaffold step 3: `GridPosition` (immutable 3-D coord) and `GameObject` (entity base class). |
+
 ## Specs (`docs/superpowers/specs/`)
 
 | Path | Status | Purpose |
