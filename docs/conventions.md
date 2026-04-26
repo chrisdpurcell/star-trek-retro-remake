@@ -2,7 +2,7 @@
 
 LLM-targeted pattern library. Each convention follows the six-field schema (Applies-when / Rule / Code / Why / Sources / Related). The Quick Reference table below is for O(1) lookup — find the convention number, then jump to the section.
 
-**Pre-scaffold note (2026-04-26):** This is a starter set seeded from `DESIGN.md` and `tech-stack-pyside6.md`. Conventions are added as new patterns get established. Behavioral guidance directed at Claude itself (e.g., "always use TDD") is intentionally NOT in this file — that lives in Auto Memory under `~/.claude/projects/-home-chris-projects-star-trek-retro-remake/memory/`. This file holds **system facts** about the project's structure and rules.
+**Pre-scaffold note (2026-04-26):** This is a starter set seeded from `docs/design/DESIGN.md` and `docs/design/tech-stack-pyside6.md`. Conventions are added as new patterns get established. Behavioral guidance directed at Claude itself (e.g., "always use TDD") is intentionally NOT in this file — that lives in Auto Memory under `~/.claude/projects/-home-chris-projects-star-trek-retro-remake/memory/`. This file holds **system facts** about the project's structure and rules.
 
 **Rule:** do not introduce a new pattern without checking this file. New patterns that persist are added as numbered conventions before session end.
 
@@ -36,8 +36,8 @@ ship_moved = signal("ship_moved")  # plain blinker, NOT QObject.Signal
 **Why:** Headless testability. The entire game simulation must run in `pytest` without instantiating `QApplication`. Rejected alternative: making the model classes inherit from `QObject` directly — that conflates simulation with rendering and forces every test through the Qt event loop, which is multi-second startup cost per test process.
 
 **Sources:**
-- `DESIGN.md` §9.1 "Layer Boundaries" + "Layer Enforcement"
-- `tech-stack-pyside6.md` §2.1, §2.2, §15.3
+- `docs/design/DESIGN.md` §9.1 "Layer Boundaries" + "Layer Enforcement"
+- `docs/design/tech-stack-pyside6.md` §2.1, §2.2, §15.3
 - Mechanical enforcement: `import-linter` contract at `.importlinter` (added in scaffold step 1)
 
 **Related:** §2 (the bridge module is the only audited cross-layer import).
@@ -67,8 +67,8 @@ class ModelBridge(QObject):
 **Why:** One audit point for the model↔view boundary. If a view module ever needs to peek into `model/`, the violation is found by `import-linter` instead of accumulating quietly.
 
 **Sources:**
-- `tech-stack-pyside6.md` §5.1, §5.2
-- `DESIGN.md` §9.1 "MVC Wiring and Event Flow"
+- `docs/design/tech-stack-pyside6.md` §5.1, §5.2
+- `docs/design/DESIGN.md` §9.1 "MVC Wiring and Event Flow"
 
 **Related:** §1 (the bridge exists because §1 forbids the simpler approach).
 
@@ -95,8 +95,8 @@ with open("ships.toml", "rb") as f:
 **Why:** Pickle deserialization is arbitrary code execution; a malicious save file can root the player. TOML + pydantic round-trip catches malformed data at load time, before it reaches turn logic. Performance is not a concern — pydantic v2's Rust core is faster than the disk read.
 
 **Sources:**
-- `DESIGN.md` §9.5, §9.2 "Saved-State Security"
-- `tech-stack-pyside6.md` §15.1, §15.9 "Skip list" (pickle/dill row)
+- `docs/design/DESIGN.md` §9.5, §9.2 "Saved-State Security"
+- `docs/design/tech-stack-pyside6.md` §15.1, §15.9 "Skip list" (pickle/dill row)
 
 **Related:** §1 (config dataclasses live in `src/stmrr/config/`, not `model/`).
 
@@ -117,8 +117,8 @@ QT_QPA_PLATFORM = "offscreen"
 **Why:** CI runners and SSH sessions have no `$DISPLAY`; without the offscreen plugin, every `QApplication()` call dies with `qt.qpa.xcb: could not connect to display`. Setting it via `pytest-env` (not via shell wrapper) means a developer running `uv run pytest` locally gets the same behavior without remembering the env var.
 
 **Sources:**
-- `DESIGN.md` §10.3 "Headless Qt"
-- `tech-stack-pyside6.md` §9 "Testing Strategy"
+- `docs/design/DESIGN.md` §10.3 "Headless Qt"
+- `docs/design/tech-stack-pyside6.md` §9 "Testing Strategy"
 
 ---
 
@@ -126,13 +126,13 @@ QT_QPA_PLATFORM = "offscreen"
 
 **Applies when:** recording an architectural decision.
 
-**Rule:** ADRs live at `docs/adr/NNNN-kebab-title.md`. Numbering is monotone (next free integer, zero-padded to 4). Use `docs/adr/template.md` as the starting point. Once a decision is implemented and the ADR is no longer the current-state reference, prepend `> **Status: ✅ Complete — DO NOT EXECUTE.**` plus a pointer to the current-state doc. Living reference docs (DESIGN.md, this file) are exempt — they update in place.
+**Rule:** ADRs live at `docs/adr/NNNN-kebab-title.md`. Numbering is monotone (next free integer, zero-padded to 4). Use `docs/adr/template.md` as the starting point. Once a decision is implemented and the ADR is no longer the current-state reference, prepend `> **Status: ✅ Complete — DO NOT EXECUTE.**` plus a pointer to the current-state doc. Living reference docs (`docs/design/DESIGN.md`, this file) are exempt — they update in place.
 
 **Why:** `git log` is a poor index for design decisions; ADRs are. The neutralizer banner stops a future session from re-executing a frozen plan as if it were a current directive. Same rule the homelab repo uses, same rule the parent meta-repo's `CLAUDE.md` formalizes.
 
 **Sources:**
-- `DESIGN.md` §10.7 "Architecture Decision Records"
-- `tech-stack-pyside6.md` §11 step 2, §13.4
+- `docs/design/DESIGN.md` §10.7 "Architecture Decision Records"
+- `docs/design/tech-stack-pyside6.md` §11 step 2, §13.4
 - `~/.claude/CLAUDE.md` "Repo Documentation Standard"
 
 ---
@@ -146,8 +146,8 @@ QT_QPA_PLATFORM = "offscreen"
 **Why:** Regeneration needs the prompt. IP defensibility needs the provenance trail. Future contributors need the lineage. The risk lives at the prompt → AI image layer, not at the file layer; archived prompts are the audit record.
 
 **Sources:**
-- `tech-stack-pyside6.md` §14.4
-- `DESIGN.md` §7.2 "Prompt Archival"
+- `docs/design/tech-stack-pyside6.md` §14.4
+- `docs/design/DESIGN.md` §7.2 "Prompt Archival"
 
 **Related:** §7 (prompts must respect the IP boundary).
 
@@ -165,8 +165,8 @@ QT_QPA_PLATFORM = "offscreen"
 **Why:** MIT covers your code, not Star Trek IP. CBS / Paramount tolerates non-commercial fan projects when the boundary is explicit. The risk surface for AI-generated art is verbatim reproduction of canonical designs — prompt discipline is the mitigation.
 
 **Sources:**
-- `tech-stack-pyside6.md` §13.3
-- `DESIGN.md` §12.1
+- `docs/design/tech-stack-pyside6.md` §13.3
+- `docs/design/DESIGN.md` §12.1
 
 **Related:** §6 (prompt files are the audit trail).
 

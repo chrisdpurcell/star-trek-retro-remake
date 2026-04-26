@@ -4,16 +4,16 @@
 
 ## State at a glance
 
-- Pre-scaffold. `DESIGN.md` + `tech-stack-pyside6.md` committed.
+- Pre-scaffold. `docs/design/DESIGN.md` + `docs/design/tech-stack-pyside6.md` committed.
 - Handoff system per `/mnt/share/claude-handoff-system.md` §2.1. Decision 3 = PER-REPO; Decision 2 deferred until `src/` exists.
 - Public-facing repo live at https://github.com/chrisdpurcell/star-trek-retro-remake — README/CONTRIBUTING/SECURITY/NOTICE/CHANGELOG + `.github/` templates committed; description, 7 topics, secret scanning, Private Vulnerability Reporting configured. Branch protection deferred until CI lands.
-- Next milestone: scaffold step 1 of `tech-stack-pyside6.md` §11 — `pyproject.toml`, `uv` lockfile, `src/stmrr/` skeleton, then ADRs 0001–0012.
+- Next milestone: scaffold step 1 of `docs/design/tech-stack-pyside6.md` §11 — `pyproject.toml`, `uv` lockfile, `src/stmrr/` skeleton, then ADRs 0001–0012.
 
 ## Session Instructions
 
 Before any work:
 1. `git -C ~/projects/star-trek-retro-remake pull` — ensure repo is current
-2. Read `DESIGN.md` for game design + locked architecture; `tech-stack-pyside6.md` for scaffold-phase operational steps. Where they disagree, `DESIGN.md` wins (per its own §0 note).
+2. Read `docs/design/DESIGN.md` for game design + locked architecture; `docs/design/tech-stack-pyside6.md` for scaffold-phase operational steps. Where they disagree, `docs/design/DESIGN.md` wins (per its own §0 note).
 3. Check `docs/conventions.md` before introducing new patterns.
 4. New patterns that will persist are added as numbered conventions before session end.
 
@@ -22,9 +22,9 @@ Before any work:
 
 ## What Remains
 
-- Scaffold step 1 of `tech-stack-pyside6.md` §11 — `pyproject.toml` + `uv` lockfile + `src/stmrr/` + `tests/` skeleton + `.importlinter` + `.pre-commit-config.yaml`.
-- ADRs 0001–0012 capturing the locked decisions per `DESIGN.md` §10.7 (scaffold step 2).
+- Scaffold step 1 of `docs/design/tech-stack-pyside6.md` §11 — `pyproject.toml` + `uv` lockfile + `src/stmrr/` + `tests/` skeleton + `.importlinter` + `.pre-commit-config.yaml`.
+- ADRs 0001–0012 capturing the locked decisions per `docs/design/DESIGN.md` §10.7 (scaffold step 2).
 - `.github/workflows/ci.yml` (deferred — needs `pyproject.toml` to test against).
-- Branch protection on `main` (deferred — enable once CI workflow lands; per `tech-stack-pyside6.md` §13.5).
+- Branch protection on `main` (deferred — enable once CI workflow lands; per `docs/design/tech-stack-pyside6.md` §13.5).
 - Bundled-font license texts under `assets/fonts/<font>/LICENSE` once fonts are committed (`NOTICE.md` placeholder lists JetBrains Mono + VT323).
 - `GITHUB_EMAIL` in `~/.bashrc` still references the old `L3DigitalNet` no-reply address — sweep when convenient.

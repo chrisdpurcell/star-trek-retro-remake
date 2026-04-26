@@ -4,17 +4,17 @@ Thanks for your interest in *Star Trek Retro Remake*. The project is a personal 
 
 ## Project status
 
-The repository is currently pre-scaffold: the canonical game design lives in [`DESIGN.md`](DESIGN.md) and the technical scaffold plan in [`tech-stack-pyside6.md`](tech-stack-pyside6.md), but `src/` does not yet exist. The standards below take effect when the scaffold lands (`v0.1`).
+The repository is currently pre-scaffold: the canonical game design lives in [`docs/design/DESIGN.md`](docs/design/DESIGN.md) and the technical scaffold plan in [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md), but `src/` does not yet exist. The standards below take effect when the scaffold lands (`v0.1`).
 
 ## Reporting issues
 
 Use the issue templates in `.github/ISSUE_TEMPLATE/`:
 
 - **Bug** — only meaningful once builds exist
-- **Feature** — for ideas that fit within the scope of `DESIGN.md`
-- **Design discussion** — for questions about decisions captured in `DESIGN.md` §10.7 (ADRs) or scope changes
+- **Feature** — for ideas that fit within the scope of `docs/design/DESIGN.md`
+- **Design discussion** — for questions about decisions captured in `docs/design/DESIGN.md` §10.7 (ADRs) or scope changes
 
-Before opening a feature or design discussion issue, skim `DESIGN.md` to see whether the topic is already covered.
+Before opening a feature or design discussion issue, skim `docs/design/DESIGN.md` to see whether the topic is already covered.
 
 ## IP boundary (read this first)
 
@@ -26,7 +26,7 @@ This is a non-commercial fan project with explicit IP boundaries — see [`NOTIC
 
 ## Coding standards
 
-Standards are taken from `DESIGN.md` §10.6.
+Standards are taken from `docs/design/DESIGN.md` §10.6.
 
 ### Formatting and linting (ruff)
 
@@ -84,7 +84,7 @@ CI re-runs all checks; pre-commit is a local convenience.
 
 The project enforces strict layer boundaries — the model layer must have **zero Qt imports**. This is mechanically enforced by `import-linter` in CI (contract config: `.importlinter` at repo root).
 
-If you find yourself wanting to import `PySide6` in `src/stmrr/model/`, you've identified a missing seam in `controller/model_bridge.py` — don't bypass the rule, raise it as a design discussion issue. Full rationale in `DESIGN.md` §9.1.
+If you find yourself wanting to import `PySide6` in `src/stmrr/model/`, you've identified a missing seam in `controller/model_bridge.py` — don't bypass the rule, raise it as a design discussion issue. Full rationale in `docs/design/DESIGN.md` §9.1.
 
 ## Commit messages
 
@@ -108,7 +108,7 @@ Once `v0.1` lands, PRs should:
 - Pass CI (ruff, mypy, import-linter, pytest)
 - Stay focused — one PR per logical change
 
-Until then, PRs are welcome for documentation fixes and typos in `DESIGN.md` / `tech-stack-pyside6.md` / this file.
+Until then, PRs are welcome for documentation fixes and typos in `docs/design/DESIGN.md` / `docs/design/tech-stack-pyside6.md` / this file.
 
 ## License
 

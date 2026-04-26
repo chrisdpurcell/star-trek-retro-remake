@@ -2,7 +2,7 @@
 
 A turn-based, grid-based Star Trek strategy game inspired by *Star Trek* (1971) and *Super Star Trek* (1973), reimagined with a windowed graphical interface that evokes mid-1990s desktop strategy games — *Master of Orion 2*, *X-COM: UFO Defense*, *Heroes of Might and Magic 2*.
 
-> **Status:** Pre-scaffold. Game design is locked in [`DESIGN.md`](DESIGN.md); source code does not yet exist. The first build will be `v0.1`.
+> **Status:** Pre-scaffold. Game design is locked in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); source code does not yet exist. The first build will be `v0.1`.
 
 ## At a glance
 
@@ -20,8 +20,8 @@ Visual assets are AI-generated (OpenAI ChatGPT Images 2.0). Prompts are archived
 
 ## Documents
 
-- [`DESIGN.md`](DESIGN.md) — canonical Game Design Document (gameplay, world, mechanics, technical architecture)
-- [`tech-stack-pyside6.md`](tech-stack-pyside6.md) — scaffold-phase operational notes
+- [`docs/design/DESIGN.md`](docs/design/DESIGN.md) — canonical Game Design Document (gameplay, world, mechanics, technical architecture)
+- [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md) — scaffold-phase operational notes
 - [`CONTRIBUTING.md`](CONTRIBUTING.md) — coding standards and contribution workflow
 - [`SECURITY.md`](SECURITY.md) — vulnerability reporting
 - [`NOTICE.md`](NOTICE.md) — IP boundary and bundled-asset licenses
