@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ── star-trek-retro-remake additions ──
+# IDE / editor scratch
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local Qt / Linux runtime artifacts
+*.qmlc
+*.jsc
+
+# Local-only experiments and notes
+/scratch/
+/.local/
