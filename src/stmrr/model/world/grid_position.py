@@ -44,3 +44,6 @@ class GridPosition:
         dy = self.y - other.y
         dz = self.z - other.z
         return sqrt(dx * dx + dy * dy + dz * dz)
+
+    def is_adjacent(self, other: GridPosition) -> bool:
+        return self.chebyshev_distance(other) == 1

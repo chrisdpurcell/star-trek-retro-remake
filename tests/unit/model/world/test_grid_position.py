@@ -186,3 +186,43 @@ def test_distance_methods_self_distance_is_zero(pos: GridPosition) -> None:
     assert pos.manhattan_distance(pos) == 0
     assert pos.chebyshev_distance(pos) == 0
     assert pos.euclidean_distance(pos) == 0.0
+
+
+_ADJACENT_DELTAS = [
+    (dx, dy, dz)
+    for dz in (-1, 0, 1)
+    for dy in (-1, 0, 1)
+    for dx in (-1, 0, 1)
+    if (dx, dy, dz) != (0, 0, 0)
+]
+
+
+@pytest.mark.parametrize(
+    "delta",
+    _ADJACENT_DELTAS,
+    ids=[f"d=({dx:+d},{dy:+d},{dz:+d})" for dx, dy, dz in _ADJACENT_DELTAS],
+)
+def test_is_adjacent_true_for_each_of_26_directions(
+    delta: tuple[int, int, int],
+) -> None:
+    pos = GridPosition(5, 5, 5)
+    neighbor = GridPosition(5 + delta[0], 5 + delta[1], 5 + delta[2])
+
+    assert pos.is_adjacent(neighbor) is True
+
+
+def test_is_adjacent_self_returns_false() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    assert pos.is_adjacent(pos) is False
+
+
+@pytest.mark.parametrize(
+    "far",
+    [GridPosition(7, 5, 5), GridPosition(0, 0, 0), GridPosition(10, 10, 10)],
+    ids=["distance-2", "far-corner", "far-diagonal"],
+)
+def test_is_adjacent_false_for_chebyshev_distance_gt_one(far: GridPosition) -> None:
+    pos = GridPosition(5, 5, 5)
+
+    assert pos.is_adjacent(far) is False
