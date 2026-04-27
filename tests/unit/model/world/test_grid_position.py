@@ -273,3 +273,69 @@ def test_neighbors_excludes_self() -> None:
     pos = GridPosition(5, 5, 5)
 
     assert pos not in list(pos.neighbors())
+
+
+def test_with_x_returns_copy_with_new_x() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    result = pos.with_x(9)
+
+    assert result == GridPosition(9, 5, 5)
+
+
+def test_with_y_returns_copy_with_new_y() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    result = pos.with_y(9)
+
+    assert result == GridPosition(5, 9, 5)
+
+
+def test_with_z_returns_copy_with_new_z() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    result = pos.with_z(9)
+
+    assert result == GridPosition(5, 5, 9)
+
+
+def test_with_x_negative_raises_valueerror() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    with pytest.raises(ValueError):
+        pos.with_x(-1)
+
+
+def test_with_y_negative_raises_valueerror() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    with pytest.raises(ValueError):
+        pos.with_y(-1)
+
+
+def test_with_z_negative_raises_valueerror() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    with pytest.raises(ValueError):
+        pos.with_z(-1)
+
+
+@pytest.mark.parametrize(
+    "method_name",
+    ["with_x", "with_y", "with_z"],
+)
+@pytest.mark.parametrize(
+    "bad_value",
+    [True, 1.0, Fraction(1, 1), Decimal("1")],
+    ids=["bool", "float", "Fraction", "Decimal"],
+)
+def test_with_axis_non_int_raises_typeerror(method_name: str, bad_value: Any) -> None:
+    pos = GridPosition(5, 5, 5)
+    method = getattr(pos, method_name)
+
+    with pytest.raises(TypeError):
+        method(bad_value)
+
+
+def test_origin_returns_zero_position() -> None:
+    assert GridPosition.origin() == GridPosition(0, 0, 0)

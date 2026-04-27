@@ -67,3 +67,16 @@ class GridPosition:
                     if nx < 0 or ny < 0 or nz < 0:
                         continue
                     yield GridPosition(nx, ny, nz)
+
+    def with_x(self, x: int) -> GridPosition:
+        return GridPosition(x, self.y, self.z)
+
+    def with_y(self, y: int) -> GridPosition:
+        return GridPosition(self.x, y, self.z)
+
+    def with_z(self, z: int) -> GridPosition:
+        return GridPosition(self.x, self.y, z)
+
+    @classmethod
+    def origin(cls) -> GridPosition:
+        return cls(0, 0, 0)
