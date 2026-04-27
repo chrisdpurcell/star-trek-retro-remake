@@ -97,10 +97,7 @@ _PAINTER_SAMPLE_SEED = 42
 _PAINTER_SAMPLE_N = 200
 
 _FULL_DOMAIN: list[GridPosition] = [
-    GridPosition(x, y, z)
-    for x in range(20)
-    for y in range(20)
-    for z in range(7)
+    GridPosition(x, y, z) for x in range(20) for y in range(20) for z in range(7)
 ]
 
 
@@ -132,14 +129,8 @@ def _build_painter_sample() -> list[tuple[GridPosition, GridPosition]]:
 
 
 _PAINTER_PAIRS = _build_painter_sample()
-_STRICT_LT_PAIRS = [
-    (a, b) for a, b in _PAINTER_PAIRS if a.x + a.y < b.x + b.y
-]
-_SAME_DIAG_LT_Z_PAIRS = [
-    (a, b)
-    for a, b in _PAINTER_PAIRS
-    if a.x + a.y == b.x + b.y and a.z < b.z
-]
+_STRICT_LT_PAIRS = [(a, b) for a, b in _PAINTER_PAIRS if a.x + a.y < b.x + b.y]
+_SAME_DIAG_LT_Z_PAIRS = [(a, b) for a, b in _PAINTER_PAIRS if a.x + a.y == b.x + b.y and a.z < b.z]
 
 
 # ---------------------------------------------------------------------------
@@ -168,10 +159,11 @@ def test_z_value_for_returns_spec_examples(pos: GridPosition, expected: int) -> 
 @pytest.mark.parametrize(
     ("a", "b"),
     [(GridPosition(i, 0, 0), GridPosition(i + 1, 0, 0)) for i in range(19)],
-    ids=[f"x={i}->{i+1}" for i in range(19)],
+    ids=[f"x={i}->{i + 1}" for i in range(19)],
 )
 def test_z_value_for_strictly_increases_as_anti_diagonal_increases(
-    a: GridPosition, b: GridPosition,
+    a: GridPosition,
+    b: GridPosition,
 ) -> None:
     assert z_value_for(a) < z_value_for(b)
 
@@ -179,7 +171,7 @@ def test_z_value_for_strictly_increases_as_anti_diagonal_increases(
 @pytest.mark.parametrize(
     "z",
     list(range(6)),
-    ids=[f"z={z}->{z+1}" for z in range(6)],
+    ids=[f"z={z}->{z + 1}" for z in range(6)],
 )
 def test_z_value_for_strictly_increases_as_z_increases_at_fixed_xy(z: int) -> None:
     a = GridPosition(3, 4, z)
@@ -194,7 +186,8 @@ def test_z_value_for_strictly_increases_as_z_increases_at_fixed_xy(z: int) -> No
     ids=lambda p: f"{p.x},{p.y},{p.z}",
 )
 def test_z_value_for_orders_lower_anti_diagonal_behind_higher(
-    p1: GridPosition, p2: GridPosition,
+    p1: GridPosition,
+    p2: GridPosition,
 ) -> None:
     assert z_value_for(p1) < z_value_for(p2)
 
@@ -205,7 +198,8 @@ def test_z_value_for_orders_lower_anti_diagonal_behind_higher(
     ids=lambda p: f"{p.x},{p.y},{p.z}",
 )
 def test_z_value_for_orders_lower_z_behind_higher_at_same_anti_diagonal(
-    p1: GridPosition, p2: GridPosition,
+    p1: GridPosition,
+    p2: GridPosition,
 ) -> None:
     assert z_value_for(p1) < z_value_for(p2)
 
@@ -284,7 +278,8 @@ def test_scene_to_world_bool_z_raises_typeerror(bad_z: bool) -> None:
     ids=["int-int", "float-int", "int-float", "float-float"],
 )
 def test_scene_to_world_accepts_int_or_float_for_sx_sy(
-    sx: float, sy: float,
+    sx: float,
+    sy: float,
 ) -> None:
     assert scene_to_world(sx, sy, 0) == GridPosition(1, 0, 0)
 
@@ -360,14 +355,9 @@ def test_projection_imports_no_pyside6_or_shiboken6() -> None:
     imports = _collect_imports(source)
 
     forbidden = ("PySide6", "shiboken6")
-    violations = [
-        name for name in imports
-        if any(_is_under(name, p) for p in forbidden)
-    ]
+    violations = [name for name in imports if any(_is_under(name, p) for p in forbidden)]
 
-    assert violations == [], (
-        f"projection.py imports forbidden modules: {violations}"
-    )
+    assert violations == [], f"projection.py imports forbidden modules: {violations}"
 
 
 def test_projection_imports_no_other_view_subpackages_or_controller() -> None:
@@ -381,14 +371,9 @@ def test_projection_imports_no_other_view_subpackages_or_controller() -> None:
         "stmrr.view.widgets",
         "stmrr.view.theme",
     )
-    violations = [
-        name for name in imports
-        if any(_is_under(name, p) for p in forbidden)
-    ]
+    violations = [name for name in imports if any(_is_under(name, p) for p in forbidden)]
 
-    assert violations == [], (
-        f"projection.py imports forbidden subpackages: {violations}"
-    )
+    assert violations == [], f"projection.py imports forbidden subpackages: {violations}"
 
 
 # ---------------------------------------------------------------------------
