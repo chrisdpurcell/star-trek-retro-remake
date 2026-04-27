@@ -18,3 +18,12 @@ source_modules =
     stmrr.view
 forbidden_modules =
     stmrr.model.events
+
+[importlinter:contract:projection-is-qt-free]
+name = projection.py must not import Qt or PySide6
+type = forbidden
+source_modules =
+    stmrr.view.scene.projection
+forbidden_modules =
+    PySide6
+    shiboken6
