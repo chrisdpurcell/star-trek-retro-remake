@@ -42,4 +42,4 @@ def z_value_for(pos: GridPosition) -> int:
     see spec §5.3 for the bounded-domain invariant and same-cell-tie
     handling.
     """
-    raise NotImplementedError
+    return (pos.x + pos.y) * MAX_Z_DEPTH + pos.z
