@@ -6,6 +6,7 @@ contract this module satisfies.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from dataclasses import dataclass
 from math import sqrt
 
@@ -47,3 +48,22 @@ class GridPosition:
 
     def is_adjacent(self, other: GridPosition) -> bool:
         return self.chebyshev_distance(other) == 1
+
+    def neighbors(self) -> Iterator[GridPosition]:
+        """Yield up-to-26 valid (non-negative) adjacent positions.
+
+        Order: sorted by (dz, dy, dx) lexicographically over {-1, 0, +1}^3
+        excluding (0, 0, 0). AI pathfinding tie-breaks on this ordering;
+        replay tests need bit-stable behavior across Python versions.
+        """
+        for dz in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for dx in (-1, 0, 1):
+                    if dz == 0 and dy == 0 and dx == 0:
+                        continue
+                    nx = self.x + dx
+                    ny = self.y + dy
+                    nz = self.z + dz
+                    if nx < 0 or ny < 0 or nz < 0:
+                        continue
+                    yield GridPosition(nx, ny, nz)

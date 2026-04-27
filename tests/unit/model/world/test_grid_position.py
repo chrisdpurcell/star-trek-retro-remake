@@ -226,3 +226,50 @@ def test_is_adjacent_false_for_chebyshev_distance_gt_one(far: GridPosition) -> N
     pos = GridPosition(5, 5, 5)
 
     assert pos.is_adjacent(far) is False
+
+
+@pytest.mark.parametrize(
+    ("origin", "expected_count"),
+    [
+        (GridPosition(5, 5, 5), 26),
+        (GridPosition(0, 5, 5), 17),
+        (GridPosition(0, 0, 5), 11),
+        (GridPosition(0, 0, 0), 7),
+    ],
+    ids=["interior-26", "face-17", "edge-11", "corner-7"],
+)
+def test_neighbors_count_matches_boundary_class(origin: GridPosition, expected_count: int) -> None:
+    result = list(origin.neighbors())
+
+    assert len(result) == expected_count
+
+
+def test_neighbors_all_have_chebyshev_distance_one() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    for neighbor in pos.neighbors():
+        assert pos.chebyshev_distance(neighbor) == 1
+
+
+def test_neighbors_all_have_non_negative_coords() -> None:
+    pos = GridPosition(0, 0, 0)
+
+    for neighbor in pos.neighbors():
+        assert neighbor.x >= 0
+        assert neighbor.y >= 0
+        assert neighbor.z >= 0
+
+
+def test_neighbors_yields_in_dz_dy_dx_lexicographic_order() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    result = list(pos.neighbors())
+    deltas = [(n.z - 5, n.y - 5, n.x - 5) for n in result]
+
+    assert deltas == sorted(deltas)
+
+
+def test_neighbors_excludes_self() -> None:
+    pos = GridPosition(5, 5, 5)
+
+    assert pos not in list(pos.neighbors())
