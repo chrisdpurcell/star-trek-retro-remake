@@ -6,6 +6,7 @@
 
 - v0.1 scaffold on `main`; CI green. Step 3 (model: `GridPosition` + `GameObject`) complete at HEAD `1d657bc`.
 - Step 4 implementation complete at HEAD `bcd07b4`: `src/stmrr/view/scene/projection.py` (pure-Python iso projection, 100% line+branch coverage) + `.importlinter` projection-is-qt-free contract (3 kept).
+- `pyrightconfig.json` landed (IDE config, not CI): `extraPaths=["src"]`, `pythonVersion=3.14`, `typeCheckingMode=standard`. Project-wide pyright sweep clean.
 - **Next milestone:** step 5 spec authoring per `docs/specs/v0.1-model-layer.md` §4 (remaining model modules).
 - Canonical design: `docs/design/DESIGN.md` (wins over `tech-stack-pyside6.md` on conflicts).
 
@@ -26,5 +27,4 @@ Before any work:
 ## What Remains
 
 - Step 5+: remaining model modules per `docs/specs/v0.1-model-layer.md` §4. `tests/unit/model/test_no_qt_imports.py` runtime test (deferred from step 3) lands when ≥3 model modules exist.
-- Pyright follow-up: add `pyrightconfig.json` with `extraPaths = ["src"]` (IDE noise, not CI).
 - Font license texts due when fonts are committed; `NOTICE.md` has the grep tag.

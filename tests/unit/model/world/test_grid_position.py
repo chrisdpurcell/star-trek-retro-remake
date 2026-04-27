@@ -53,7 +53,7 @@ def test_gridposition_attribute_assignment_raises_frozen_instance_error() -> Non
     pos = GridPosition(1, 2, 3)
 
     with pytest.raises(dataclasses.FrozenInstanceError):
-        pos.x = 99
+        pos.x = 99  # pyright: ignore[reportAttributeAccessIssue]
 
 
 @pytest.mark.parametrize(
