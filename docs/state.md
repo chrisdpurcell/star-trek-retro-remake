@@ -5,7 +5,7 @@
 ## State at a glance
 
 - v0.1 scaffold on `main`; CI green. Step 3 (model: `GridPosition` + `GameObject`) complete at HEAD `1d657bc`.
-- Step 4 implementation complete at HEAD `b33eecf`: `src/stmrr/view/scene/projection.py` (pure-Python iso projection, 100% line+branch coverage) + `.importlinter` projection-is-qt-free contract (3 kept).
+- Step 4 implementation complete at HEAD `bcd07b4`: `src/stmrr/view/scene/projection.py` (pure-Python iso projection, 100% line+branch coverage) + `.importlinter` projection-is-qt-free contract (3 kept).
 - **Next milestone:** step 5 spec authoring per `docs/specs/v0.1-model-layer.md` §4 (remaining model modules).
 - Canonical design: `docs/design/DESIGN.md` (wins over `tech-stack-pyside6.md` on conflicts).
 
