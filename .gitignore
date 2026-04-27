@@ -231,3 +231,6 @@ __marimo__/
 # Local-only experiments and notes
 /scratch/
 /.local/
+
+# Codex CLI tool marker (session-extraneous, not repo state)
+/.codex

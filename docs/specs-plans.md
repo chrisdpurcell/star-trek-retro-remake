@@ -15,8 +15,9 @@ Adversarial-review specs gating implementation. Authored before code lands; revi
 
 | Path | Status | Purpose |
 |---|---|---|
-| [`specs/v0.1-step-3-grid-position-and-game-object.md`](specs/v0.1-step-3-grid-position-and-game-object.md) | Draft — pending adversarial review | Module-level spec for v0.1 scaffold step 3: `GridPosition` (immutable 3-D coord) and `GameObject` (entity base class). |
-| [`specs/v0.1-model-layer.md`](specs/v0.1-model-layer.md) | Draft — pending adversarial review | Cross-cutting spec for the v0.1 pure-Python model layer: events, ID lifecycle, state-machine contract, dependency graph, invariants. |
+| [`specs/v0.1-step-3-grid-position-and-game-object.md`](specs/v0.1-step-3-grid-position-and-game-object.md) | ✅ Cleared review; implemented (HEAD `1d657bc`) | Module-level spec for v0.1 scaffold step 3: `GridPosition` (immutable 3-D coord) and `GameObject` (entity base class). |
+| [`specs/v0.1-model-layer.md`](specs/v0.1-model-layer.md) | Cleared review; partially implemented (step 3 sections done; steps 5+ pending) | Cross-cutting spec for the v0.1 pure-Python model layer: events, ID lifecycle, state-machine contract, dependency graph, invariants. |
+| [`specs/v0.1-step-4-projection.md`](specs/v0.1-step-4-projection.md) | ✅ Cleared review (3 Codex rounds + 2 polish items); plan-writing pending | Module-level spec for v0.1 scaffold step 4: `view/scene/projection.py` — pure-function isometric projection (forward + inverse + painter `zValue`). Locks `(64, 32)` tile dims, `MAX_Z_DEPTH = 10`, scene_to_world Optional return, round-then-check negativity, mandates a new `.importlinter` `projection-is-qt-free` contract. |
 
 ## Specs (`docs/superpowers/specs/`)
 
