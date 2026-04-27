@@ -34,11 +34,16 @@ import pytest
 SIGNAL_CALL_RE = re.compile(r"\.signal\s*\(")
 PAYLOAD_CLASS_RE = re.compile(r"^class \w*Payload\b", re.MULTILINE)
 
+# Module-level repo root: parents[0]=tests/unit/model, [1]=tests/unit, [2]=tests, [3]=repo_root.
+# Captured once so both the helper and the parametrize ids= lambdas can reference
+# a stable path; using p.parents[3] inside the lambda would walk up from the
+# parametrized path itself and produce inconsistent ids for deeper module files.
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+
 
 def _model_source_files_excluding_events() -> list[Path]:
     """All *.py files under src/stmrr/model/ except events.py itself."""
-    repo_root = Path(__file__).resolve().parents[3]
-    model_dir = repo_root / "src" / "stmrr" / "model"
+    model_dir = _REPO_ROOT / "src" / "stmrr" / "model"
     events_path = (model_dir / "events.py").resolve()
 
     return sorted(p for p in model_dir.rglob("*.py") if p.resolve() != events_path)
@@ -47,7 +52,7 @@ def _model_source_files_excluding_events() -> list[Path]:
 @pytest.mark.parametrize(
     "source_path",
     _model_source_files_excluding_events(),
-    ids=lambda p: p.relative_to(p.parents[3]).as_posix(),
+    ids=lambda p: p.relative_to(_REPO_ROOT).as_posix(),
 )
 def test_no_signal_call_in_model_source_outside_events(
     source_path: Path,
@@ -67,7 +72,7 @@ def test_no_signal_call_in_model_source_outside_events(
 @pytest.mark.parametrize(
     "source_path",
     _model_source_files_excluding_events(),
-    ids=lambda p: p.relative_to(p.parents[3]).as_posix(),
+    ids=lambda p: p.relative_to(_REPO_ROOT).as_posix(),
 )
 def test_no_payload_class_declaration_in_model_source_outside_events(
     source_path: Path,
