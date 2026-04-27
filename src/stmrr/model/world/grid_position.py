@@ -7,6 +7,7 @@ contract this module satisfies.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from math import sqrt
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,3 +28,19 @@ class GridPosition:
                 raise TypeError(f"GridPosition.{axis_name} must be int, got {type(value).__name__}")
             if value < 0:
                 raise ValueError(f"GridPosition.{axis_name} must be >= 0, got {value}")
+
+    def manhattan_distance(self, other: GridPosition) -> int:
+        return abs(self.x - other.x) + abs(self.y - other.y) + abs(self.z - other.z)
+
+    def chebyshev_distance(self, other: GridPosition) -> int:
+        return max(
+            abs(self.x - other.x),
+            abs(self.y - other.y),
+            abs(self.z - other.z),
+        )
+
+    def euclidean_distance(self, other: GridPosition) -> float:
+        dx = self.x - other.x
+        dy = self.y - other.y
+        dz = self.z - other.z
+        return sqrt(dx * dx + dy * dy + dz * dz)

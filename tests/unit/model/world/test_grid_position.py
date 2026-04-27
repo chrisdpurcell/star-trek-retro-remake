@@ -114,3 +114,75 @@ def test_gridposition_bool_y_raises_typeerror(bad_value: bool) -> None:
 def test_gridposition_bool_z_raises_typeerror(bad_value: bool) -> None:
     with pytest.raises(TypeError):
         GridPosition(0, 0, bad_value)
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    [
+        (GridPosition(0, 0, 0), GridPosition(0, 0, 0), 0),
+        (GridPosition(0, 0, 0), GridPosition(1, 0, 0), 1),
+        (GridPosition(0, 0, 0), GridPosition(1, 2, 3), 6),
+        (GridPosition(5, 5, 5), GridPosition(0, 0, 0), 15),
+    ],
+    ids=["zero", "axis-aligned", "diagonal", "reverse-diagonal"],
+)
+def test_manhattan_distance_returns_sum_of_absolute_deltas(
+    a: GridPosition, b: GridPosition, expected: int
+) -> None:
+    assert a.manhattan_distance(b) == expected
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    [
+        (GridPosition(0, 0, 0), GridPosition(0, 0, 0), 0),
+        (GridPosition(0, 0, 0), GridPosition(1, 2, 3), 3),
+        (GridPosition(0, 0, 0), GridPosition(5, 1, 1), 5),
+    ],
+    ids=["zero", "diagonal-z-max", "axis-x-max"],
+)
+def test_chebyshev_distance_returns_max_absolute_delta(
+    a: GridPosition, b: GridPosition, expected: int
+) -> None:
+    assert a.chebyshev_distance(b) == expected
+
+
+@pytest.mark.parametrize(
+    ("a", "b", "expected"),
+    [
+        (GridPosition(0, 0, 0), GridPosition(0, 0, 0), 0.0),
+        (GridPosition(0, 0, 0), GridPosition(3, 4, 0), 5.0),
+        (GridPosition(0, 0, 0), GridPosition(2, 3, 6), 7.0),
+    ],
+    ids=["zero", "3-4-5-triangle", "2-3-6-spec-example"],
+)
+def test_euclidean_distance_returns_sqrt_sum_squares(
+    a: GridPosition, b: GridPosition, expected: float
+) -> None:
+    assert a.euclidean_distance(b) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    ("a", "b"),
+    [
+        (GridPosition(1, 2, 3), GridPosition(4, 5, 6)),
+        (GridPosition(0, 0, 0), GridPosition(7, 7, 7)),
+        (GridPosition(2, 9, 1), GridPosition(8, 0, 5)),
+    ],
+    ids=["mid-mid", "zero-far", "mixed-deltas"],
+)
+def test_distance_methods_are_symmetric(a: GridPosition, b: GridPosition) -> None:
+    assert a.manhattan_distance(b) == b.manhattan_distance(a)
+    assert a.chebyshev_distance(b) == b.chebyshev_distance(a)
+    assert a.euclidean_distance(b) == pytest.approx(b.euclidean_distance(a))
+
+
+@pytest.mark.parametrize(
+    "pos",
+    [GridPosition(0, 0, 0), GridPosition(3, 4, 5), GridPosition(10, 0, 7)],
+    ids=["origin", "diagonal", "skewed"],
+)
+def test_distance_methods_self_distance_is_zero(pos: GridPosition) -> None:
+    assert pos.manhattan_distance(pos) == 0
+    assert pos.chebyshev_distance(pos) == 0
+    assert pos.euclidean_distance(pos) == 0.0
