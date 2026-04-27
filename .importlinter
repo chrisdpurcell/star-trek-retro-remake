@@ -27,3 +27,14 @@ source_modules =
 forbidden_modules =
     PySide6
     shiboken6
+
+[importlinter:contract:blinker-only-in-events]
+name = blinker only in events
+type = forbidden
+source_modules =
+    stmrr.model
+forbidden_modules =
+    blinker
+ignore_imports =
+    stmrr.model.events -> blinker
+allow_indirect_imports = True
