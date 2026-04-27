@@ -64,3 +64,45 @@ def test_gameobject_is_hashable_and_distinct_from_same_position_peer() -> None:
     s = {a, b}
 
     assert len(s) == 2
+
+
+def test_gameobject_deactivate_sets_active_false() -> None:
+    obj = GameObject(GridPosition(0, 0, 0))
+
+    obj.deactivate()
+
+    assert obj.active is False
+
+
+def test_gameobject_deactivate_is_idempotent() -> None:
+    obj = GameObject(GridPosition(0, 0, 0))
+
+    obj.deactivate()
+    obj.deactivate()
+
+    assert obj.active is False
+
+
+def test_gameobject_repr_includes_class_name_id_position_active() -> None:
+    pos = GridPosition(1, 2, 3)
+    obj = GameObject(pos)
+
+    result = repr(obj)
+
+    assert result == f"GameObject(id={obj.id}, position={pos}, active=True)"
+
+
+def test_gameobject_repr_uses_subclass_name_for_subclass() -> None:
+    class _Probe(GameObject):
+        pass
+
+    obj = _Probe(GridPosition(0, 0, 0))
+
+    assert repr(obj).startswith("_Probe(")
+
+
+def test_gameobject_repr_reflects_inactive_state() -> None:
+    obj = GameObject(GridPosition(0, 0, 0))
+    obj.deactivate()
+
+    assert "active=False" in repr(obj)

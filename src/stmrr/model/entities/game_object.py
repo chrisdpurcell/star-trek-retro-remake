@@ -41,3 +41,11 @@ class GameObject:
 
     def __hash__(self) -> int:
         return id(self)
+
+    def deactivate(self) -> None:
+        self.active = False
+
+    def __repr__(self) -> str:
+        return (
+            f"{type(self).__name__}(id={self.id}, position={self.position}, active={self.active})"
+        )
