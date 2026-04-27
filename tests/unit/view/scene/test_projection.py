@@ -298,3 +298,21 @@ def test_scene_to_world_active_z_passes_through_for_in_bounds_clicks(z: int) -> 
     sx, sy = world_to_scene(GridPosition(5, 5, z))
 
     assert scene_to_world(sx, sy, z) == GridPosition(5, 5, z)
+
+
+# ---------------------------------------------------------------------------
+# Round-trip property — primary correctness gate per spec §7
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "pos",
+    _FULL_DOMAIN,
+    ids=lambda p: f"{p.x},{p.y},{p.z}",
+)
+def test_round_trip_scene_to_world_of_world_to_scene_equals_original(
+    pos: GridPosition,
+) -> None:
+    sx, sy = world_to_scene(pos)
+
+    assert scene_to_world(sx, sy, pos.z) == pos
