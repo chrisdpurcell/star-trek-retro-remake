@@ -31,8 +31,25 @@ def scene_to_world(sx: float, sy: float, z: int) -> GridPosition | None:
 
     Round-to-nearest snapping; returns None if the rounded result has any
     negative axis. Raises ValueError on negative z, TypeError on non-int z.
+
+    Note: no bool/type guard on sx/sy — they originate from QPointF.x()/.y()
+    or integer test literals and cannot be bool in the step 6 mouse path.
+    See spec §5.2 for the deliberate asymmetry rationale.
     """
-    raise NotImplementedError
+    if not isinstance(z, int) or isinstance(z, bool):
+        raise TypeError(f"z must be int, got {type(z).__name__}")
+    if z < 0:
+        raise ValueError(f"z must be >= 0, got {z}")
+
+    adjusted_sy = sy + z * Z_OFFSET
+    raw_x = sx / TILE_WIDTH + adjusted_sy / TILE_HEIGHT
+    raw_y = adjusted_sy / TILE_HEIGHT - sx / TILE_WIDTH
+    rounded_x = round(raw_x)
+    rounded_y = round(raw_y)
+
+    if rounded_x < 0 or rounded_y < 0:
+        return None
+    return GridPosition(rounded_x, rounded_y, z)
 
 
 def z_value_for(pos: GridPosition) -> int:

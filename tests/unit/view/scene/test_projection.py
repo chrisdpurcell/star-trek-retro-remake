@@ -212,3 +212,89 @@ def test_z_value_for_orders_lower_z_behind_higher_at_same_anti_diagonal(
 
 def test_z_value_for_anti_diagonal_ties_are_intentional_and_equal() -> None:
     assert z_value_for(GridPosition(1, 0, 0)) == z_value_for(GridPosition(0, 1, 0))
+
+
+# ---------------------------------------------------------------------------
+# scene_to_world — direct cases
+# ---------------------------------------------------------------------------
+
+
+def test_scene_to_world_origin_returns_origin_position() -> None:
+    assert scene_to_world(0.0, 0.0, 0) == GridPosition(0, 0, 0)
+
+
+def test_scene_to_world_iso_unit_x_position_returns_unit_x() -> None:
+    assert scene_to_world(32.0, 16.0, 0) == GridPosition(1, 0, 0)
+
+
+def test_scene_to_world_mid_cell_offset_rounds_to_nearest() -> None:
+    assert scene_to_world(40.0, 18.0, 0) == GridPosition(1, 0, 0)
+
+
+def test_scene_to_world_just_outside_origin_snaps_to_origin() -> None:
+    assert scene_to_world(-1.0, 0.0, 0) == GridPosition(0, 0, 0)
+
+
+def test_scene_to_world_far_negative_sx_returns_none() -> None:
+    assert scene_to_world(-64.0, 0.0, 0) is None
+
+
+def test_scene_to_world_click_rounding_to_negative_y_returns_none() -> None:
+    # Input chosen so rounded_x is non-negative but rounded_y is not:
+    # adjusted_sy = 0; raw_x = 64/64 + 0 = 1; raw_y = 0 - 64/64 = -1.
+    # Pairs with `test_scene_to_world_far_negative_sx_returns_none`
+    # (which is x-only) to independently exercise both clauses of the
+    # `rounded_x < 0 or rounded_y < 0` short-circuit.
+    assert scene_to_world(64.0, 0.0, 0) is None
+
+
+def test_scene_to_world_active_z_3_layer_origin_returns_origin_at_z3() -> None:
+    assert scene_to_world(0.0, -96.0, 3) == GridPosition(0, 0, 3)
+
+
+@pytest.mark.parametrize(
+    "z",
+    [-1, -5, -100],
+    ids=["z=-1", "z=-5", "z=-100"],
+)
+def test_scene_to_world_negative_z_raises_valueerror(z: int) -> None:
+    with pytest.raises(ValueError):
+        scene_to_world(0.0, 0.0, z)
+
+
+@pytest.mark.parametrize(
+    "bad_z",
+    [1.0, Fraction(1, 1), Decimal("1"), object()],
+    ids=["float", "Fraction", "Decimal", "object"],
+)
+def test_scene_to_world_non_int_z_raises_typeerror(bad_z: Any) -> None:
+    with pytest.raises(TypeError):
+        scene_to_world(0.0, 0.0, bad_z)
+
+
+@pytest.mark.parametrize("bad_z", [True, False], ids=["True", "False"])
+def test_scene_to_world_bool_z_raises_typeerror(bad_z: bool) -> None:
+    with pytest.raises(TypeError):
+        scene_to_world(0.0, 0.0, bad_z)
+
+
+@pytest.mark.parametrize(
+    ("sx", "sy"),
+    [(32, 16), (32.0, 16), (32, 16.0), (32.0, 16.0)],
+    ids=["int-int", "float-int", "int-float", "float-float"],
+)
+def test_scene_to_world_accepts_int_or_float_for_sx_sy(
+    sx: float, sy: float,
+) -> None:
+    assert scene_to_world(sx, sy, 0) == GridPosition(1, 0, 0)
+
+
+@pytest.mark.parametrize(
+    "z",
+    list(range(7)),
+    ids=[f"z={z}" for z in range(7)],
+)
+def test_scene_to_world_active_z_passes_through_for_in_bounds_clicks(z: int) -> None:
+    sx, sy = world_to_scene(GridPosition(5, 5, z))
+
+    assert scene_to_world(sx, sy, z) == GridPosition(5, 5, z)
