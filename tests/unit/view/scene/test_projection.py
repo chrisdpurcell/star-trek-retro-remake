@@ -316,3 +316,77 @@ def test_round_trip_scene_to_world_of_world_to_scene_equals_original(
     sx, sy = world_to_scene(pos)
 
     assert scene_to_world(sx, sy, pos.z) == pos
+
+
+# ---------------------------------------------------------------------------
+# Static AST import-purity — redundant with `.importlinter` per spec §7
+# ---------------------------------------------------------------------------
+
+_PROJECTION_PATH = (
+    pathlib.Path(__file__).resolve().parents[4]
+    / "src"
+    / "stmrr"
+    / "view"
+    / "scene"
+    / "projection.py"
+)
+
+
+def _collect_imports(source: str) -> list[str]:
+    tree = ast.parse(source)
+    names: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                names.append(alias.name)
+        elif isinstance(node, ast.ImportFrom):
+            if node.module is not None:
+                names.append(node.module)
+    return names
+
+
+def _is_under(name: str, prefix: str) -> bool:
+    return name == prefix or name.startswith(f"{prefix}.")
+
+
+def test_projection_source_file_exists_at_expected_path() -> None:
+    assert _PROJECTION_PATH.is_file(), (
+        f"Expected projection.py at {_PROJECTION_PATH}; the AST import-purity "
+        "tests resolve their target path relative to this test file."
+    )
+
+
+def test_projection_imports_no_pyside6_or_shiboken6() -> None:
+    source = _PROJECTION_PATH.read_text()
+    imports = _collect_imports(source)
+
+    forbidden = ("PySide6", "shiboken6")
+    violations = [
+        name for name in imports
+        if any(_is_under(name, p) for p in forbidden)
+    ]
+
+    assert violations == [], (
+        f"projection.py imports forbidden modules: {violations}"
+    )
+
+
+def test_projection_imports_no_other_view_subpackages_or_controller() -> None:
+    source = _PROJECTION_PATH.read_text()
+    imports = _collect_imports(source)
+
+    forbidden = (
+        "stmrr.controller",
+        "stmrr.view.docks",
+        "stmrr.view.dialogs",
+        "stmrr.view.widgets",
+        "stmrr.view.theme",
+    )
+    violations = [
+        name for name in imports
+        if any(_is_under(name, p) for p in forbidden)
+    ]
+
+    assert violations == [], (
+        f"projection.py imports forbidden subpackages: {violations}"
+    )
