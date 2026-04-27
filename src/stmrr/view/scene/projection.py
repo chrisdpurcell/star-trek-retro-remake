@@ -21,7 +21,9 @@ MAX_Z_DEPTH: int = 10
 
 def world_to_scene(pos: GridPosition) -> tuple[float, float]:
     """Project world (x, y, z) to scene (sx, sy) per spec §4.3."""
-    raise NotImplementedError
+    sx = (pos.x - pos.y) * TILE_WIDTH / 2
+    sy = (pos.x + pos.y) * TILE_HEIGHT / 2 - pos.z * Z_OFFSET
+    return (sx, sy)
 
 
 def scene_to_world(sx: float, sy: float, z: int) -> GridPosition | None:
