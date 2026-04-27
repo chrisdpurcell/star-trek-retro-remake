@@ -339,9 +339,8 @@ def _collect_imports(source: str) -> list[str]:
         if isinstance(node, ast.Import):
             for alias in node.names:
                 names.append(alias.name)
-        elif isinstance(node, ast.ImportFrom):
-            if node.module is not None:
-                names.append(node.module)
+        elif isinstance(node, ast.ImportFrom) and node.module is not None:
+            names.append(node.module)
     return names
 
 
@@ -390,3 +389,16 @@ def test_projection_imports_no_other_view_subpackages_or_controller() -> None:
     assert violations == [], (
         f"projection.py imports forbidden subpackages: {violations}"
     )
+
+
+# ---------------------------------------------------------------------------
+# z-headroom invariant per spec §8.5
+# ---------------------------------------------------------------------------
+
+
+def test_max_z_depth_exceeds_sector_z_ceiling() -> None:
+    # Spec §8.5: for every GridPosition constructible under DESIGN.md §4.3's
+    # sector ceiling of z <= 6, pos.z < MAX_Z_DEPTH. A future ADR raising the
+    # ceiling past z=9 must update MAX_Z_DEPTH or the painter-ordering
+    # invariants (§8.3, §8.4) silently break.
+    assert max(p.z for p in _FULL_DOMAIN) < MAX_Z_DEPTH
