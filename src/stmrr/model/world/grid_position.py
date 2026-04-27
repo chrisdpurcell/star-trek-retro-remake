@@ -20,3 +20,10 @@ class GridPosition:
     x: int
     y: int
     z: int
+
+    def __post_init__(self) -> None:
+        for axis_name, value in (("x", self.x), ("y", self.y), ("z", self.z)):
+            if not isinstance(value, int) or isinstance(value, bool):
+                raise TypeError(f"GridPosition.{axis_name} must be int, got {type(value).__name__}")
+            if value < 0:
+                raise ValueError(f"GridPosition.{axis_name} must be >= 0, got {value}")
