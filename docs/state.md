@@ -1,13 +1,12 @@
 # State
 
-**Last updated:** 2026-04-27 (post step-5)
+**Last updated:** 2026-05-25 (post step-6)
 
 ## State at a glance
 
-- v0.1 scaffold on `main`; CI green. Step 3 (`GridPosition` + `GameObject`) at `1d657bc`; step 4 (`view/scene/projection.py`) at `bcd07b4`.
-- **Step 5 implementation complete at HEAD `5420568`** (this session): `model/state/states.py` (`GameState` ABC stub w/ `__init_subclass__` enforcement of `allowed_transitions`), `model/exceptions.py` (8-class hierarchy, kwargs-only init, locked `__str__` formats), `model/events.py` (4 frozen+slots payloads + 4 named signals + private `_stmrr_events` `Namespace`). `.importlinter` `blinker-only-in-events` (4th contract, 4 kept). `tests/unit/model/test_no_qt_imports.py` subprocess-isolated runtime guard + `test_invariant_10_enforcement.py` three-layer regex sweep. Coordinated umbrella amendments to `v0.1-model-layer.md` §5.2 + §6 + §7 invariants 1+10 + §9. 205 model tests at 100% line+branch coverage; 10,920 cases in the full suite all green. mypy --strict clean across 25 source files.
-- `pyrightconfig.json` landed earlier this session (IDE config, not CI): `extraPaths=["src"]`, `pythonVersion=3.14`, `typeCheckingMode=standard`.
-- **Next milestone:** step 6+ — remaining model modules per `docs/specs/v0.1-model-layer.md` §4. Likely first targets: `world/sector_map.py`, `entities/starship.py` + `station.py` (forward-references already provided by step 5's `events.py` + `exceptions.py`).
+- v0.1 scaffold on `main`; CI running on push at HEAD `8fe5f8b`. Step 3 (`GridPosition` + `GameObject`) at `1d657bc`; step 4 (`view/scene/projection.py`) at `bcd07b4`; step 5 (`states.py` + `exceptions.py` + `events.py`) at `5420568`.
+- **Step 6 implementation complete at HEAD `8fe5f8b`** (this session): `model/world/sector_map.py` (dict-backed bounded entity container; `bounds_check` predicate; `add` ValueError on out-of-bounds OR duplicate-ID, bounds-first first-failure-wins, no mutation on failure; `remove` KeyError mirroring `dict.__delitem__`; `get` returns `None`; `at` insertion-order list incl. inactive; `entities` fresh-tuple snapshot; `__contains__` + `__len__` dunders) and `model/entities/station.py` (`Station(GameObject)` with wide-Literal `StationType` for v0.2 save-forward-compat + `_V1_ALLOWED_STATION_TYPES: frozenset[str]` runtime restriction; three-step `services` validation pipeline BEFORE `super().__init__(position)` so failed construction does NOT consume EntityId; `accepts_dock(ship: _Dockable)` returns `ship.active`; `_Dockable: Protocol` inline-declared to sidestep not-yet-existing `entities.starship`). Spec Fix A: `entities.game_object` import on `sector_map.py` moved to `TYPE_CHECKING` to break a latent circular-import cycle (`entities/__init__.py` → `game_object.py` → `world/__init__.py` → `sector_map.py` → `entities.game_object` mid-load). Six umbrella amendments to `v0.1-model-layer.md` (§4 SectorMap+Station rows, §5.6.2, §5.7, §6 DAG two rows, §8.1 bullet). 308 model tests at 100% line+branch coverage; 11,023 cases in the full suite all green. mypy `--strict` clean across 27 source files. 4 import-linter contracts kept, 0 broken.
+- **Next milestone:** step 7+ — remaining model modules per `docs/specs/v0.1-model-layer.md` §4. Likely first target: `entities/starship.py` (full Starship surface incl. `_debit_ap` helper, `move_to` / `dock_at` / `restore_ap` action methods per umbrella §5.6) + `combat/turn_manager.py`. Step 6's `Station.accepts_dock(ship: _Dockable)` already satisfied by GameObject inheritance — Starship structurally conforms once it lands.
 - Canonical design: `docs/design/DESIGN.md` (wins over `tech-stack-pyside6.md` on conflicts).
 
 ## Session Instructions
@@ -26,5 +25,5 @@ Before any work:
 
 ## What Remains
 
-- Step 6+: remaining model modules per `docs/specs/v0.1-model-layer.md` §4 — `world/sector_map.py`, `entities/{starship,station}.py`, `state/{game_state_manager,states (concretes)}.py`, `combat/turn_manager.py`. Each lands as its own per-step spec.
+- Step 7+: remaining model modules per `docs/specs/v0.1-model-layer.md` §4 — `entities/starship.py`, `combat/turn_manager.py`, `state/game_state_manager.py`, `state/states.py` concrete subclasses (`MainMenuState`, `SectorMapState`). Each lands as its own per-step spec.
 - Font license texts due when fonts are committed; `NOTICE.md` has the grep tag.
