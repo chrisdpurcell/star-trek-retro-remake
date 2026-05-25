@@ -399,6 +399,23 @@ def test_move_to_inactive_ship_raises_inactive_entity_error() -> None:
     assert ship.position == GridPosition(1, 1, 0)
 
 
+def test_move_to_inactive_ship_out_of_bounds_raises_inactive_entity_error() -> None:
+    """Dual-violation witness for spec §4.5 precondition order:
+    active → bounds. An inactive ship targeting an out-of-bounds cell
+    must raise InactiveEntityError (the FIRST guard), not OutOfBoundsError.
+    Locks the ordering against inversion regressions."""
+    sector = SectorMap(width=3, height=3, depth=3)
+    ship = Starship(position=GridPosition(2, 2, 2), ship_class="x", hull=1, ap_max=5)
+    sector.add(ship)
+    ship.deactivate()
+
+    with pytest.raises(InactiveEntityError):
+        ship.move_to(GridPosition(3, 2, 2), sector)  # x=3 is out of bounds
+
+    assert ship.ap_remaining == 5
+    assert ship.position == GridPosition(2, 2, 2)
+
+
 def test_move_to_out_of_bounds_raises_out_of_bounds_error() -> None:
     sector = SectorMap(width=3, height=3, depth=3)
     ship = Starship(position=GridPosition(2, 2, 2), ship_class="x", hull=1, ap_max=5)
@@ -492,6 +509,8 @@ def test_dock_at_happy_path_debits_ap_emits_docked_no_station_mutation() -> None
     captured: list[DockedPayload] = []
     services_before = station.services
     station_type_before = station.station_type
+    station_active_before = station.active
+    station_position_before = station.position
 
     def receiver(sender: object, payload: DockedPayload) -> None:
         captured.append(payload)
@@ -506,6 +525,8 @@ def test_dock_at_happy_path_debits_ap_emits_docked_no_station_mutation() -> None
     assert captured == [DockedPayload(ship_id=ship.id, station_id=station.id)]
     assert station.services == services_before
     assert station.station_type == station_type_before
+    assert station.active == station_active_before
+    assert station.position == station_position_before
 
 
 # ---- dock_at: preconditions in spec order -----------------------------------
@@ -525,6 +546,23 @@ def test_dock_at_inactive_ship_raises_inactive_entity_error() -> None:
 
     with pytest.raises(InactiveEntityError):
         ship.dock_at(station.id, sector)
+
+
+def test_dock_at_inactive_ship_missing_station_raises_inactive_entity_error() -> None:
+    """Dual-violation witness for spec §4.6 precondition order:
+    active → resolve-target. An inactive ship trying to dock at a
+    non-existent station ID must raise InactiveEntityError (the FIRST
+    guard), not NotDockableError. Locks the ordering against inversion."""
+    sector = SectorMap(width=10, height=10, depth=5)
+    ship = Starship(position=GridPosition(1, 1, 0), ship_class="x", hull=1, ap_max=5)
+    sector.add(ship)
+    ship.deactivate()
+    bogus_id = EntityId(99999)
+
+    with pytest.raises(InactiveEntityError):
+        ship.dock_at(bogus_id, sector)
+
+    assert ship.ap_remaining == 5
 
 
 def test_dock_at_missing_station_id_raises_not_dockable() -> None:
