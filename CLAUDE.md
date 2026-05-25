@@ -14,4 +14,4 @@
 
 ## Status
 
-Pre-scaffold. `docs/design/DESIGN.md` (canonical) and `docs/design/tech-stack-pyside6.md` (operational scaffold notes) are the design artifacts. First scaffold step is `docs/design/tech-stack-pyside6.md` §11 — `pyproject.toml` + `uv` lockfile + repo skeleton.
+v0.1 scaffold steps 1–6 complete at HEAD `8fe5f8b`. Active work resumes at step 7 (`entities/starship.py` + `combat/turn_manager.py`). Read `docs/state.md` for current milestone pointers and remaining work. Design is locked in `docs/design/DESIGN.md` (canonical); `docs/design/tech-stack-pyside6.md` is supplementary for scaffold phases.

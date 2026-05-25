@@ -43,4 +43,4 @@ Two event layers because the model must remain Qt-free for headless testing; the
 
 ## State of the system
 
-Nothing built yet. `docs/design/DESIGN.md` and `docs/design/tech-stack-pyside6.md` describe the intended target; `src/stmrr/` does not exist on disk.
+v0.1 scaffold steps 1–6 complete. `src/stmrr/` structure: `model/` (pure Python) houses `world/sector_map.py`, `entities/{game_object.py, station.py}`, `state/states.py`, `exceptions.py`, `events.py`; `view/scene/projection.py` (isometric math); remaining layers (controller, persistence, config, app.py) pending. Live state and picked-up work are in `docs/state.md`.

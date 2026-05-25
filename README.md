@@ -2,7 +2,7 @@
 
 A turn-based, grid-based Star Trek strategy game inspired by *Star Trek* (1971) and *Super Star Trek* (1973), reimagined with a windowed graphical interface that evokes mid-1990s desktop strategy games — *Master of Orion 2*, *X-COM: UFO Defense*, *Heroes of Might and Magic 2*.
 
-> **Status:** Pre-scaffold. Game design is locked in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); source code does not yet exist. The first build will be `v0.1`.
+> **Status:** v0.1 scaffold in progress. Steps 1–6 complete (game model layer — foundation classes, world, entities, state machine, events, exceptions). Steps 7–8 pending (remaining model modules, then controller/view/app integration). Game design locked in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); live state in [`docs/state.md`](docs/state.md).
 
 ## At a glance
 
