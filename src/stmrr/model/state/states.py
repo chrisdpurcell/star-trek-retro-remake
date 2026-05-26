@@ -57,4 +57,58 @@ class GameState(ABC):
     def exit(self) -> None: ...
 
 
-__all__ = ["GameState"]
+class MainMenuState(GameState):
+    """Main menu state — the v0.1 session start state.
+
+    `allowed_transitions` is patched at module level below this class
+    body (see end of file) to break the mutual MainMenuState ↔ SectorMapState
+    forward-reference. The class-body declaration `frozenset()` satisfies
+    the step-5 `__init_subclass__` presence check; the patch replaces it
+    with `frozenset({SectorMapState})`.
+
+    Per umbrella spec §5.8, `enter`/`exit` do NOT instantiate world objects.
+    v0.1 bodies are `pass` — UI cueing is the bridge's job, not the
+    state's, and the cueing channel is the `state_changed` event.
+    """
+
+    allowed_transitions: ClassVar[frozenset[type[GameState]]] = frozenset()
+    # Patched below the class definitions: allowed_transitions = frozenset({SectorMapState})
+
+    def enter(self) -> None:
+        # Empty per umbrella §5.8 — state hooks do not do world construction
+        # or UI cueing; cueing flows through the state_changed event.
+        pass
+
+    def exit(self) -> None:
+        pass
+
+
+class SectorMapState(GameState):
+    """Sector-map state — the v0.1 in-game session state.
+
+    See MainMenuState docstring for the `allowed_transitions` patch
+    rationale. Per umbrella §5.8, `enter` MUST NOT construct a
+    `SectorMap` — `app.py` owns world construction.
+    """
+
+    allowed_transitions: ClassVar[frozenset[type[GameState]]] = frozenset()
+    # Patched below the class definitions: allowed_transitions = frozenset({MainMenuState})
+
+    def enter(self) -> None:
+        pass
+
+    def exit(self) -> None:
+        pass
+
+
+# Resolve the mutual MainMenuState ↔ SectorMapState forward reference.
+# Each class body declared `allowed_transitions = frozenset()` (satisfies
+# the step-5 __init_subclass__ presence check); the assignments below
+# replace those placeholders with the actual allowed sets now that both
+# classes exist as names. Deleting either of these two lines silently
+# reverts the allowed sets to empty — the smoke tests in
+# tests/unit/model/state/test_states.py guard against that regression.
+MainMenuState.allowed_transitions = frozenset({SectorMapState})
+SectorMapState.allowed_transitions = frozenset({MainMenuState})
+
+__all__ = ["GameState", "MainMenuState", "SectorMapState"]
