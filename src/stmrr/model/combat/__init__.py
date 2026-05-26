@@ -1,1 +1,5 @@
-"""TurnManager, CombatResolver, AI state machines (DESIGN.md §9.1, §5.2, §5.6)."""
+"""Combat module: TurnManager (v0.1); combat resolution + AI (v0.2)."""
+
+from stmrr.model.combat.turn_manager import TurnManager
+
+__all__ = ["TurnManager"]
