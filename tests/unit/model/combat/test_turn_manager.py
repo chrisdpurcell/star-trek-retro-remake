@@ -40,7 +40,7 @@ def test_construction_with_explicit_current_turn_preserves_value() -> None:
     assert tm.current_turn == 5
 
 
-def test_construction_current_turn_is_kwarg_only() -> None:
+def test_construction_current_turn_positional_raises_type_error() -> None:
     with pytest.raises(TypeError):
         TurnManager(EntityId(1), 5)  # type: ignore[misc]
 
@@ -78,8 +78,9 @@ def test_construction_player_id_below_one_raises_value_error(bad: int) -> None:
         (True, "bool"),
         (1.5, "float"),
         ("1", "str"),
+        (None, "NoneType"),
     ],
-    ids=["bool", "float", "str"],
+    ids=["bool", "float", "str", "None"],
 )
 def test_construction_current_turn_non_int_raises_type_error(bad_value: object, name: str) -> None:
     with pytest.raises(TypeError, match=f"current_turn must be int, got {name}"):
@@ -331,4 +332,10 @@ def test_turn_manager_does_not_import_station_or_sector_map_at_runtime() -> None
         # If station is imported at all, it must be inside TYPE_CHECKING
         assert type_checking_pos != -1 and station_pos > type_checking_pos, (
             "Station, if imported, must be inside TYPE_CHECKING"
+        )
+
+    sector_map_pos = text.find("from stmrr.model.world.sector_map")
+    if sector_map_pos != -1:
+        assert type_checking_pos != -1 and sector_map_pos > type_checking_pos, (
+            "SectorMap, if imported, must be inside TYPE_CHECKING"
         )
