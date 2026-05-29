@@ -1,1 +1,5 @@
 """View layer: PySide6-only. Subscribes to bridged Qt signals, renders state (DESIGN.md §9.1)."""
+
+from stmrr.view.main_window import MainWindow
+
+__all__ = ["MainWindow"]

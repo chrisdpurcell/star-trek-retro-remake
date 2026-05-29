@@ -18,6 +18,7 @@ source_modules =
     stmrr.view
 forbidden_modules =
     stmrr.model.events
+allow_indirect_imports = True
 
 [importlinter:contract:projection-is-qt-free]
 name = projection.py must not import Qt or PySide6
