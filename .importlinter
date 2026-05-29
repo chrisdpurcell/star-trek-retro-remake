@@ -38,3 +38,14 @@ forbidden_modules =
 ignore_imports =
     stmrr.model.events -> blinker
 allow_indirect_imports = True
+
+[importlinter:contract:controller-events-via-bridge-only]
+name = Only model_bridge imports model.events within the controller
+type = forbidden
+source_modules =
+    stmrr.controller
+forbidden_modules =
+    stmrr.model.events
+ignore_imports =
+    stmrr.controller.model_bridge -> stmrr.model.events
+allow_indirect_imports = True
