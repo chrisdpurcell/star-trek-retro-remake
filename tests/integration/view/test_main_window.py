@@ -149,3 +149,53 @@ def test_view_package_reexports_main_window():
 
     assert view_pkg.MainWindow is MainWindow
     assert view_pkg.__all__ == ["MainWindow"]
+
+
+def test_bind_bridge_renders_initial_state(qtbot, bridge):
+    window = MainWindow()
+    qtbot.addWidget(window)
+    window.bind_bridge(bridge)
+    assert window.findChild(QLabel, "stateIndicator").text() == "MainMenuState"
+
+
+def test_state_changed_updates_indicator_end_to_end(qtbot):
+    from stmrr.controller.model_bridge import ModelBridge
+    from stmrr.model.state.game_state_manager import GameStateManager
+    from stmrr.model.state.states import MainMenuState, SectorMapState
+
+    manager = GameStateManager(MainMenuState())
+    bridge = ModelBridge(manager)
+    try:
+        window = MainWindow()
+        qtbot.addWidget(window)
+        window.bind_bridge(bridge)
+        manager.transition_to(SectorMapState())
+        assert window.findChild(QLabel, "stateIndicator").text() == "SectorMapState"
+    finally:
+        bridge.teardown()
+
+
+def test_state_changed_opaque_payload_falls_back_to_repr(qtbot, bridge):
+    from stmrr.model.events import state_changed
+
+    window = MainWindow()
+    qtbot.addWidget(window)
+    window.bind_bridge(bridge)
+    sentinel = object()  # has no `to_state` attribute
+    state_changed.send(object(), payload=sentinel)
+    assert window.findChild(QLabel, "stateIndicator").text() == repr(sentinel)
+
+
+def test_close_event_tears_down_bound_bridge(qtbot, mocker, bridge):
+    window = MainWindow()
+    qtbot.addWidget(window)
+    window.bind_bridge(bridge)
+    spy = mocker.spy(bridge, "teardown")
+    window.close()
+    spy.assert_called_once()
+
+
+def test_close_event_without_bridge_does_not_raise(qtbot):
+    window = MainWindow()
+    qtbot.addWidget(window)
+    window.close()  # _bridge is None -> teardown skipped, no exception
