@@ -224,3 +224,11 @@ def test_model_bridge_is_plain_qobject_not_abc(bridge: ModelBridge) -> None:
 
     assert QObject in ModelBridge.__mro__
     assert abc.ABC not in ModelBridge.__mro__
+
+
+def test_controller_package_reexports_model_bridge() -> None:
+    import stmrr.controller as controller_pkg
+    from stmrr.controller import ModelBridge as ReexportedModelBridge
+
+    assert ReexportedModelBridge is ModelBridge
+    assert controller_pkg.__all__ == ["ModelBridge"]
