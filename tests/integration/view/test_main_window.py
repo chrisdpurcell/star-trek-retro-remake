@@ -80,6 +80,8 @@ def test_fullscreen_action_is_checkable_and_calls_show_methods(qtbot, mocker):
 def test_about_action_opens_message_box(qtbot, mocker):
     from PySide6.QtWidgets import QMessageBox
 
+    from stmrr import __version__
+
     about = mocker.patch.object(QMessageBox, "about")
     window = MainWindow()
     qtbot.addWidget(window)
@@ -87,7 +89,7 @@ def test_about_action_opens_message_box(qtbot, mocker):
     assert action is not None
     action.trigger()
     assert about.call_count == 1
-    assert "0.1.0.dev0" in about.call_args.args[2]
+    assert __version__ in about.call_args.args[2]
 
 
 def test_dock_toggle_actions_track_visibility(qtbot):
