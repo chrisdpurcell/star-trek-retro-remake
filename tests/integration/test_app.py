@@ -1,10 +1,12 @@
 """Integration tests for the stmrr.app entry point (v0.1 step 10)."""
 
 import os
+import runpy
 import subprocess
 import sys
 import textwrap
 
+import pytest
 from PySide6.QtWidgets import QApplication, QLabel
 
 from stmrr.app import build_main_window, main
@@ -90,3 +92,12 @@ def test_build_main_window_without_app_raises_runtimeerror():
     assert result.returncode != 0
     assert result.returncode != 134  # clear RuntimeError, not a Qt C++ abort
     assert "QApplication" in result.stderr
+
+
+def test_dunder_main_raises_systemexit_with_main_return_code(monkeypatch):
+    import stmrr.app as app_module
+
+    monkeypatch.setattr(app_module, "main", lambda: 0)
+    with pytest.raises(SystemExit) as excinfo:
+        runpy.run_module("stmrr", run_name="__main__")
+    assert excinfo.value.code == 0
