@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regenerate docs/bugs/INDEX.md from frontmatter of all bug files."""
+"""Regenerate docs/handoff/bugs/INDEX.md from frontmatter of all bug files."""
 
 import re
 from pathlib import Path
@@ -36,7 +36,7 @@ def main() -> None:
     out = [
         "# Bug Index",
         "",
-        "Generated from frontmatter. Regenerate with `python3 docs/bugs/_regen_index.py`.",
+        "Generated from frontmatter. Regenerate with `python3 docs/handoff/bugs/_regen_index.py`.",
         "",
         "| # | Date | Title | Services | Status |",
         "|---|---|---|---|---|",

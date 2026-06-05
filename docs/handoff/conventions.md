@@ -178,7 +178,7 @@ QT_QPA_PLATFORM = "offscreen"
 
 **Rule:** Specs go in `docs/superpowers/specs/`, plans in `docs/superpowers/plans/`. ISO-8601 filename prefix (`YYYY-MM-DD-kebab-title.md`). Completed plans get the neutralizer banner so a future session sees `✅ Complete — DO NOT EXECUTE` before any imperative content.
 
-**Why:** Same reason as §5 (ADRs). Frozen point-in-time docs without a neutralizer get re-executed by an unwary future agent. The pointer table at `docs/specs-plans.md` is what surfaces them; the directory is the storage, not the index.
+**Why:** Same reason as §5 (ADRs). Frozen point-in-time docs without a neutralizer get re-executed by an unwary future agent. The pointer table at `docs/handoff/specs-plans.md` is what surfaces them; the directory is the storage, not the index.
 
 **Sources:**
 - `~/.claude/CLAUDE.md` "Frozen planning docs rule"
