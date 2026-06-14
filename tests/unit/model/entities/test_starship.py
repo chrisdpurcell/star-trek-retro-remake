@@ -443,8 +443,8 @@ def test_move_to_non_adjacent_raises_not_adjacent_error() -> None:
 
 
 def test_move_to_zero_distance_raises_not_adjacent_error() -> None:
-    """Chebyshev distance 0 is NOT adjacent. Roguelike convention per spec
-    SA-001 research."""
+    """Chebyshev distance 0 is NOT adjacent. Roguelike convention per
+    research [spec-assumptions §B] (step-7 spec §4.5 move_to)."""
     sector = SectorMap(width=10, height=10, depth=5)
     ship = Starship(position=GridPosition(1, 1, 0), ship_class="x", hull=1, ap_max=5)
     sector.add(ship)
@@ -715,8 +715,8 @@ def _starship_source() -> str:
 
 
 def test_starship_module_does_not_import_turn_manager() -> None:
-    """Umbrella invariant 8 (step-7 spec invariant 9): no back-edge from
-    entities.starship to combat.turn_manager."""
+    """Step-7 spec invariant 9 (umbrella §6 "No cycles" runtime DAG): no
+    back-edge from entities.starship to combat.turn_manager."""
     text = _starship_source()
 
     assert "combat.turn_manager" not in text
@@ -724,7 +724,8 @@ def test_starship_module_does_not_import_turn_manager() -> None:
 
 
 def test_starship_imports_station_at_runtime() -> None:
-    """Step-7 spec §3 + §6 amendment A1: `entities.station` is a RUNTIME
+    """Step-7 spec §3 + §10 (umbrella §6 DAG, entities.starship row):
+    `entities.station` is a RUNTIME
     import in `entities.starship` because `dock_at` does
     `isinstance(target, Station)` (a runtime expression). Research
     finding D blocker — original umbrella had it as TYPE_CHECKING-only,
@@ -740,8 +741,9 @@ def test_starship_imports_station_at_runtime() -> None:
 
 
 def test_starship_imports_sector_map_only_under_type_checking() -> None:
-    """Step-7 spec §3 + §6 amendment A1: `world.sector_map` is
-    TYPE_CHECKING-only in `entities.starship` (only used as a parameter
+    """Step-7 spec §3 + §10 (umbrella §6 DAG, entities.starship row):
+    `world.sector_map` is TYPE_CHECKING-only in `entities.starship` (only
+    used as a parameter
     annotation; the actual `sector_map.get(...)` / `sector_map.bounds_check(...)`
     calls are duck-typed at runtime). CR-005 review finding — tightens
     the existing back-edge test to cover all DAG claims, not just the
@@ -753,5 +755,5 @@ def test_starship_imports_sector_map_only_under_type_checking() -> None:
     assert sector_map_import_pos != -1, "SectorMap import missing"
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert sector_map_import_pos > type_checking_pos, (
-        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per step-7 spec §6)"
+        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per umbrella §6 DAG)"
     )

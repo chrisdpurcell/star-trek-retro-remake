@@ -91,7 +91,10 @@ class Starship(GameObject):
 
         v0.2 TODO: if Starship instances are mutated from multiple
         QThreadPool workers (AI move tasks), this read-modify-write
-        becomes a race. Two paths (DESIGN.md §9.4):
+        becomes a race. Two paths — documented canonically by this TODO,
+        which step-7 spec §9.2 ("Threading model selection", still-open 4)
+        defers to; DESIGN.md §9.4 commits only the broader QThreadPool +
+        Qt-signal direction, not the lock-based alternative:
           (a) Confine all model mutations to a single "model thread"
               and use Qt queued signal/slot for cross-thread handoff
               (lock-free, idiomatic Qt — preferred).

@@ -287,7 +287,7 @@ def test_turn_manager_source_imports_starship_at_runtime() -> None:
 
 
 def test_turn_manager_imports_sector_map_only_under_type_checking() -> None:
-    """Step-7 spec §6 amendment A4: `world.sector_map` is TYPE_CHECKING-only
+    """Step-7 spec §5.1 (umbrella §6 DAG): `world.sector_map` is TYPE_CHECKING-only
     in `combat.turn_manager` (only used as a parameter annotation; the
     runtime `sector_map.get(...)` call is duck-typed via the passed
     instance). CR-005 review finding — tightens the existing import-
@@ -299,12 +299,12 @@ def test_turn_manager_imports_sector_map_only_under_type_checking() -> None:
     assert sector_map_import_pos != -1, "SectorMap import missing"
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert sector_map_import_pos > type_checking_pos, (
-        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per step-7 spec §6)"
+        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per umbrella §6 DAG)"
     )
 
 
 def test_turn_manager_imports_entity_id_only_under_type_checking() -> None:
-    """Step-7 spec §6 amendment A4: `entities.game_object` is TYPE_CHECKING-
+    """Step-7 spec §5.1 (umbrella §6 DAG): `entities.game_object` is TYPE_CHECKING-
     only in `combat.turn_manager` (only used for the `EntityId` NewType
     annotation on `__init__`; never minted or unwrapped at runtime).
     CR-005 review finding."""
@@ -316,7 +316,7 @@ def test_turn_manager_imports_entity_id_only_under_type_checking() -> None:
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert game_object_import_pos > type_checking_pos, (
         "game_object (EntityId) import must be INSIDE TYPE_CHECKING block "
-        "(annotation-only per step-7 spec §6)"
+        "(annotation-only per umbrella §6 DAG)"
     )
 
 

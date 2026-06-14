@@ -1,15 +1,18 @@
-"""GameState ABC for the v0.1 hand-rolled state machine (ADR-0005).
+"""GameState ABC + v0.1 concrete states for the hand-rolled state machine (ADR-0005).
 
-Minimal stub: the ABC plus __init_subclass__ runtime enforcement of the
+The ABC (step 5) supplies __init_subclass__ runtime enforcement of the
 `allowed_transitions: ClassVar[frozenset[type[GameState]]]` contract.
-Concrete v0.1 states (MainMenuState, SectorMapState) and the
-GameStateManager that consumes them land in the next step where their
-allowed_transitions sets are reviewed against gsm's transition contract
-in the same review.
+The two v0.1 concrete states MainMenuState and SectorMapState (step 8)
+follow it; their mutual MainMenuState ↔ SectorMapState references are
+resolved by the post-class patch at the end of this file (see comment
+there). GameStateManager (the consumer that reads allowed_transitions)
+lives in the sibling module state.game_state_manager.
 
 See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md`
-§6 for the enforcement rationale and the inspect.isabstract(cls) vs
-cls.__abstractmethods__ ordering note.
+§6 for the __init_subclass__ enforcement rationale and the
+inspect.isabstract(cls) vs cls.__abstractmethods__ ordering note;
+`docs/specs/v0.1-step-8-game-state-manager.md` §5 for the concrete
+states and the post-class patch idiom.
 """
 
 from __future__ import annotations

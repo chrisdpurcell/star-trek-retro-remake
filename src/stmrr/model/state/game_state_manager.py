@@ -3,9 +3,10 @@
 Per umbrella spec docs/specs/v0.1-model-layer.md §5.3, `transition_to`
 runs the five-step lifecycle `validate → exit → mutate → enter → emit`.
 __init__ fires the initial state's `enter()` synchronously (no
-`state_changed` event for construction — see spec §9.1 Q2).
+`state_changed` event for construction — see step-8 spec
+docs/specs/v0.1-step-8-game-state-manager.md §9.1 Q2).
 
-Lifecycle hook exception policy (spec §6.5): propagate without rollback.
+Lifecycle hook exception policy (step-8 spec §6.5): propagate without rollback.
 `exit()` failure → no mutation, no event. `enter()` failure → mutation
 already committed, no event.
 
