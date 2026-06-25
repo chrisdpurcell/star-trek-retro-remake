@@ -1,6 +1,6 @@
 # State
 
-**Last updated:** 2026-05-29
+**Last updated:** 2026-06-25
 
 ## State at a glance
 
