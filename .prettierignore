@@ -1,0 +1,7 @@
+# Agent Handoff owns exact managed blocks, installed artifacts, status, and tasks.
+AGENTS.md
+CLAUDE.md
+.agents/agent-handoff/
+.agents/skills/agent-handoff/
+docs/STATUS.md
+docs/TODO.md

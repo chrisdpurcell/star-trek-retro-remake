@@ -1,8 +1,9 @@
 # CLAUDE.md
 
-**Session startup:** state is injected by the SessionStart hook (see `.claude/hooks/session_start.py`).
+**Session startup:** state is injected by the repo-local Agent Handoff SessionStart hook; do not reread it when injected.
 
 **Document layout (read on demand):**
+
 - `docs/handoff/state.md` — live state + active incidents (auto-injected, do not read directly)
 - `docs/handoff/deployed.md` — deployment truth (pre-scaffold: nothing built yet)
 - `docs/handoff/architecture.md` — layered architecture + pointers into `docs/design/DESIGN.md` / `docs/design/tech-stack-pyside6.md`
@@ -14,4 +15,11 @@
 
 ## Status
 
-v0.1 scaffold steps 1–6 complete at HEAD `8fe5f8b`. Active work resumes at step 7 (`entities/starship.py` + `combat/turn_manager.py`). Read `docs/handoff/state.md` for current milestone pointers and remaining work. Design is locked in `docs/design/DESIGN.md` (canonical); `docs/design/tech-stack-pyside6.md` is supplementary for scaffold phases.
+v0.1 steps 1–10 are complete and the MVC triad is runnable. Step 11—planning and implementing `MapView`/`GridScene`—is next. The canonical design remains `docs/design/DESIGN.md`.
+
+<!-- BEGIN agent-handoff managed instructions -->
+Use the repo-local `$agent-handoff` skill at startup and closeout.
+Do not reread `docs/handoff/state.md` when SessionStart already injected it.
+Keep current status and tasks in `docs/STATUS.md` and `docs/TODO.md`; route durable facts through `docs/handoff/`.
+At closeout, update only changed facts, preserve user-authored work, store credential references only, and run relevant validation.
+<!-- END agent-handoff managed instructions -->
