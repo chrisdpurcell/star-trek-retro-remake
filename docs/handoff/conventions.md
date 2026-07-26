@@ -110,8 +110,10 @@ with open("ships.toml", "rb") as f:
 
 ```toml
 # pyproject.toml
-[tool.pytest_env]
-QT_QPA_PLATFORM = "offscreen"
+[tool.pytest.ini_options]
+env = [
+    "QT_QPA_PLATFORM=offscreen",
+]
 ```
 
 **Why:** CI runners and SSH sessions have no `$DISPLAY`; without the offscreen plugin, every `QApplication()` call dies with `qt.qpa.xcb: could not connect to display`. Setting it via `pytest-env` (not via shell wrapper) means a developer running `uv run pytest` locally gets the same behavior without remembering the env var.

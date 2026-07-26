@@ -1,6 +1,6 @@
 """Unit tests for the model event bus.
 
-Covers spec §5 + umbrella §5.2: payload dataclass shape (frozen, slots,
+Covers SPEC-S005 FR-004 through FR-007: payload dataclass shape (frozen, slots,
 value-based equality), signal namespace privacy, signal-name discipline,
 sender + payload delivery via blinker.send + connected_to, receiver-order
 independence, and the per-payload typing.get_type_hints() invariant.
@@ -133,7 +133,7 @@ def test_payload_equality_is_value_based() -> None:
     assert a != c
 
 
-# ---- Per-payload get_type_hints() invariant (spec §5.2 table) ----------------
+# ---- Per-payload get_type_hints() contract (SPEC-S005 FR-007) ----------------
 
 
 def test_shipmoved_get_type_hints_raises_nameerror() -> None:
@@ -174,7 +174,7 @@ def test_signal_has_expected_name(signal_obj: object, expected_name: str) -> Non
     assert getattr(signal_obj, "name", None) == expected_name
 
 
-# ---- send + connected_to delivery (spec §7.3 isolation requirement) -----------
+# ---- send + connected_to delivery (SPEC-S005 FR-006) -------------------------
 
 
 def test_ship_moved_send_invokes_receiver_with_sender_and_payload() -> None:
@@ -211,7 +211,7 @@ def test_two_receivers_both_invoked_on_send() -> None:
     assert counts == {"a": 1, "b": 1}
 
 
-# ---- Namespace privacy + __all__ discipline (spec §5.1) ----------------------
+# ---- Namespace privacy + __all__ discipline (SPEC-S005 FR-005) ---------------
 
 
 def test_all_exports_exactly_eight_public_names() -> None:

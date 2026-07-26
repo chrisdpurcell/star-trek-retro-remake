@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0008-star-trek-retro-remake-combat-on-sector-grid'
+title: 'Combat happens on the sector grid, not a separate combat scene'
+description: 'Decision to resolve combat on the sector grid instead of using a separate combat scene.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0008 — Combat happens on the sector grid, not a separate combat scene
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

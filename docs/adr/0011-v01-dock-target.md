@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0011-star-trek-retro-remake-v0-1-dock-target'
+title: 'v0.1 scope includes the starbase Dock action target'
+description: 'Decision to include starbase docking as a version 0.1 action target.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0011 — v0.1 scope includes the starbase Dock action target
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

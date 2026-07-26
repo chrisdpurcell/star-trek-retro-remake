@@ -1,7 +1,31 @@
+---
+schema_version: '1.1'
+id: 'adr-0013-star-trek-retro-remake-ruleset-protection-with-admin-bypass'
+title: 'Branch protection via ruleset with admin bypass, not classic protection'
+description: 'Decision to protect the default branch with a GitHub ruleset that permits administrator bypass.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'decision'
+  - 'policy'
+  - 'security'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0013: Branch protection via ruleset with admin bypass, not classic protection
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 
@@ -30,7 +54,7 @@ Branch protection on `main` is implemented as a GitHub **ruleset** (not classic 
   - `pull_request` with `required_approving_review_count: 0` and `dismiss_stale_reviews_on_push: true`
   - `required_status_checks` with `strict_required_status_checks_policy: true` and the single context `"ruff + mypy + import-linter + pytest"` (the CI workflow's job name, not the per-step labels)
 
-The required status check references the **job name**, not individual step names. All quality gates (ruff format, ruff check, mypy, lint-imports, pytest) live inside one job; listing them as separate required contexts produces an unsatisfiable rule.
+The required status check references the **job name**, not individual step names. Its legacy context string is intentionally frozen for ruleset compatibility; the current job body calls `scripts/check.py` and runs Ruff, BasedPyright strict, import-linter, branch-aware coverage.py/pytest, and pip-audit. Listing those as separate required contexts would produce an unsatisfiable rule.
 
 ## Consequences
 

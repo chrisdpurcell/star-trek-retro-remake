@@ -1,7 +1,17 @@
-# Agent Handoff owns exact managed blocks, installed artifacts, status, and tasks.
+# Package and harness assets must retain their released or managed bytes.
+.agents/
+.claude/
+.codex/
+.standards/
+.import_linter_cache/
+
+# Agent/tooling-managed or independently governed documents.
 AGENTS.md
 CLAUDE.md
-.agents/agent-handoff/
-.agents/skills/agent-handoff/
+.github/PULL_REQUEST_TEMPLATE.md
+.github/workflows/format.yml
+.github/workflows/lint-markdown.yml
 docs/STATUS.md
 docs/TODO.md
+docs/adr/template.md
+docs/handoff/

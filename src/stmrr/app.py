@@ -1,9 +1,10 @@
 """Entry point: build the QApplication, wire the MVC triad, show the main window.
 
-Implements step-9 spec §5.7's deferred wiring: construct the GameStateManager,
-construct ModelBridge(manager, parent=window), bind it to the window (which owns
-teardown via closeEvent). build_main_window() is the testable seam (no QApplication,
-no event loop); main() owns the QApplication lifecycle and the loop.
+Implements SPEC-S010 D-001 and FR-010: construct the GameStateManager,
+construct ModelBridge(manager, parent=window), and bind it to the window,
+which owns teardown under SPEC-S009 IR-004. build_main_window() is the
+testable seam (no QApplication, no event loop); main() owns the
+QApplication lifecycle and the loop.
 """
 
 from __future__ import annotations
@@ -26,10 +27,10 @@ def build_main_window() -> tuple[MainWindow, ModelBridge, GameStateManager]:
     The testable seam: no QApplication creation, no exec(). Requires a GUI
     QApplication to already exist (main() or pytest-qt creates it) — constructing a
     QWidget without one aborts the process at the C++ level, so this public,
-    importable seam fails fast with a clear RuntimeError instead (CR-002; the
+    importable seam fails fast with a clear RuntimeError instead (SPEC-S010 FR-009; the
     isinstance guard covers both no-app and a non-GUI QCoreApplication). Order
     matters — the window must exist before the bridge so the bridge can be
-    Qt-parented to it (step-9 §5.7). Returns the bridge and manager so the caller
+    Qt-parented to it (SPEC-S010 D-001). Returns the bridge and manager so the caller
     holds Python refs that keep them alive (PySide6 parenting does not pin the
     Python wrapper; blinker holds the bridge with weak=False).
     """
@@ -51,7 +52,7 @@ def main() -> int:
     """Build/reuse the QApplication, show the main window, run the event loop."""
     logger.info("Starting Star Trek Retro Remake v{}", __version__)
     app = QApplication.instance()
-    # App-creation path; exercised by the manual `python -m stmrr` smoke (Task 6 Step 4).
+    # QApplication-creation path; exercised by the manual launch smoke (SPEC-S010 IR-003).
     if app is None:  # pragma: no cover
         # Only when WE create the app: own it and set metadata. Under pytest-qt a
         # session QApplication already exists; reusing it avoids the "destroy the

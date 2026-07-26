@@ -1,6 +1,6 @@
 """Unit tests for SectorMap.
 
-Covers spec §4: construction validation (int/bool footgun + range >=1
+Covers SPEC-S006 FR-001 through FR-009: construction validation (int/bool footgun + range >=1
 per axis), bounds_check boundary classes (corners + one-past-end), add
 preconditions in order (bounds before duplicate-ID, ValueError on both,
 no mutation on failure), remove (KeyError on missing per dict protocol),
@@ -152,7 +152,7 @@ def test_bounds_check_returns_false_for_one_past_end(
 def test_bounds_check_never_raises_on_extreme_inputs() -> None:
     sector = SectorMap(width=1, height=1, depth=1)
 
-    # Extreme but constructable GridPositions (all >= 0 per step-3 spec).
+    # Extreme but constructable GridPositions remain valid under SPEC-S003 FR-002.
     far = GridPosition(10_000, 10_000, 10_000)
     sector.bounds_check(far)  # must not raise
 
@@ -223,7 +223,7 @@ def test_add_oob_raises_valueerror_and_no_mutation(position: GridPosition) -> No
     assert len(sector) == 0
     with pytest.raises(ValueError) as exc_info:
         sector.add(entity)
-    # Verbatim message per spec §7.1 ("messages tested verbatim against the spec format strings")
+    # This exact diagnostic is part of the preserved SPEC-S006 FR-003 contract.
     assert str(exc_info.value) == (
         f"entity position {position} is outside sector bounds (10, 10, 5)"
     )
@@ -239,15 +239,14 @@ def test_add_duplicate_id_raises_valueerror_and_no_mutation() -> None:
     assert len(sector) == 1
     with pytest.raises(ValueError) as exc_info:
         sector.add(entity)
-    # Verbatim message per spec §7.1
+    # This exact diagnostic is part of the preserved SPEC-S006 FR-003 contract.
     assert str(exc_info.value) == f"entity id {entity.id} already present in sector"
     assert len(sector) == 1
     assert sector.get(entity.id) is entity
 
 
 def test_add_checks_bounds_before_duplicate_id() -> None:
-    """If an entity is BOTH out-of-bounds AND has a duplicate id, the
-    out-of-bounds branch fires first (spec §4.3.1 first-failure-wins)."""
+    """Prove the SPEC-S006 FR-003 bounds-before-duplicate order."""
     sector = SectorMap(width=10, height=10, depth=5)
     entity_in_bounds = GameObject(position=GridPosition(0, 0, 0))
     sector.add(entity_in_bounds)

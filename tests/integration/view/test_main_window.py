@@ -1,12 +1,15 @@
-"""pytest-qt tests for the MainWindow shell (v0.1 step 10)."""
+"""pytest-qt tests for the SPEC-S010 MainWindow shell contract."""
 
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QDockWidget, QLabel, QMainWindow, QPushButton, QTextEdit
+from pytest_mock import MockerFixture
+from pytestqt.qtbot import QtBot
 
+from stmrr.controller.model_bridge import ModelBridge
 from stmrr.view.main_window import MainWindow
 
 
-def test_is_qmainwindow_with_title_and_min_size(qtbot):
+def test_is_qmainwindow_with_title_and_min_size(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     assert isinstance(window, QMainWindow)
@@ -15,14 +18,14 @@ def test_is_qmainwindow_with_title_and_min_size(qtbot):
     assert window.minimumHeight() == 1000
 
 
-def test_menu_bar_has_top_level_menus(qtbot):
+def test_menu_bar_has_top_level_menus(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     titles = [a.text() for a in window.menuBar().actions()]
     assert titles == ["&File", "&View", "&Game", "&Help"]
 
 
-def test_central_placeholder_present(qtbot):
+def test_central_placeholder_present(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     central = window.centralWidget()
@@ -30,7 +33,7 @@ def test_central_placeholder_present(qtbot):
     assert central.objectName() == "mapViewPlaceholder"
 
 
-def test_docks_present(qtbot):
+def test_docks_present(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     right = window.findChild(QDockWidget, "rightDock")
@@ -43,14 +46,14 @@ def test_docks_present(qtbot):
     assert comm_log.isReadOnly()
 
 
-def test_turn_bar_widgets_in_status_bar(qtbot):
+def test_turn_bar_widgets_in_status_bar(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     assert window.findChild(QPushButton, "endTurnButton") is not None
     assert window.findChild(QLabel, "stateIndicator") is not None
 
 
-def test_exit_action_closes_window(qtbot):
+def test_exit_action_closes_window(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.show()
@@ -61,7 +64,9 @@ def test_exit_action_closes_window(qtbot):
     assert not window.isVisible()
 
 
-def test_fullscreen_action_is_checkable_and_calls_show_methods(qtbot, mocker):
+def test_fullscreen_action_is_checkable_and_calls_show_methods(
+    qtbot: QtBot, mocker: MockerFixture
+) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     full = mocker.patch.object(window, "showFullScreen")
@@ -77,7 +82,7 @@ def test_fullscreen_action_is_checkable_and_calls_show_methods(qtbot, mocker):
     normal.assert_called_once()
 
 
-def test_about_action_opens_message_box(qtbot, mocker):
+def test_about_action_opens_message_box(qtbot: QtBot, mocker: MockerFixture) -> None:
     from PySide6.QtWidgets import QMessageBox
 
     from stmrr import __version__
@@ -92,7 +97,7 @@ def test_about_action_opens_message_box(qtbot, mocker):
     assert __version__ in about.call_args.args[2]
 
 
-def test_dock_toggle_actions_track_visibility(qtbot):
+def test_dock_toggle_actions_track_visibility(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.show()
@@ -110,7 +115,7 @@ def test_dock_toggle_actions_track_visibility(qtbot):
         assert action.isChecked() is dock.isVisible()
 
 
-def test_placeholder_actions_disabled_wired_actions_enabled(qtbot):
+def test_placeholder_actions_disabled_wired_actions_enabled(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     disabled = [
@@ -135,7 +140,9 @@ def test_placeholder_actions_disabled_wired_actions_enabled(qtbot):
         action = window.findChild(QAction, name)
         assert action is not None, name
         assert not action.isEnabled(), name
-    assert not window.findChild(QPushButton, "endTurnButton").isEnabled()
+    end_turn_button = window.findChild(QPushButton, "endTurnButton")
+    assert end_turn_button is not None
+    assert not end_turn_button.isEnabled()
     for name in (
         "actionExit",
         "actionFullscreen",
@@ -143,7 +150,9 @@ def test_placeholder_actions_disabled_wired_actions_enabled(qtbot):
         "actionToggleRightDock",
         "actionToggleCommLog",
     ):
-        assert window.findChild(QAction, name).isEnabled(), name
+        action = window.findChild(QAction, name)
+        assert action is not None, name
+        assert action.isEnabled(), name
 
 
 def test_view_package_reexports_main_window():
@@ -153,15 +162,16 @@ def test_view_package_reexports_main_window():
     assert view_pkg.__all__ == ["MainWindow"]
 
 
-def test_bind_bridge_renders_initial_state(qtbot, bridge):
+def test_bind_bridge_renders_initial_state(qtbot: QtBot, bridge: ModelBridge) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.bind_bridge(bridge)
-    assert window.findChild(QLabel, "stateIndicator").text() == "MainMenuState"
+    state_indicator = window.findChild(QLabel, "stateIndicator")
+    assert state_indicator is not None
+    assert state_indicator.text() == "MainMenuState"
 
 
-def test_state_changed_updates_indicator_end_to_end(qtbot):
-    from stmrr.controller.model_bridge import ModelBridge
+def test_state_changed_updates_indicator_end_to_end(qtbot: QtBot) -> None:
     from stmrr.model.state.game_state_manager import GameStateManager
     from stmrr.model.state.states import MainMenuState, SectorMapState
 
@@ -172,12 +182,14 @@ def test_state_changed_updates_indicator_end_to_end(qtbot):
         qtbot.addWidget(window)
         window.bind_bridge(bridge)
         manager.transition_to(SectorMapState())
-        assert window.findChild(QLabel, "stateIndicator").text() == "SectorMapState"
+        state_indicator = window.findChild(QLabel, "stateIndicator")
+        assert state_indicator is not None
+        assert state_indicator.text() == "SectorMapState"
     finally:
         bridge.teardown()
 
 
-def test_state_changed_opaque_payload_falls_back_to_repr(qtbot, bridge):
+def test_state_changed_opaque_payload_falls_back_to_repr(qtbot: QtBot, bridge: ModelBridge) -> None:
     from stmrr.model.events import state_changed
 
     window = MainWindow()
@@ -185,10 +197,14 @@ def test_state_changed_opaque_payload_falls_back_to_repr(qtbot, bridge):
     window.bind_bridge(bridge)
     sentinel = object()  # has no `to_state` attribute
     state_changed.send(object(), payload=sentinel)
-    assert window.findChild(QLabel, "stateIndicator").text() == repr(sentinel)
+    state_indicator = window.findChild(QLabel, "stateIndicator")
+    assert state_indicator is not None
+    assert state_indicator.text() == repr(sentinel)
 
 
-def test_close_event_tears_down_bound_bridge(qtbot, mocker, bridge):
+def test_close_event_tears_down_bound_bridge(
+    qtbot: QtBot, mocker: MockerFixture, bridge: ModelBridge
+) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.bind_bridge(bridge)
@@ -197,7 +213,7 @@ def test_close_event_tears_down_bound_bridge(qtbot, mocker, bridge):
     spy.assert_called_once()
 
 
-def test_close_event_without_bridge_does_not_raise(qtbot):
+def test_close_event_without_bridge_does_not_raise(qtbot: QtBot) -> None:
     window = MainWindow()
     qtbot.addWidget(window)
     window.close()  # _bridge is None -> teardown skipped, no exception

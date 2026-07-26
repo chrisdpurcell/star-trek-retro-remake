@@ -1,0 +1,6 @@
+interface:
+  display_name: "Markdown Frontmatter"
+  short_description: "Create and maintain markdown frontmatter."
+
+policy:
+  allow_implicit_invocation: true

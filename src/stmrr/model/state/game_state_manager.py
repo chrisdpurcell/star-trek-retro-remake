@@ -1,17 +1,18 @@
 """Hand-rolled state machine driving the v0.1 main-menu ↔ sector-map pivot.
 
-Per umbrella spec docs/specs/v0.1-model-layer.md §5.3, `transition_to`
-runs the five-step lifecycle `validate → exit → mutate → enter → emit`.
+Per SPEC-S008 D-001 and FR-005 through FR-008, `transition_to` runs the
+five-step lifecycle `validate → exit → mutate → enter → emit`.
 __init__ fires the initial state's `enter()` synchronously (no
-`state_changed` event for construction — see step-8 spec
-docs/specs/v0.1-step-8-game-state-manager.md §9.1 Q2).
+`state_changed` event for construction — SPEC-S008 FR-002 and FR-003).
 
-Lifecycle hook exception policy (step-8 spec §6.5): propagate without rollback.
+Lifecycle hook exception policy (SPEC-S008 FR-009, FR-010, and D-003):
+propagate without rollback.
 `exit()` failure → no mutation, no event. `enter()` failure → mutation
 already committed, no event.
 
-World ownership rule (umbrella §5.8): instances of `SectorMap` and other
-runtime entities are NOT constructed in any `GameState.enter` body;
+World ownership rule (SPEC-ML01 FR-018 and SPEC-S008 D-004): instances
+of `SectorMap` and other runtime entities are NOT constructed in any
+`GameState.enter` body;
 `app.py` (or a wire-up session object) owns world construction.
 `GameStateManager` knows only about states.
 """

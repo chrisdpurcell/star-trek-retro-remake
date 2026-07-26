@@ -1,7 +1,31 @@
+---
+schema_version: '1.1'
+id: 'adr-0004-star-trek-retro-remake-toml-not-pickle'
+title: 'TOML for save and config, never pickle or dill'
+description: 'Decision to serialize saves and configuration as validated TOML and prohibit code-executing serializers.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+  - 'security'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0004 — TOML for save and config, never pickle or dill
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

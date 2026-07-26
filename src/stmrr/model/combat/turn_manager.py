@@ -1,19 +1,19 @@
 """TurnManager: turn-counter + orchestrator for the v0.1 End-Turn pipeline.
 
-Per umbrella §5.4, AP lives on the entity (Starship.ap_remaining), NOT
+Per SPEC-ML01 FR-005, AP lives on the entity (Starship.ap_remaining), NOT
 here. TurnManager.advance_turn calls player.restore_ap(); it does NOT
 debit AP, track NPC turn order, or own initiative. Those land at v0.2
 when combat ships.
 
 Runtime imports entities.starship for isinstance(player, Starship) in
-advance_turn (umbrella §6 amended in step-7 §10); no back-edge —
+advance_turn (SPEC-S007 NFR-001); no back-edge —
 Starship does not import turn_manager.
 
-SA-001 lock (step-7 spec §5.3 + invariant 8): advance_turn is
-type-and-presence verification only. Inactive (destroyed) player ships
+SPEC-S007 FR-013 locks advance_turn as type-and-presence verification
+only. Inactive (destroyed) player ships
 SUCCEED at End Turn — AP restored, counter incremented, event emitted.
-Umbrella §5.6.3 locks "Preconditions: none — End Turn is always
-available." Game-over detection is the controller's job via state
+The approved End Turn contract has no active-state precondition and is always
+available. Game-over detection is the controller's job via state
 transitions, not advance_turn refusing.
 """
 
@@ -43,12 +43,14 @@ class TurnManager:
     """
 
     def __init__(self, player_id: EntityId, *, current_turn: int = 1) -> None:
-        if not isinstance(player_id, int) or isinstance(player_id, bool):
+        # Runtime callers can bypass annotations; keep both guards so invalid
+        # IDs and turn counters fail before any manager state is initialized.
+        if not isinstance(player_id, int) or isinstance(player_id, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"player_id must be int, got {type(player_id).__name__}")
         if player_id < 1:
             raise ValueError(f"player_id must be >= 1, got {player_id}")
 
-        if not isinstance(current_turn, int) or isinstance(current_turn, bool):
+        if not isinstance(current_turn, int) or isinstance(current_turn, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"current_turn must be int, got {type(current_turn).__name__}")
         if current_turn < 1:
             raise ValueError(f"current_turn must be >= 1, got {current_turn}")
@@ -57,18 +59,18 @@ class TurnManager:
         self.current_turn: int = current_turn
 
     def advance_turn(self, sector_map: SectorMap) -> None:
-        """End the current turn. Implements umbrella §5.6.3.
+        """End the current turn. Implements SPEC-S007 FR-012 through FR-014.
 
         Preconditions: none — End Turn is always available, including
-        when the player ship is inactive (game-over state). SA-001 lock.
+        when the player ship is inactive (game-over state), per SPEC-S007 FR-013.
 
-        Effects (umbrella invariant 9 — mutate → emit):
+        Effects (SPEC-S007 FR-014 — mutate → emit):
           1. Resolve player from sector_map.
           2. Type-and-presence check: None or non-Starship → raise
              InactiveEntityError. Does NOT check player.active.
           3. player.restore_ap() — runs even if player.active is False.
           4. self.current_turn += 1.
-          5. Emit turn_advanced with payload.turn_number = NEW turn.
+          5. Emit turn_advanced with payload.turn_number = the new turn.
 
         Subscribers reading manager.current_turn or player.ap_remaining
         inside the handler see the new values.

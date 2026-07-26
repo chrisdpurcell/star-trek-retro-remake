@@ -1,0 +1,198 @@
+#!/usr/bin/env bash
+# new-doc-id - generate a standard-conformant document id for the
+# markdown-frontmatter skill:  {doc_type}-{base36-6}-{document-name}
+#
+# This is the id format package 1.2 enforces via `validate-id`
+# (run by `project-standards validate` and the V5 CI workflow): an id whose
+# leading segment is not a valid doc_type is REJECTED. The prefix therefore
+# is the doc_type, not the repo name (a repo-name prefix fails validation).
+#
+# The random token exists because LLMs cannot generate randomness: a model
+# asked for a "random" base36 token produces low-entropy, collision-prone
+# strings and tends to reuse tokens already in its context, defeating the
+# global-uniqueness goal. /dev/urandom supplies real entropy.
+#
+# Usage: new-doc-id [--scaffold] [--doc-type TYPE] [--status S] <document-name>
+#   --doc-type TYPE  doc_type - becomes the id prefix AND the scaffold's
+#                    doc_type field (default: note). MUST be a valid
+#                    doc_type or the id fails validate-id.
+#   --scaffold       emit a full canonical-order frontmatter block (the
+#                    eleven required fields, strings and dates quoted,
+#                    empty lists as []) instead of the bare id
+#   --status S       scaffold status (default: draft)
+#
+# The document name is sanitized with project_standards.id_format.slugify when
+# available (spaces/punctuation collapse, Unicode is ASCII-normalized, long
+# slugs are capped), with a stdlib fallback matching that algorithm. A trailing
+# .md is dropped before slugging. Exit codes: 0 ok; 2 usage error.
+#
+# Requirements: bash, coreutils, Python 3.
+# ADR ids are NOT this format - they follow the standard's ADR form
+# adr-{NNNN}-{repo-name}-{title} (see SKILL.md); do not use this script for ADRs.
+
+set -euo pipefail
+
+usage() {
+  printf 'usage: new-doc-id [--scaffold] [--doc-type TYPE] [--status S] <document-name>\n' >&2
+  exit 2
+}
+
+valid_doc_type() {
+  case "$1" in
+    index | note | concept | reference | runbook | spec | plan | adr | decision | research | template | log | prompt | schema)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+valid_status() {
+  case "$1" in
+    draft | active | review | deprecated | archived | superseded | stub)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
+SCAFFOLD=0
+DOC_TYPE="note"
+STATUS="draft"
+DOC_NAME=""
+while (($# > 0)); do
+  case "$1" in
+    --scaffold)
+      SCAFFOLD=1
+      shift
+      ;;
+    --doc-type)
+      [[ $# -ge 2 ]] || usage
+      DOC_TYPE="$2"
+      shift 2
+      ;;
+    --status)
+      [[ $# -ge 2 ]] || usage
+      STATUS="$2"
+      shift 2
+      ;;
+    -*)
+      usage
+      ;;
+    *)
+      [[ -z "$DOC_NAME" ]] || usage
+      DOC_NAME="$1"
+      shift
+      ;;
+  esac
+done
+[[ -n "$DOC_NAME" ]] || usage
+if ! valid_doc_type "$DOC_TYPE"; then
+  printf 'new-doc-id: invalid doc_type: %s\n' "$DOC_TYPE" >&2
+  exit 2
+fi
+if [[ "$DOC_TYPE" == "adr" ]]; then
+  printf 'new-doc-id: do not use this script for ADR ids; use adr-{NNNN}-{repo-name}-{title}\n' >&2
+  exit 2
+fi
+if ! valid_status "$STATUS"; then
+  printf 'new-doc-id: invalid status: %s\n' "$STATUS" >&2
+  exit 2
+fi
+
+SCRIPT_PATH="${BASH_SOURCE[0]}"
+slug="$(
+  NEW_DOC_ID_SCRIPT="$SCRIPT_PATH" DOC_NAME="$DOC_NAME" python3 - <<'PY'
+import os
+import re
+import sys
+import unicodedata
+from pathlib import Path
+
+
+def fallback_slugify(text: str) -> str:
+    text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", "-", text).strip("-")
+    if len(text) > 60:
+        head = text[:60]
+        if "-" in head:
+            head = head[: head.rfind("-")]
+        text = head.strip("-")
+    return text
+
+
+def load_slugify():
+    script = Path(os.environ["NEW_DOC_ID_SCRIPT"]).resolve()
+    candidates = [Path.cwd() / "src"]
+    candidates.extend(parent / "src" for parent in script.parents)
+    for candidate in candidates:
+        if (candidate / "project_standards" / "id_format.py").exists():
+            sys.path.insert(0, str(candidate))
+            break
+    try:
+        from project_standards.id_format import slugify
+    except Exception:
+        return fallback_slugify
+    return slugify
+
+
+doc_name = os.environ["DOC_NAME"]
+if doc_name.endswith(".md"):
+    doc_name = doc_name[:-3]
+print(load_slugify()(doc_name))
+PY
+)"
+if [[ -z "$slug" ]]; then
+  printf 'new-doc-id: document name sanitized to nothing: %q\n' "$DOC_NAME" >&2
+  exit 2
+fi
+
+# 6 chars of base36 from /dev/urandom. head-then-tr (not tr-then-head) so tr
+# never takes a SIGPIPE under pipefail; loop in case a chunk yields fewer
+# than 6 valid chars.
+token=""
+while ((${#token} < 6)); do
+  chunk="$(head -c 256 /dev/urandom | tr -dc '0-9a-z')"
+  token="${token}${chunk}"
+done
+token="${token:0:6}"
+
+# The doc_type prefix is what validate-id keys on - a non-doc_type prefix fails.
+id="${DOC_TYPE}-${token}-${slug}"
+
+if ((SCAFFOLD == 0)); then
+  printf '%s\n' "$id"
+  exit 0
+fi
+
+# Scaffold: the eleven required fields in canonical order, quoted per the
+# rules that actually fail validation (quoted dates, quoted identifier-like
+# numbers, [] for empty lists). Title = slug in Title Case as a starting
+# point; description is a placeholder the author must replace.
+title="$(
+  SLUG="$slug" python3 - <<'PY'
+import os
+
+print(os.environ["SLUG"].replace("-", " ").title())
+PY
+)"
+today="$(date +%F)"
+cat <<EOF
+---
+schema_version: '1.1'
+id: '$id'
+title: '$title'
+description: 'REPLACE: one-sentence description of the document.'
+doc_type: '$DOC_TYPE'
+status: '$STATUS'
+created: '$today'
+updated: '$today'
+tags: []
+aliases: []
+related: []
+---
+EOF

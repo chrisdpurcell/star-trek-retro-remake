@@ -8,15 +8,14 @@ miss when an import is conditional on `if TYPE_CHECKING:` style guards
 or pulled in via dynamic patterns. Does NOT catch imports inside
 function bodies that the probe doesn't call; those are caught by
 controller-layer integration tests once the action methods land
-(umbrella §7 invariant 1, three-layer enforcement).
+(SPEC-ML01 NFR-001, three-layer enforcement).
 
 The walk runs in a clean Python subprocess — running it in the parent
 pytest process would race with `pytest-qt` (or any other view-layer
 test) loading PySide6 first, which would make the assertion fail for
 reasons unrelated to model code.
 
-See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md`
-§7.1 for the subprocess-isolation rationale.
+See SPEC-S005 FR-013 for the subprocess-isolation rationale.
 """
 
 from __future__ import annotations

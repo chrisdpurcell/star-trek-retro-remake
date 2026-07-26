@@ -1,6 +1,6 @@
 """Unit tests for Station.
 
-Covers spec §5 + §7.2: construction valid path, kind ClassVar,
+Covers SPEC-S006 FR-010 through FR-013: construction valid path, kind ClassVar,
 kwarg-only enforcement, station_type validation (parametrized over
 v0.1-rejected literal values + garbage strings), services normalization
 (parametrized over input iterable shapes), services element-type
@@ -16,11 +16,11 @@ import pytest
 
 from stmrr.model.entities.game_object import GameObject
 from stmrr.model.entities.station import (
-    _STATION_TYPE_ARGS,
-    _V1_ALLOWED_STATION_TYPES,
+    _STATION_TYPE_ARGS,  # pyright: ignore[reportPrivateUsage]  # White-box tests pin the private type domain.
+    _V1_ALLOWED_STATION_TYPES,  # pyright: ignore[reportPrivateUsage]  # White-box tests pin the v0.1 subset.
     Station,
     StationType,
-    _Dockable,
+    _Dockable,  # pyright: ignore[reportPrivateUsage]  # White-box test pins the structural contract.
 )
 from stmrr.model.world.grid_position import GridPosition
 
@@ -49,7 +49,7 @@ def test_kind_classvar_equals_station_on_class_and_instance() -> None:
 
 def test_positional_construction_raises_typeerror() -> None:
     with pytest.raises(TypeError):
-        Station(GridPosition(0, 0, 0), "starbase", ["repair"])  # type: ignore[misc]
+        Station(GridPosition(0, 0, 0), "starbase", ["repair"])  # pyright: ignore[reportCallIssue]  # This runtime test intentionally violates the keyword-only constructor contract.
 
 
 # ---- station_type validation ------------------------------------------------
@@ -64,7 +64,7 @@ def test_station_type_rejects_v02_reserved_values(station_type: str) -> None:
     with pytest.raises(ValueError, match=r"reserved for v0\.2"):
         Station(
             position=GridPosition(0, 0, 0),
-            station_type=station_type,  # type: ignore[arg-type]
+            station_type=station_type,  # pyright: ignore[reportArgumentType]  # Runtime parametrization widens the reserved literal values to str.
             services=[],
         )
 
@@ -76,15 +76,15 @@ def test_station_type_rejects_v02_reserved_values(station_type: str) -> None:
 )
 def test_station_type_rejects_garbage_strings(garbage: str) -> None:
     # Note: the error message says "reserved for v0.2" even for non-Literal
-    # garbage strings — this is intentional (single-branch guard per spec
-    # §5.2). The runtime check is `station_type not in _V1_ALLOWED_STATION_TYPES`,
+    # garbage strings — this is intentional under SPEC-S006 FR-011's
+    # single-branch guard. The runtime check is `station_type not in _V1_ALLOWED_STATION_TYPES`,
     # which fires the same message for both v0.2-reserved values and garbage.
-    # mypy --strict catches truly-garbage values at the StationType type-check
+    # BasedPyright catches truly-garbage values at the StationType type-check
     # level; this test exercises the runtime backstop for untyped callers.
     with pytest.raises(ValueError, match=r"reserved for v0\.2"):
         Station(
             position=GridPosition(0, 0, 0),
-            station_type=garbage,  # type: ignore[arg-type]
+            station_type=garbage,  # pyright: ignore[reportArgumentType]  # This test exercises the runtime backstop for non-Literal strings.
             services=[],
         )
 
@@ -93,7 +93,7 @@ def test_station_type_valueerror_lists_v01_allowed_in_sorted_form() -> None:
     with pytest.raises(ValueError) as exc_info:
         Station(
             position=GridPosition(0, 0, 0),
-            station_type="civilian",  # type: ignore[arg-type]
+            station_type="civilian",
             services=[],
         )
 
@@ -118,7 +118,7 @@ def test_services_accepts_various_iterable_shapes(services_input: object) -> Non
     s = Station(
         position=GridPosition(0, 0, 0),
         station_type="starbase",
-        services=services_input,  # type: ignore[arg-type]
+        services=services_input,  # pyright: ignore[reportArgumentType]  # The object-typed parameter intentionally covers several valid iterable shapes.
     )
 
     assert s.services == frozenset({"repair", "resupply"})
@@ -149,7 +149,7 @@ def test_services_field_is_frozenset_immutable() -> None:
 
     assert isinstance(s.services, frozenset)
     with pytest.raises(AttributeError):
-        s.services.add("resupply")  # type: ignore[attr-defined]
+        s.services.add("resupply")  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]  # This test calls the absent mutation API to prove the field is immutable.
 
 
 # ---- services element-type rejection ----------------------------------------
@@ -173,7 +173,7 @@ def test_services_with_non_str_element_raises_typeerror(
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=bad_services,  # type: ignore[arg-type]
+            services=bad_services,  # pyright: ignore[reportArgumentType]  # This test intentionally crosses the typed boundary to exercise element validation.
         )
 
 
@@ -182,7 +182,7 @@ def test_services_typeerror_message_names_sorted_deduplicated_types() -> None:
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=[1, "repair", b"x"],  # type: ignore[arg-type]
+            services=[1, "repair", b"x"],  # pyright: ignore[reportArgumentType]  # Mixed invalid elements exercise the runtime error detail.
         )
 
     msg = str(exc_info.value)
@@ -206,7 +206,7 @@ def test_services_as_bare_str_raises_typeerror(bare_str: str) -> None:
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=bare_str,  # type: ignore[arg-type]
+            services=bare_str,
         )
 
 
@@ -220,7 +220,7 @@ def test_services_as_bare_bytes_raises_typeerror(bare_bytes: bytes) -> None:
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=bare_bytes,  # type: ignore[arg-type]
+            services=bare_bytes,  # pyright: ignore[reportArgumentType]  # This test intentionally passes a bare bytes container to the runtime guard.
         )
 
 
@@ -246,7 +246,7 @@ def test_services_with_unhashable_non_str_element_raises_custom_typeerror(
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=unhashable_services,  # type: ignore[arg-type]
+            services=unhashable_services,  # pyright: ignore[reportArgumentType]  # Invalid unhashable elements verify the custom error wins.
         )
 
 
@@ -254,9 +254,7 @@ def test_services_with_unhashable_non_str_element_raises_custom_typeerror(
 
 
 class _ProbeShip(GameObject):
-    """GameObject-shaped probe satisfying the _Dockable Protocol
-    (active: bool inherited from GameObject). Sidesteps the not-yet-
-    landed Starship class per spec §7.2."""
+    """Satisfy SPEC-S006 FR-013 through inherited active state only."""
 
 
 def test_accepts_dock_returns_true_for_active_probe() -> None:
@@ -282,7 +280,7 @@ def test_accepts_dock_reads_only_active_attribute_duck_typed() -> None:
     class _MinimalDockable:
         active = True
 
-    assert station.accepts_dock(_MinimalDockable()) is True  # type: ignore[arg-type]
+    assert station.accepts_dock(_MinimalDockable()) is True
 
 
 # ---- identity equality + __repr__ -------------------------------------------
@@ -314,7 +312,7 @@ def test_repr_uses_station_subclass_name() -> None:
 def test_v1_allowed_station_types_is_frozenset_immutable() -> None:
     assert isinstance(_V1_ALLOWED_STATION_TYPES, frozenset)
     with pytest.raises(AttributeError):
-        _V1_ALLOWED_STATION_TYPES.add("civilian")  # type: ignore[attr-defined]
+        _V1_ALLOWED_STATION_TYPES.add("civilian")  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]  # This test calls the absent mutation API to prove the private set is immutable.
 
 
 def test_station_type_args_is_tuple_with_all_four_literal_values() -> None:
@@ -350,27 +348,25 @@ def test_station_type_typealias_is_importable() -> None:
 
 
 def test_dockable_protocol_is_a_protocol() -> None:
-    from typing import Protocol
+    from typing import is_protocol
 
     # _Dockable is a Protocol (intentionally NOT @runtime_checkable in v0.1
-    # — structural-typing-only). The test asserts class identity and the
-    # Protocol base-class relationship via __mro__. Don't import
-    # runtime_checkable; ruff F401 would flag it as unused.
-    assert Protocol in _Dockable.__mro__ or _Dockable.__bases__[0] is Protocol
+    # — structural-typing-only). Use the public semantic predicate rather
+    # than depending on the implementation detail of its base-class order.
+    assert is_protocol(_Dockable)
 
 
 # ---- failed-construction-does-not-consume-EntityId invariant ---------------
 
 
 def test_failed_station_type_validation_does_not_advance_entity_id() -> None:
-    """spec §5.2 + invariant 12: validate BEFORE super().__init__(position)
-    so the EntityId counter doesn't advance on construction failure."""
+    """Prove SPEC-S006 FR-010 preserves identity on construction failure."""
     s1 = Station(position=GridPosition(0, 0, 0), station_type="starbase", services=[])
 
     with pytest.raises(ValueError):
         Station(
             position=GridPosition(0, 0, 0),
-            station_type="civilian",  # type: ignore[arg-type]
+            station_type="civilian",
             services=[],
         )
 
@@ -386,7 +382,7 @@ def test_failed_services_element_validation_does_not_advance_entity_id() -> None
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services=[1],  # type: ignore[arg-type]
+            services=[1],  # pyright: ignore[reportArgumentType]  # This runtime-validation failure must not consume an EntityId.
         )
 
     s2 = Station(position=GridPosition(0, 0, 0), station_type="starbase", services=[])
@@ -401,7 +397,7 @@ def test_failed_services_container_validation_does_not_advance_entity_id() -> No
         Station(
             position=GridPosition(0, 0, 0),
             station_type="starbase",
-            services="repair",  # type: ignore[arg-type]
+            services="repair",
         )
 
     s2 = Station(position=GridPosition(0, 0, 0), station_type="starbase", services=[])

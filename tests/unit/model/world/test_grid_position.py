@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import dataclasses
+from collections.abc import Callable
 from decimal import Decimal
 from fractions import Fraction
-from typing import Any
+from typing import Any, cast
 
 import pytest
 
 from stmrr.model.world.grid_position import GridPosition
+
+_approx_float = cast(Callable[[float], object], pytest.approx)
 
 
 def test_gridposition_constructs_with_zero_coords() -> None:
@@ -159,7 +162,7 @@ def test_chebyshev_distance_returns_max_absolute_delta(
 def test_euclidean_distance_returns_sqrt_sum_squares(
     a: GridPosition, b: GridPosition, expected: float
 ) -> None:
-    assert a.euclidean_distance(b) == pytest.approx(expected)
+    assert a.euclidean_distance(b) == _approx_float(expected)
 
 
 @pytest.mark.parametrize(
@@ -174,7 +177,7 @@ def test_euclidean_distance_returns_sqrt_sum_squares(
 def test_distance_methods_are_symmetric(a: GridPosition, b: GridPosition) -> None:
     assert a.manhattan_distance(b) == b.manhattan_distance(a)
     assert a.chebyshev_distance(b) == b.chebyshev_distance(a)
-    assert a.euclidean_distance(b) == pytest.approx(b.euclidean_distance(a))
+    assert a.euclidean_distance(b) == _approx_float(b.euclidean_distance(a))
 
 
 @pytest.mark.parametrize(

@@ -1,0 +1,16 @@
+name: Validate project specs
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate-specs:
+    if: ${{ true }}
+    uses: L3DigitalNet/project-standards/.github/workflows/validate-specs.yml@v5
+    with:
+      standards-ref: "v5"
+      strict-lint: true

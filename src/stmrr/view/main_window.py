@@ -2,12 +2,12 @@
 
 The first QWidget-class module in the codebase (DESIGN.md §6.2). Built bare; a
 ModelBridge is attached afterwards via bind_bridge() so the bridge can be
-Qt-parented to this window (step-9 spec §5.7) — the window must exist before the
-bridge. Owns the bridge's blinker-side teardown via closeEvent().
+Qt-parented to this window (SPEC-S010 D-001) — the window must exist before
+the bridge. Owns the bridge's blinker-side teardown per SPEC-S009 IR-004.
 
-Placeholders (menus, toolbar, docks, turn bar) stand in until later scaffold
-steps: MapView/GridScene replace the central widget (steps 11-12); action_handlers
-wire the disabled gameplay actions. The one real behavior is the minimal MVC-seam
+Placeholders (menus, toolbar, docks, turn bar) stand in until later scaffolding:
+MapView/GridScene replace the central widget, and action handlers wire the disabled
+gameplay actions. The one real behavior is the minimal MVC-seam
 consumer: the window reads bridge.current_state for an initial state indicator and
 updates it on bridge.state_changed.
 
@@ -44,7 +44,7 @@ if TYPE_CHECKING:
 
 
 class MainWindow(QMainWindow):
-    """The application shell (DESIGN.md §6.2); empty placeholders until steps 11-12."""
+    """The application shell (DESIGN.md §6.2); placeholders await later UI work."""
 
     MINIMUM_WIDTH = 1600
     MINIMUM_HEIGHT = 1000
@@ -190,7 +190,7 @@ class MainWindow(QMainWindow):
         """Attach the model->view seam: initial render + live state tracking.
 
         Stores the bridge for owner-side teardown (closeEvent), renders the initial
-        mode from current_state (the step-9 initial-render hook, before any
+        mode from current_state (SPEC-S010 FR-005, before any
         transition fires), and tracks subsequent transitions via state_changed. The
         payload is treated opaquely (object) so the view imports no model.events.
 
@@ -230,7 +230,7 @@ class MainWindow(QMainWindow):
         teardown() runs before super().closeEvent() as defensive ordering, releasing
         the blinker subs while the bridge is unambiguously alive; the Qt-signal half
         (view slots <- bridge signals) is Qt object-tree parenting's job. NOT wired
-        via destroyed.connect (step-9 §5.7).
+        via destroyed.connect (SPEC-S009 D-003 and IR-004).
         """
         if self._bridge is not None:
             self._bridge.teardown()

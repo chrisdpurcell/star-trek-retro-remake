@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from stmrr.model.entities.game_object import GameObject, _next_entity_id
+from stmrr.model.entities.game_object import (
+    GameObject,
+    _next_entity_id,  # pyright: ignore[reportPrivateUsage]  # White-box tests pin the ID allocator contract.
+)
 from stmrr.model.world.grid_position import GridPosition
 
 

@@ -1,24 +1,24 @@
 """Starship: active player/NPC entity on a sector grid.
 
-v0.1 surface (umbrella §4 + §5.6 + step-7 spec §4):
+v0.1 surface (SPEC-S007 FR-001 through FR-010):
 
-  - kind: ClassVar[str] = "starship" — TOML save discriminator (umbrella §5.5).
+  - kind: ClassVar[str] = "starship" — TOML save discriminator (SPEC-S007 DR-001).
   - Kwarg-only __init__: ship_class (non-empty str), hull (non-bool int >= 1),
     ap_max (non-bool int >= 1, default 5), ap_remaining (None sentinel
     resolves to ap_max, else non-bool int in [0, ap_max]).
   - All validation runs BEFORE super().__init__(position) — failed
-    construction does NOT consume an EntityId (mirrors step-6 Station
-    invariant 12).
+    construction does NOT consume an EntityId (SPEC-S007 FR-001 through
+    FR-004, mirroring SPEC-S006 FR-010).
   - _debit_ap(cost): atomic check-then-debit. cost validated as non-bool
     int >= 1. v0.1 callers always pass cost=1; v0.2 variable-cost moves
     pass computed costs.
-  - move_to / dock_at: umbrella §5.6.1 / §5.6.2 verbatim. Precondition
+  - move_to / dock_at: SPEC-S007 FR-006 through FR-009. Precondition
     order locked; no mutation on precondition failure.
   - restore_ap: unconditional self.ap_remaining = self.ap_max.
 
 isinstance(target, Station) in dock_at is NOMINAL — @runtime_checkable
 Protocol isinstance checks attribute existence only (false-safety trap
-per step-7 spec §4.6 + research [spec-assumptions §C]).
+per SPEC-S007 D-003 and research [spec-assumptions §C]).
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ if TYPE_CHECKING:
 
 
 class Starship(GameObject):
-    """Active player/NPC entity. Owns AP (umbrella §5.4) and the three
+    """Active player/NPC entity. Owns AP (SPEC-ML01 FR-005) and the three
     v0.1 action methods."""
 
     kind: ClassVar[str] = "starship"
@@ -57,23 +57,25 @@ class Starship(GameObject):
         ap_max: int = 5,
         ap_remaining: int | None = None,
     ) -> None:
-        if not isinstance(ship_class, str):
+        # Runtime callers can bypass annotations; preserve the public
+        # constructor's defensive failures before EntityId allocation.
+        if not isinstance(ship_class, str):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"ship_class must be str, got {type(ship_class).__name__}")
         if len(ship_class) == 0:
             raise ValueError("ship_class must be non-empty")
 
-        if not isinstance(hull, int) or isinstance(hull, bool):
+        if not isinstance(hull, int) or isinstance(hull, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"hull must be int, got {type(hull).__name__}")
         if hull < 1:
             raise ValueError(f"hull must be >= 1, got {hull}")
 
-        if not isinstance(ap_max, int) or isinstance(ap_max, bool):
+        if not isinstance(ap_max, int) or isinstance(ap_max, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"ap_max must be int, got {type(ap_max).__name__}")
         if ap_max < 1:
             raise ValueError(f"ap_max must be >= 1, got {ap_max}")
 
         if ap_remaining is not None:
-            if not isinstance(ap_remaining, int) or isinstance(ap_remaining, bool):
+            if not isinstance(ap_remaining, int) or isinstance(ap_remaining, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
                 raise TypeError(
                     f"ap_remaining must be int or None, got {type(ap_remaining).__name__}"
                 )
@@ -92,8 +94,8 @@ class Starship(GameObject):
         v0.2 TODO: if Starship instances are mutated from multiple
         QThreadPool workers (AI move tasks), this read-modify-write
         becomes a race. Two paths — documented canonically by this TODO,
-        which step-7 spec §9.2 ("Threading model selection", still-open 4)
-        defers to; DESIGN.md §9.4 commits only the broader QThreadPool +
+        which SPEC-S007 WH-005's preserved "Threading model selection for
+        v0.2" anchor defers to; DESIGN.md §9.4 commits only the broader QThreadPool +
         Qt-signal direction, not the lock-based alternative:
           (a) Confine all model mutations to a single "model thread"
               and use Qt queued signal/slot for cross-thread handoff
@@ -103,7 +105,9 @@ class Starship(GameObject):
         PEP 703 free-threading makes this real even without QThreadPool
         once 3.14 free-threaded builds are adopted.
         """
-        if not isinstance(cost, int) or isinstance(cost, bool):
+        # Runtime callers can bypass annotations; this guard preserves the
+        # helper's atomic no-mutation failure contract for invalid costs.
+        if not isinstance(cost, int) or isinstance(cost, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
             raise TypeError(f"cost must be int, got {type(cost).__name__}")
         if cost < 1:
             raise ValueError(f"cost must be >= 1, got {cost}")
@@ -113,7 +117,7 @@ class Starship(GameObject):
         self.ap_remaining -= cost
 
     def move_to(self, target: GridPosition, sector_map: SectorMap) -> None:
-        """Move one cell. Implements umbrella §5.6.1.
+        """Move one cell. Implements SPEC-S007 FR-006 and FR-007.
 
         Precondition order: active → bounds → adjacent → AP.
         First failure raises; no mutation occurs.
@@ -141,15 +145,15 @@ class Starship(GameObject):
         )
 
     def dock_at(self, station_id: EntityId, sector_map: SectorMap) -> None:
-        """Dock at a station. Implements umbrella §5.6.2.
+        """Dock at a station. Implements SPEC-S007 FR-008 and FR-009.
 
         Precondition order: active → resolve-target-is-active-Station →
         adjacent → accepts_dock → AP. First failure raises; no mutation
         on Station; no AP debit on precondition failure.
 
         Conflated NotDockableError for the resolve step (None /
-        non-Station / inactive station) is intentional per umbrella
-        §5.6.2; v0.2 may split.
+        non-Station / inactive station) is intentional per SPEC-S007
+        FR-008; v0.2 may split.
         """
         if not self.active:
             raise InactiveEntityError(entity_id=self.id)
@@ -171,7 +175,7 @@ class Starship(GameObject):
         )
 
     def restore_ap(self) -> None:
-        """Reset ap_remaining to ap_max. Unconditional per umbrella §5.6.3
+        """Reset ap_remaining to ap_max. Unconditional per SPEC-S007 FR-010
         + DESIGN.md §3.1 (unused AP does not carry over)."""
         self.ap_remaining = self.ap_max
 

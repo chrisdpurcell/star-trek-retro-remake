@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0005-star-trek-retro-remake-hand-rolled-state-machine'
+title: 'Hand-rolled state machine, not QStateMachine or transitions library'
+description: 'Decision to implement the game state machine directly instead of using Qt or third-party FSM frameworks.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0005 — Hand-rolled state machine, not QStateMachine or transitions library
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

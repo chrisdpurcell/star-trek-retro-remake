@@ -1,3 +1,25 @@
+---
+schema_version: '1.1'
+id: 'reference-cktdmk-notice'
+title: 'NOTICE'
+description: 'Licensing and intellectual-property boundaries for Star Trek Retro Remake and its planned bundled assets.'
+doc_type: 'reference'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'policy'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # NOTICE
 
 This document records the intellectual property boundaries of this project for contributors and downstream users.
@@ -10,7 +32,7 @@ Copyright © 2026 Chris Purcell.
 
 ## Star Trek IP
 
-*Star Trek* and all related marks, characters, ships, factions, locations, and concepts — including but not limited to *Federation*, *Klingon*, *Romulan*, *Starfleet*, and the names of canonical starship classes — are intellectual property of **CBS Studios Inc. / Paramount Global**, including trademarks and copyrights.
+_Star Trek_ and all related marks, characters, ships, factions, locations, and concepts — including but not limited to _Federation_, _Klingon_, _Romulan_, _Starfleet_, and the names of canonical starship classes — are intellectual property of **CBS Studios Inc. / Paramount Global**, including trademarks and copyrights.
 
 The MIT license on this project's code **does not** extend to this material.
 
@@ -30,7 +52,7 @@ If you are a representative of CBS or Paramount and have concerns about specific
 The following fonts will be bundled with the game once the asset pipeline lands. Their license texts will travel here when added.
 
 | Font | License | Usage |
-|---|---|---|
+| --- | --- | --- |
 | JetBrains Mono | SIL Open Font License 1.1 | Primary monospace for UI panels, comm log |
 | VT323 | SIL Open Font License 1.1 | Pixel/CRT accent for splash and headers |
 

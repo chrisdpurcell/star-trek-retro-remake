@@ -1,7 +1,6 @@
 """Base class for all active entities on a sector grid.
 
-See docs/specs/v0.1-step-3-grid-position-and-game-object.md §5 for the
-full contract.
+See SPEC-S003 FR-008 through FR-013 for the full contract.
 """
 
 from __future__ import annotations
@@ -15,20 +14,20 @@ EntityId = NewType("EntityId", int)
 # TODO(v0.2+): wrap _next_entity_id in threading.Lock once AI processing moves
 # to QThreadPool. See docs/design/DESIGN.md §9.4 "Threading". Single-threaded
 # turn loop means v0.1 does not need synchronization.
-_NEXT_ENTITY_ID: int = 0
+_entity_id_counter: int = 0
 
 
 def _next_entity_id() -> EntityId:
-    global _NEXT_ENTITY_ID
-    _NEXT_ENTITY_ID += 1
-    return EntityId(_NEXT_ENTITY_ID)
+    global _entity_id_counter
+    _entity_id_counter += 1
+    return EntityId(_entity_id_counter)
 
 
 class GameObject:
     """Base class for all active entities on a sector grid.
 
     Identity is per-instance (lifetime ID), not per-position. Two instances
-    with identical attributes are NOT equal — different ships. See spec §5.4.
+    with identical attributes are NOT equal — different ships (SPEC-S003 FR-011).
     """
 
     def __init__(self, position: GridPosition) -> None:

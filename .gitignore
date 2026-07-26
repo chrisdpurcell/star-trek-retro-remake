@@ -220,7 +220,6 @@ __marimo__/
 # ── star-trek-retro-remake additions ──
 # IDE / editor scratch
 .idea/
-.vscode/
 *.swp
 *.swo
 

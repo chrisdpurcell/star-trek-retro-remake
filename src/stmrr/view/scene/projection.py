@@ -4,9 +4,9 @@ Pure Python — zero PySide6 imports. Mechanically enforced by the
 `.importlinter` `projection-is-qt-free` contract and the static AST
 import-purity test in `tests/unit/view/scene/test_projection.py`.
 
-See `docs/specs/v0.1-step-4-projection.md` for the formula derivations,
-the round-then-check negativity rule, and the painter-correctness
-invariant `z_value_for` enforces.
+See SPEC-S004 for the formula derivations, the round-then-check
+negativity rule, and the painter-correctness invariant `z_value_for`
+enforces.
 """
 
 from __future__ import annotations
@@ -20,23 +20,25 @@ MAX_Z_DEPTH: int = 10
 
 
 def world_to_scene(pos: GridPosition) -> tuple[float, float]:
-    """Project world (x, y, z) to scene (sx, sy) per spec §4.3."""
+    """Project world (x, y, z) to scene (sx, sy) per SPEC-S004 FR-002."""
     sx = (pos.x - pos.y) * TILE_WIDTH / 2
     sy = (pos.x + pos.y) * TILE_HEIGHT / 2 - pos.z * Z_OFFSET
     return (sx, sy)
 
 
 def scene_to_world(sx: float, sy: float, z: int) -> GridPosition | None:
-    """Inverse-project scene (sx, sy) against active z per spec §4.4.
+    """Inverse-project scene (sx, sy) against active z per SPEC-S004 FR-003 through FR-006.
 
     Round-to-nearest snapping; returns None if the rounded result has any
     negative axis. Raises ValueError on negative z, TypeError on non-int z.
 
     Note: no bool/type guard on sx/sy — they originate from QPointF.x()/.y()
-    or integer test literals and cannot be bool in the step 6 mouse path.
-    See spec §5.2 for the deliberate asymmetry rationale.
+    or integer test literals and cannot be bool in the planned mouse-input path.
+    See SPEC-S004 FR-006 for the deliberate asymmetry rationale.
     """
-    if not isinstance(z, int) or isinstance(z, bool):
+    # Runtime callers can bypass annotations; this public inverse-projection
+    # boundary must reject bool and other non-integral z values explicitly.
+    if not isinstance(z, int) or isinstance(z, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
         raise TypeError(f"z must be int, got {type(z).__name__}")
     if z < 0:
         raise ValueError(f"z must be >= 0, got {z}")
@@ -56,7 +58,7 @@ def z_value_for(pos: GridPosition) -> int:
     """Painter-ordering integer for QGraphicsItem.setZValue().
 
     Higher values paint in front. Encodes painter ordering, not z-depth —
-    see spec §5.3 for the bounded-domain invariant and same-cell-tie
+    see SPEC-S004 FR-007 through FR-009 for the bounded-domain and same-cell-tie
     handling.
     """
     return (pos.x + pos.y) * MAX_Z_DEPTH + pos.z

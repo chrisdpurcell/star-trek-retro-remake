@@ -1,6 +1,6 @@
 """Unit tests for the model-layer exception hierarchy.
 
-Covers spec §4: hierarchy shape, kwargs-only __init__ signatures,
+Covers SPEC-S005 FR-001 through FR-003: hierarchy shape, kwargs-only __init__ signatures,
 attribute storage, locked __str__ format strings, isinstance
 relationships, and __all__ export discipline.
 """
@@ -195,7 +195,7 @@ def test_illegaltransitionerror_stores_attrs() -> None:
     assert exc.to_state is _B
 
 
-# ---- Locked __str__ format strings (spec §4.4) -------------------------------
+# ---- Locked __str__ format strings (SPEC-S005 FR-003) ------------------------
 
 
 def test_insufficientaperror_str() -> None:

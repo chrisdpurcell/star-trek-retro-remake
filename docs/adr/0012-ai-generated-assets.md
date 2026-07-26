@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0012-star-trek-retro-remake-ai-generated-assets'
+title: 'AI-generated visual assets via ChatGPT Images 2.0; prompts archived per-asset'
+description: 'Decision to generate visual assets with ChatGPT Images 2.0 and archive prompts per asset.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'agent'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0012 — AI-generated visual assets via ChatGPT Images 2.0; prompts archived per-asset
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

@@ -1,4 +1,4 @@
-"""Integration tests for the stmrr.app entry point (v0.1 step 10)."""
+"""Integration tests for the SPEC-S010 ``stmrr.app`` entry-point contract."""
 
 import os
 import runpy
@@ -8,6 +8,7 @@ import textwrap
 
 import pytest
 from PySide6.QtWidgets import QApplication, QLabel
+from pytestqt.qtbot import QtBot
 
 from stmrr.app import build_main_window, main
 from stmrr.controller.model_bridge import ModelBridge
@@ -15,7 +16,7 @@ from stmrr.model.state.game_state_manager import GameStateManager
 from stmrr.view.main_window import MainWindow
 
 
-def test_build_main_window_wires_triad(qtbot):
+def test_build_main_window_wires_triad(qtbot: QtBot) -> None:
     window, bridge, manager = build_main_window()
     try:
         qtbot.addWidget(window)
@@ -24,25 +25,33 @@ def test_build_main_window_wires_triad(qtbot):
         assert isinstance(manager, GameStateManager)
         assert bridge.parent() is window
         assert bridge.current_state is manager.current_state
-        assert window.findChild(QLabel, "stateIndicator").text() == "MainMenuState"
+        state_indicator = window.findChild(QLabel, "stateIndicator")
+        assert state_indicator is not None
+        assert state_indicator.text() == "MainMenuState"
     finally:
         bridge.teardown()
 
 
-def test_main_reuses_existing_qapplication(qtbot, monkeypatch):
+def test_main_reuses_existing_qapplication(qtbot: QtBot, monkeypatch: pytest.MonkeyPatch) -> None:
     import stmrr.app as app_module
 
     before = QApplication.instance()
     assert before is not None  # pytest-qt session app
-    monkeypatch.setattr(QApplication, "exec", lambda *a, **k: 0)
 
-    captured = {}
+    def fake_exec(*_args: object, **_kwargs: object) -> int:
+        return 0
+
+    monkeypatch.setattr(QApplication, "exec", fake_exec)
+
+    captured_window: MainWindow | None = None
+    captured_bridge: ModelBridge | None = None
     real_build = app_module.build_main_window
 
-    def capturing_build():
+    def capturing_build() -> tuple[MainWindow, ModelBridge, GameStateManager]:
+        nonlocal captured_bridge, captured_window
         window, bridge, manager = real_build()
-        captured["window"] = window
-        captured["bridge"] = bridge
+        captured_window = window
+        captured_bridge = bridge
         return window, bridge, manager
 
     monkeypatch.setattr(app_module, "build_main_window", capturing_build)
@@ -50,10 +59,10 @@ def test_main_reuses_existing_qapplication(qtbot, monkeypatch):
         assert main() == 0
         assert QApplication.instance() is before  # no second QApplication
     finally:
-        if "bridge" in captured:
-            captured["bridge"].teardown()
-        if "window" in captured:
-            captured["window"].close()
+        if captured_bridge is not None:
+            captured_bridge.teardown()
+        if captured_window is not None:
+            captured_window.close()
 
 
 def test_main_rejects_non_gui_qcoreapplication():
@@ -94,7 +103,9 @@ def test_build_main_window_without_app_raises_runtimeerror():
     assert "QApplication" in result.stderr
 
 
-def test_dunder_main_raises_systemexit_with_main_return_code(monkeypatch):
+def test_dunder_main_raises_systemexit_with_main_return_code(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     import stmrr.app as app_module
 
     monkeypatch.setattr(app_module, "main", lambda: 0)

@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0009-star-trek-retro-remake-no-audio-in-v0-1'
+title: 'No audio in v0.1; full audio pass deferred to v1.0'
+description: 'Decision to defer all audio until version 1.0 and keep version 0.1 silent.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0009 — No audio in v0.1; full audio pass deferred to v1.0
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

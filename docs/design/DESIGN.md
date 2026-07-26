@@ -1,3 +1,26 @@
+---
+schema_version: '1.1'
+id: 'spec-0gkoh9-star-trek-retro-remake-game-design-document'
+title: 'Game Design Document: Star Trek Retro Remake'
+description: 'Canonical game design and technical architecture for Star Trek Retro Remake.'
+doc_type: 'spec'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'architecture'
+  - 'spec'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # Game Design Document: Star Trek Retro Remake
 
 ## Table of Contents
@@ -114,13 +137,13 @@
 
 ### 1.1 Game Overview
 
-A turn-based, grid-based strategy game set in the Star Trek universe, inspired by the classic *Star Trek* (1971) and *Super Star Trek* (1973) text games but reimagined with a windowed graphical interface evoking mid-1990s desktop strategy games. The player commands a Federation starship, exploring space, completing missions, and engaging in tactical combat with rival factions across a procedurally varied galaxy.
+A turn-based, grid-based strategy game set in the Star Trek universe, inspired by the classic _Star Trek_ (1971) and _Super Star Trek_ (1973) text games but reimagined with a windowed graphical interface evoking mid-1990s desktop strategy games. The player commands a Federation starship, exploring space, completing missions, and engaging in tactical combat with rival factions across a procedurally varied galaxy.
 
 This is an unofficial, non-commercial fan project — a personal labor of love rather than a product.
 
 ### 1.2 Target Audience
 
-Star Trek fans, strategy game enthusiasts, and players who enjoy turn-based tactical combat and space exploration with a retro aesthetic. The game targets players who appreciate dense information panels, deliberate decision-making, and the windowed-application feel of *Master of Orion 2*, *Heroes of Might and Magic 2*, *X-COM: UFO Defense*, and the era of MUD/MUSH desktop clients.
+Star Trek fans, strategy game enthusiasts, and players who enjoy turn-based tactical combat and space exploration with a retro aesthetic. The game targets players who appreciate dense information panels, deliberate decision-making, and the windowed-application feel of _Master of Orion 2_, _Heroes of Might and Magic 2_, _X-COM: UFO Defense_, and the era of MUD/MUSH desktop clients.
 
 ### 1.3 Platform and Technical Requirements
 
@@ -328,23 +351,23 @@ Upgrades fall into four categories:
 - **Cadet Mode** (new players): Reduced enemy stats (−25% hull/shields), more generous resource regeneration (+50%), extended action point pool (+2 AP per turn), clearer tactical hints.
 - **Officer Mode** (standard balanced): Default enemy and resource values, 5 AP per turn for the player.
 - **Captain Mode** (challenging): Enhanced enemy stats (+25% hull/shields), standard resources, reduced action points (4 AP per turn).
-- **Admiral Mode** (expert): Maximum enemy stats (+50% hull/shields), resource scarcity (−25% regeneration), permadeath for crew members. Player AP unchanged at 5 per turn — Admiral's challenge comes from a harder *world*, not a less-capable player. The penalty bundle (tougher enemies, scarce resources, permanent crew loss) makes every engagement consequential without limiting tactical options.
+- **Admiral Mode** (expert): Maximum enemy stats (+50% hull/shields), resource scarcity (−25% regeneration), permadeath for crew members. Player AP unchanged at 5 per turn — Admiral's challenge comes from a harder _world_, not a less-capable player. The penalty bundle (tougher enemies, scarce resources, permanent crew loss) makes every engagement consequential without limiting tactical options.
 
 #### Ship Class Balance
 
 Reference: [Memory Alpha — 23rd-century Federation starship classes](https://memory-alpha.fandom.com/wiki/Starship_classes_of_the_United_Federation_of_Planets).
 
-| Class | Profile |
-|-------|---------|
-| Constitution | Balanced all-rounder (baseline) |
-| Constellation | Heavy weapons platform (+30% hull, −10% speed) |
-| Miranda | Hybrid science/scout (−20% hull, +30% speed) |
-| Reliant | Versatile support (+10% hull, +20% speed, improved sensors) |
-| Excelsior | Heavy cruiser (+40% hull, −20% maneuverability) |
-| Federation | Dreadnought (+50% hull, −30% speed, +20% weapons damage) |
-| Oberth | Science vessel (−30% hull, +40% sensor range, −10% weapons) |
-| Antares | Survey ship (−20% hull, +30% speed, +20% sensor range) |
-| Soyuz | Light cruiser (+10% speed, −10% hull, −10% weapons) |
+| Class         | Profile                                                     |
+| ------------- | ----------------------------------------------------------- |
+| Constitution  | Balanced all-rounder (baseline)                             |
+| Constellation | Heavy weapons platform (+30% hull, −10% speed)              |
+| Miranda       | Hybrid science/scout (−20% hull, +30% speed)                |
+| Reliant       | Versatile support (+10% hull, +20% speed, improved sensors) |
+| Excelsior     | Heavy cruiser (+40% hull, −20% maneuverability)             |
+| Federation    | Dreadnought (+50% hull, −30% speed, +20% weapons damage)    |
+| Oberth        | Science vessel (−30% hull, +40% sensor range, −10% weapons) |
+| Antares       | Survey ship (−20% hull, +30% speed, +20% sensor range)      |
+| Soyuz         | Light cruiser (+10% speed, −10% hull, −10% weapons)         |
 
 #### Weapon Balance
 
@@ -403,7 +426,7 @@ The sector map is the central element of the game. Most play time happens here.
 #### Galaxy Map Sectors
 
 | Sector Type | Security | Facilities | Mission Focus |
-|-------------|----------|------------|---------------|
+| --- | --- | --- | --- |
 | **Federation Core** | High, frequent patrols | Numerous starbases | Patrol, escort, diplomacy |
 | **Border** | Moderate, mixed control | Less frequent starbases | Patrol, reconnaissance, defense |
 | **Neutral Zone** | Low, uncharted | Rare | Exploration, first contact, surveys |
@@ -420,7 +443,7 @@ The sector map is the central element of the game. Most play time happens here.
 #### Environmental Objects
 
 | Environment | Sensor Impact | Movement Impact | Combat Impact |
-|-------------|---------------|-----------------|---------------|
+| --- | --- | --- | --- |
 | **Open Space** | Standard range | No penalties | Emphasizes maneuver |
 | **Nebulae** | −50% detection range | +1 AP per move | −10% accuracy, concealment |
 | **Asteroid Fields** | LoS blocked | Increased AP cost | +20% damage reduction (cover) |
@@ -685,7 +708,7 @@ Target acquisition uses a priority scoring system: distance (closer = higher), h
 #### Faction-Specific AI Behavior
 
 | Faction | Aggression | Tactics | Flee Threshold | Special Behavior |
-|---------|-----------|---------|----------------|------------------|
+| --- | --- | --- | --- | --- |
 | Klingon | High | Frontal assault, overwhelming firepower | Never (honor) | Aggressive engagement |
 | Romulan | Medium | Cloaking ambushes, flanking | 30% hull | Strategic withdrawal |
 | Gorn | Medium | Defensive, heavy weapons | 20% hull | Holds position, focus on durability |
@@ -711,7 +734,7 @@ Pathfinding and line-of-sight calculations use the `tcod` library (see §9.2) ra
 
 ### 6.1 UI Design Philosophy
 
-The UI evokes mid-1990s desktop strategy games — *Master of Orion 2*, *Heroes of Might and Magic 2*, *X-COM: UFO Defense* — and the era of MUD/MUSH desktop clients like zMUD and MUSHclient. The visual identifiers of that era:
+The UI evokes mid-1990s desktop strategy games — _Master of Orion 2_, _Heroes of Might and Magic 2_, _X-COM: UFO Defense_ — and the era of MUD/MUSH desktop clients like zMUD and MUSHclient. The visual identifiers of that era:
 
 - A resizable application window with full chrome — menu bar, toolbar, status bar, and dockable side panels.
 - Chunky 3D-bevel buttons with clearly visible raised and pressed states.
@@ -796,27 +819,27 @@ The application uses a single PySide6 main window with the following structure:
 
 The palette is stored as Python constants in `view/theme/palette.py` and referenced by name in stylesheet preprocessing — never inline.
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `bg.deep` | `#0A0E1A` | Outer window background, scene background |
-| `bg.panel` | `#1A1F2E` | Dock panel backgrounds |
-| `bg.raised` | `#2A3142` | Button face (default) |
-| `bg.sunken` | `#0F1320` | Pressed button, input field background |
-| `border.bright` | `#4A5878` | Top/left bevel highlight |
-| `border.dark` | `#0A0E1A` | Bottom/right bevel shadow |
-| `accent.federation` | `#4DD0E1` | Federation cyan — primary accent |
-| `accent.amber` | `#FFAA00` | LCARS-adjacent amber — secondary accent, warnings |
-| `text.primary` | `#D4DCE8` | Default panel text |
-| `text.dim` | `#7A8499` | Secondary labels, disabled text |
-| `status.shield` | `#4DD0E1` | Shield bars |
-| `status.hull` | `#7CFC00` | Hull integrity (green→yellow→red gradient by %) |
-| `status.energy` | `#FFEE00` | Energy bars |
-| `alert.red` | `#FF3030` | Red alert, hull critical |
-| `faction.klingon` | `#CC2020` | |
-| `faction.romulan` | `#208030` | |
-| `faction.gorn` | `#A06030` | |
-| `faction.orion` | `#90D000` | |
-| `faction.tholian` | `#E040E0` | |
+| Token               | Hex       | Usage                                             |
+| ------------------- | --------- | ------------------------------------------------- |
+| `bg.deep`           | `#0A0E1A` | Outer window background, scene background         |
+| `bg.panel`          | `#1A1F2E` | Dock panel backgrounds                            |
+| `bg.raised`         | `#2A3142` | Button face (default)                             |
+| `bg.sunken`         | `#0F1320` | Pressed button, input field background            |
+| `border.bright`     | `#4A5878` | Top/left bevel highlight                          |
+| `border.dark`       | `#0A0E1A` | Bottom/right bevel shadow                         |
+| `accent.federation` | `#4DD0E1` | Federation cyan — primary accent                  |
+| `accent.amber`      | `#FFAA00` | LCARS-adjacent amber — secondary accent, warnings |
+| `text.primary`      | `#D4DCE8` | Default panel text                                |
+| `text.dim`          | `#7A8499` | Secondary labels, disabled text                   |
+| `status.shield`     | `#4DD0E1` | Shield bars                                       |
+| `status.hull`       | `#7CFC00` | Hull integrity (green→yellow→red gradient by %)   |
+| `status.energy`     | `#FFEE00` | Energy bars                                       |
+| `alert.red`         | `#FF3030` | Red alert, hull critical                          |
+| `faction.klingon`   | `#CC2020` |                                                   |
+| `faction.romulan`   | `#208030` |                                                   |
+| `faction.gorn`      | `#A06030` |                                                   |
+| `faction.orion`     | `#90D000` |                                                   |
+| `faction.tholian`   | `#E040E0` |                                                   |
 
 #### Typography
 
@@ -894,7 +917,7 @@ All keybindings are configurable in Settings → Key Bindings, persisted to `key
 
 - **Default:** windowed, resizable, 1600×1000 minimum.
 - **Fullscreen:** opt-in toggle via View menu (F11). Borderless fullscreen, not exclusive.
-- **No native window decoration override:** the window manager draws the title bar. The retro feel comes from the *interior* chrome (menu bar, dock title bars, button bevels), not from custom-painted window borders. This keeps the application well-behaved on all Linux desktop environments.
+- **No native window decoration override:** the window manager draws the title bar. The retro feel comes from the _interior_ chrome (menu bar, dock title bars, button bevels), not from custom-painted window borders. This keeps the application well-behaved on all Linux desktop environments.
 - **Dock arrangement and window geometry:** persisted via `QSettings` to an INI file at `~/.config/star_trek_retro_remake/window_state.ini`. `QSettings` handles `QMainWindow.saveState()` (a binary `QByteArray`) and `QMainWindow.saveGeometry()` natively without base64 encoding. Game settings, key bindings, and save data stay in TOML (per §9.5); window-layout state is the one place where TOML would require ugly binary encoding, so it lives separately.
 
 ### 6.6 Accessibility
@@ -930,7 +953,7 @@ The visual style is "abstract retro Trek" — pixel-tile-influenced sprites at m
 - Faction silhouettes recognizable at a distance
 - Hull damage shown through sprite-state variants (clean → battle-damaged → critical)
 
-Specific ship designs intentionally *evoke* canonical Trek classes (Constitution-style saucer-and-engineering, Klingon raptor, Romulan warbird) without reproducing exact copyrighted designs. See §12.1.
+Specific ship designs intentionally _evoke_ canonical Trek classes (Constitution-style saucer-and-engineering, Klingon raptor, Romulan warbird) without reproducing exact copyrighted designs. See §12.1.
 
 #### Icon Design
 
@@ -991,9 +1014,7 @@ Template:
 ```markdown
 # {asset_name}
 
-**Tool:** ChatGPT Images 2.0
-**Date:** YYYY-MM-DD
-**Reference images:** none | path/to/ref.png
+**Tool:** ChatGPT Images 2.0 **Date:** YYYY-MM-DD **Reference images:** none | path/to/ref.png
 
 ## Prompt
 
@@ -1019,18 +1040,18 @@ A single `view/theme/asset_loader.py` module provides a `QPixmap` cache keyed by
 
 #### v0.1 Minimum Asset List
 
-| Asset | Variants | Size |
-|-------|----------|------|
-| Federation cruiser (player ship) | 4 facings | 256×256 |
-| Klingon-style ship | 4 facings | 256×256 |
-| Romulan-style ship | 4 facings | 256×256 |
-| Asteroid | 1 | 128×128 |
-| Debris field | 1 | 128×128 |
-| Nebula | 1 | 256×256 |
-| Black hole | 1 | 256×256 |
-| Starbase | 1 | 256×256 |
-| App icon | 1 | 256×256 |
-| Splash background | 1 | 1920×1080 |
+| Asset                            | Variants  | Size      |
+| -------------------------------- | --------- | --------- |
+| Federation cruiser (player ship) | 4 facings | 256×256   |
+| Klingon-style ship               | 4 facings | 256×256   |
+| Romulan-style ship               | 4 facings | 256×256   |
+| Asteroid                         | 1         | 128×128   |
+| Debris field                     | 1         | 128×128   |
+| Nebula                           | 1         | 256×256   |
+| Black hole                       | 1         | 256×256   |
+| Starbase                         | 1         | 256×256   |
+| App icon                         | 1         | 256×256   |
+| Splash background                | 1         | 1920×1080 |
 
 Approximately 19 generated assets for v0.1. Additional UI iconography is sourced from QtAwesome at no generation cost.
 
@@ -1091,7 +1112,7 @@ Narrative content is minimal in the initial release. The player is a Starfleet c
 #### Key Crew Members
 
 | Position | Role | Special Ability (Level 5+) | Skills |
-|----------|------|---------------------------|---------|
+| --- | --- | --- | --- |
 | **First Officer** | Executive officer, tactical advisor | +1 AP pool; can assume command | Command, Tactics, Leadership |
 | **Chief Engineer** | Ship systems, power distribution | Emergency repairs (2 AP) | Engineering, Warp Theory, Systems |
 | **Security Chief** | Weapons systems, ship security | +5% weapon accuracy | Tactics, Weapons, Security |
@@ -1119,7 +1140,7 @@ Procedural names use `tcod.namegen` with custom rule files for sci-fi-flavored o
 #### Enemy Commanders
 
 | Faction | Personality | Tactics | Ship Classes |
-|---------|-------------|---------|--------------|
+| --- | --- | --- | --- |
 | **Klingon** | Aggressive, honor-focused | Frontal assault, never retreats | D7 Cruiser, Bird-of-Prey |
 | **Romulan** | Tactical, deceptive | Cloaking ambushes, flanking | Bird-of-Prey, Warbird |
 | **Gorn** | Methodical, powerful | Defensive positioning, heavy weapons | Heavy Cruiser |
@@ -1129,7 +1150,7 @@ Procedural names use `tcod.namegen` with custom rule files for sci-fi-flavored o
 #### Neutral Characters
 
 | Character | Role | Benefits |
-|-----------|------|----------|
+| --- | --- | --- |
 | **Merchant Captain** | Trading opportunities, rumors | Access to rare supplies and equipment |
 | **Independent Explorer** | Sector information | Sector maps, anomaly locations |
 | **Civilian Transport** | Escort opportunities | Reputation gains, emergency assistance |
@@ -1197,7 +1218,7 @@ tests/
 
 #### Layer Enforcement
 
-The "model has zero Qt imports" rule is enforced by `import-linter`, run in CI alongside ruff and mypy. A declarative contract in `.importlinter` at the repo root specifies the forbidden dependency:
+The "model has zero Qt imports" rule is enforced by `import-linter`, run as part of the repository's Python verification gate alongside Ruff, BasedPyright, coverage.py, pytest, and pip-audit. A declarative contract in `.importlinter` at the repo root specifies the forbidden dependency:
 
 ```ini
 [importlinter]
@@ -1271,10 +1292,10 @@ The map is the central game element and gets the most architectural weight.
 - **Logical coordinates are cartesian `(x, y, z)`** stored on items. Scene coordinates are isometric-projected pixels. All conversion lives in `view/scene/projection.py` and is fully unit-tested.
 - **Z-levels** rendered as `QGraphicsItem.zValue` (Qt's painter ordering) plus per-level opacity. Active level: opacity 1.0; non-active: 0.35. Configurable in settings.
 
-Custom `QGraphicsItem` subclasses. All items receive state updates via the model bridge — never by subscribing to model events directly. See *MVC Wiring and Event Flow* below for the mechanism.
+Custom `QGraphicsItem` subclasses. All items receive state updates via the model bridge — never by subscribing to model events directly. See _MVC Wiring and Event Flow_ below for the mechanism.
 
 | Item | Role |
-|------|------|
+| --- | --- |
 | `GridCellItem` | One per grid cell, manages hover/select highlight. Pooled. |
 | `GridLineItem` | Iso grid lines per z-level. Dashed pattern denotes z-distance from active layer. |
 | `StarshipItem` | Ship sprite + faction color + facing arrow. Reflects hull, shield, and position state. |
@@ -1329,10 +1350,10 @@ Pool expansion: 25% growth when exhausted.
 The runtime stack was deliberately chosen to minimize hand-rolling. Each library replaces specific code that would otherwise need to be written, tested, and maintained.
 
 | Library | Replaces | Why |
-|---------|----------|-----|
+| --- | --- | --- |
 | **PySide6** | UI + rendering | Single framework, single event loop. `QGraphicsView` covers map rendering without pygame. |
 | **pydantic** v2 | Hand-rolled validation | Schema validation for ships, missions, factions, settings, save game state. Fast, type-safe, integrates with TOML cleanly. |
-| **tcod** (python-tcod) | Custom LoS, FOV, A* | Mature roguelike algorithm library. NumPy-based `compute_fov`, `tcod.path.Pathfinder`, `tcod.los`, plus `tcod.namegen` for procedural names. Skip its console rendering. |
+| **tcod** (python-tcod) | Custom LoS, FOV, A\* | Mature roguelike algorithm library. NumPy-based `compute_fov`, `tcod.path.Pathfinder`, `tcod.los`, plus `tcod.namegen` for procedural names. Skip its console rendering. |
 | **blinker** | Custom observer pattern | Pure-Python signal/slot library used by Flask. ~400 lines, two decades stable. |
 | **loguru** | stdlib `logging` boilerplate | Sane defaults, structured logging, pretty tracebacks, file rotation built in. |
 | **qtawesome** | AI-generated UI icons | Vector icons via Font Awesome 6, Material Design, Phosphor, etc. Themeable via QColor, sharp at any zoom, eliminates several AI generations. |
@@ -1351,7 +1372,7 @@ Save files are pydantic models serialized to TOML. **`pickle` and `dill` are ban
 #### Skipped Libraries
 
 | Library | Reason |
-|---------|--------|
+| --- | --- |
 | `transitions` / `python-statemachine` | Hand-rolled state manager is simpler at this state count. |
 | `numpy` (direct) | Pulled in via tcod transitively. Don't add as direct dep unless needed elsewhere. |
 | Behavior-tree libraries | Premature for the current AI scope. Revisit at v0.3+. |
@@ -1417,11 +1438,11 @@ uv python install 3.14
 
 # Per repo clone
 cd star-trek-retro-remake
-uv sync --all-extras
+uv sync --locked --all-groups
 uv run python -m stmrr
 ```
 
-`pyproject.toml` declares `requires-python = ">=3.14"`. CI uses the same `uv python install 3.14` step. This avoids deadends caused by distro Python lag and keeps the project pinned to a known-good interpreter version across all dev machines and CI runners.
+`pyproject.toml` declares `requires-python = ">=3.14"`. CI reads `.python-version` through `actions/setup-python` and installs the locked dependency groups with uv. This avoids deadends caused by distro Python lag and keeps the project on the same interpreter line and dependency lock across development machines and CI runners.
 
 ### 9.4 Performance Requirements
 
@@ -1557,7 +1578,7 @@ This is a solo project with Claude Code as the primary implementer. The developm
 
 #### Phased Roadmap
 
-**v0.1 — Vertical slice and core loop**
+##### v0.1 — Vertical slice and core loop
 
 - Project scaffold, MVC layering, theming
 - Empty windowed grid with zoom, pan, z-level switch
@@ -1566,7 +1587,7 @@ This is a solo project with Claude Code as the primary implementer. The developm
 - One starbase placed on the test sector. Player can move adjacent to it and trigger the **Dock** action (1 AP cost). Exercises the full action pipeline — button click → AP debit → state change → UI update — end-to-end. v0.2's combat actions ride on top of this same pipeline; proving it works in v0.1 means v0.2 can focus on combat math rather than rebuilding action plumbing.
 - Minimum asset set (per §7.2)
 
-**v0.1 Definition of Done.** v0.1 is complete when *all* of the following pass:
+**v0.1 Definition of Done.** v0.1 is complete when _all_ of the following pass:
 
 1. `uv run python -m stmrr` launches the main window on a clean Debian 13 / Ubuntu 24.04 box with no errors in the loguru log.
 2. Window opens at 1600×1000 minimum, all docks visible, retro QSS applied (no native Fusion grey bleeds through).
@@ -1576,12 +1597,12 @@ This is a solo project with Claude Code as the primary implementer. The developm
 6. A starbase is placed adjacent-reachable. Moving adjacent to it enables the Dock action button. Clicking Dock debits 1 AP, emits a `Docked` event, and writes a comm log entry timestamped via loguru.
 7. End Turn button advances the turn counter, restores AP to 5, and emits `TurnAdvanced`.
 8. Window geometry and dock layout persist across restarts via `QSettings` to `~/.config/star_trek_retro_remake/window_state.ini`.
-9. CI is green: ruff, mypy, `import-linter`, and pytest all pass. Coverage on `model/` is at or above 80%.
+9. CI is green through `uv run python scripts/check.py`: Ruff, BasedPyright strict, `import-linter`, branch-aware pytest coverage, and pip-audit all pass. Aggregate source coverage is at or above 85%.
 10. `import-linter` enforces "model has zero Qt imports" — verifiable by adding a test `PySide6` import to a model file and watching CI fail.
 
 If any of the above fails, v0.1 is not done. Don't move on to v0.2 work until the checklist clears.
 
-**v0.2 — Combat foundation**
+##### v0.2 — Combat foundation
 
 - Phaser and torpedo weapons
 - Shield facings and damage resolution
@@ -1589,7 +1610,7 @@ If any of the above fails, v0.1 is not done. Don't move on to v0.2 work until th
 - Mission system foundation with TOML templates
 - Save/load via pydantic round-trip
 
-**v0.3 — Resource management, missions, and difficulty modes**
+##### v0.3 — Resource management, missions, and difficulty modes
 
 - Energy allocation, supplies, crew morale
 - Six mission types fully implemented
@@ -1597,7 +1618,7 @@ If any of the above fails, v0.1 is not done. Don't move on to v0.2 work until th
 - Reputation system
 - Difficulty modes (Cadet / Officer / Captain / Admiral) — all four dimensions difficulty touches (combat scaling, resource scarcity, AP modifiers, and the permadeath flag) exist by this point. Permadeath enforcement lands here as a flag; the crew system that makes it consequential lands in v0.5.
 
-**v0.4 — Procedural galaxy and sector navigation**
+##### v0.4 — Procedural galaxy and sector navigation
 
 - Galaxy map mode with sector navigation
 - Procedural galaxy generation: rule-based placement of sector types, faction territories, starbases, and anomalies from a seed
@@ -1605,13 +1626,13 @@ If any of the above fails, v0.1 is not done. Don't move on to v0.2 work until th
 - Travel time and warp consumption
 - Random encounters during travel
 
-**v0.5 — Crew and progression**
+##### v0.5 — Crew and progression
 
 - Captain XP and skills (with the uncapped curve from §3.3)
 - Crew member specializations and leveling
 - Ship upgrade paths
 
-**v1.0 — Polish and ship**
+##### v1.0 — Polish and ship
 
 - Full audio pass
 - Bug fixes and balance tuning
@@ -1641,7 +1662,7 @@ Solo developer. No outside contributors anticipated for v0.1. Public open-source
 ### 10.3 Testing Strategy
 
 | Layer | Framework | Notes |
-|-------|-----------|-------|
+| --- | --- | --- |
 | Model (pure Python) | `pytest` | Headless, no `QApplication`. Fast. Run on every commit. |
 | Controller bridges | `pytest` + mocks | Mock the Qt signal layer; verify model events translate correctly. |
 | View widgets | `pytest-qt` | `qtbot` fixture for widget interaction. |
@@ -1649,7 +1670,7 @@ Solo developer. No outside contributors anticipated for v0.1. Public open-source
 | AI behavior | `pytest` | Deterministic seeds; assert state-machine transitions and target selection. |
 | TOML round-trip | `pytest` | Save → load → assert deep equality. Catches schema drift. |
 
-**Coverage targets:** 80%+ on `model/`, 60%+ on `view/`, 70%+ on `controller/`. Don't chase 100% — diminishing returns past these levels.
+**Coverage gate:** branch-aware aggregate coverage across `src/` must remain at or above 85%. Targeted suites may retain 100% where it is already inexpensive, but the release gate does not encode separate layer thresholds.
 
 #### Test Categories
 
@@ -1663,19 +1684,20 @@ Solo developer. No outside contributors anticipated for v0.1. Public open-source
 
 - `pytest` — core framework
 - `pytest-qt` — Qt widget testing
-- `pytest-cov` — coverage reporting
+- `coverage.py` — branch-aware coverage collection and reporting
 - `pytest-mock` — mocking and fixtures
 - `pytest-env` — environment variable management for headless Qt
 - `ruff` — linting and formatting
-- `mypy` — static type checking
+- `BasedPyright` — strict static type checking across source and tests
 - `import-linter` — architectural layer enforcement (see §9.1)
+- `pip-audit` — dependency vulnerability audit
 - `cProfile` — performance investigation when needed
 
 #### CI
 
-GitHub Actions workflow runs ruff, mypy, `import-linter`, and pytest on every push. Branch protection on `main` requires passing CI before merge.
+GitHub Actions runs the consumer-owned `scripts/check.py` gate on every push and pull request. Branch protection on `main` requires passing CI before merge. The job retains its legacy display name because that exact string is the required hosted status context; the commands inside it are the current gate.
 
-CI installs Python 3.14 via `uv python install 3.14`, runs `uv sync --all-extras`, then executes the lint/type/test pipeline. Headless Qt is enabled via `QT_QPA_PLATFORM=offscreen` in the workflow env (see "Headless Qt" below); `xvfb-run` is available as a fallback for any test that genuinely needs a display server.
+CI installs the version in `.python-version`, runs `uv sync --locked --all-groups`, then executes `uv run python scripts/check.py`. Headless Qt is enabled via `QT_QPA_PLATFORM=offscreen` in the workflow env (see "Headless Qt" below); `xvfb-run` is available as a fallback for any test that genuinely needs a display server.
 
 #### Headless Qt
 
@@ -1714,30 +1736,29 @@ Solo developer time. Asset generation uses an existing ChatGPT Plus subscription
 
 ### 10.6 Coding Standards
 
-A short, mechanically-enforced standard. Documented in full in `CONTRIBUTING.md`; the canonical decisions live here.
+A short, mechanically-enforced standard. Documented in full in `CONTRIBUTING.md`; the canonical decisions live here. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. The reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md) governs code shape but is not selectable and therefore has no enabled `.standards/config.toml` table or lock ownership.
 
-**Formatting and linting (ruff):**
+**Formatting and linting (Ruff):**
 
 - Line length: 100 characters.
 - Quote style: double quotes.
 - Import sorting: ruff's isort-compatible rules (`I` rule set enabled).
-- Rule sets enabled: `E`, `F`, `W`, `I`, `B`, `UP`, `SIM`, `RUF`. Add `D` (pydocstyle) only if docstring discipline becomes a problem.
+- The managed `[tool.ruff.lint]` table in `pyproject.toml` is authoritative for enabled and ignored rules.
 - `ruff format` is the formatter. No black, no separate isort.
 
-**Typing (mypy):**
+**Typing (BasedPyright):**
 
-- `model/` runs under `strict = true`. The model layer is the testable core; type rigor pays for itself.
-- `controller/` and `config/` run under `strict = true`. Same reason.
-- `view/` runs under a relaxed profile — `disallow_untyped_defs = true` but not full strict, because Qt's stub coverage has rough edges and fighting them is not worth the time.
-- `tests/` runs unchecked except for `disallow_incomplete_defs = true` to keep test fixtures honest.
+- `src/`, `tests/`, and `scripts/` run under strict mode; warnings fail the gate.
+- Dynamic Qt and test-framework boundaries use precise casts or narrow, diagnostic-specific suppressions with an adjacent reason.
+- Broad ignores and per-layer relaxed profiles are not part of the project contract.
 
-Configuration lives in `pyproject.toml` under `[tool.mypy]` with per-module overrides.
+Configuration lives in `pyproject.toml` under `[tool.basedpyright]`.
 
 **Type hints:**
 
-- All public APIs (anything not prefixed with `_`) require complete type hints on parameters and return values. Enforced by mypy strict mode in `model/`, `controller/`, `config/`.
-- Internal helpers may omit hints where mypy can infer cleanly.
-- Use `from __future__ import annotations` at the top of every module for forward-reference ergonomics.
+- All public APIs (anything not prefixed with `_`) require complete type hints on parameters and return values.
+- Internal helpers are typed wherever strict checking cannot infer a precise contract.
+- On Python 3.14+, do not add `from __future__ import annotations` merely for ordinary forward references. Existing uses remain only where their runtime annotation behavior is understood and tested.
 
 **Docstrings:**
 
@@ -1748,7 +1769,7 @@ Configuration lives in `pyproject.toml` under `[tool.mypy]` with per-module over
 
 **Module-level conventions:**
 
-- One class per module is *not* required. Group closely-related classes (e.g., all weapon-system components).
+- One class per module is _not_ required. Group closely-related classes (e.g., all weapon-system components).
 - `__all__` declared in modules with public APIs.
 - Avoid circular imports by routing through `events.py` in the model and `model_bridge.py` in the controller — both are explicitly designed as decoupling seams.
 
@@ -1760,14 +1781,12 @@ Configuration lives in `pyproject.toml` under `[tool.mypy]` with per-module over
 - Qt signals: `snake_case` past tense (`ship_moved`, `turn_advanced`) to match Qt convention.
 - Model events (blinker): same convention as Qt signals so the bridge translation is mechanical.
 
-**Pre-commit hooks:**
+**Pre-commit checks:**
 
-- ruff format
-- ruff check --fix
-- mypy (cached)
+- standard file hygiene
 - import-linter
 
-`pre-commit install` is run after `uv sync`. CI re-runs all checks; pre-commit is a local convenience that catches issues before push.
+Run `uv run pre-commit run --all-files` directly after `uv sync --locked --all-groups`; do not install hooks. The complete, authoritative local and CI gate is `uv run python scripts/check.py`.
 
 ### 10.7 Architecture Decision Records
 
@@ -1778,7 +1797,7 @@ ADRs are not living documents. Once an ADR is marked `Accepted`, the decision is
 **Initial ADR set (seeded at scaffold time):**
 
 | ADR | Title | Status |
-|-----|-------|--------|
+| --- | --- | --- |
 | 0001 | Pure-Qt rendering, no pygame or SDL | Accepted |
 | 0002 | Linux-only, no Windows or macOS support | Accepted |
 | 0003 | Model layer has zero Qt imports, enforced by import-linter | Accepted |
@@ -1830,10 +1849,10 @@ This is an unofficial, non-commercial fan project. The legal posture has the fol
 **Required posture:**
 
 - README disclaimer near the top:
-  > This is an unofficial, non-commercial fan project. *Star Trek* and all related marks, characters, ships, and concepts are intellectual property of CBS Studios Inc. / Paramount Global, including trademarks and copyrights. This project is not affiliated with, endorsed by, or sponsored by CBS Studios or Paramount.
+  > This is an unofficial, non-commercial fan project. _Star Trek_ and all related marks, characters, ships, and concepts are intellectual property of CBS Studios Inc. / Paramount Global, including trademarks and copyrights. This project is not affiliated with, endorsed by, or sponsored by CBS Studios or Paramount.
 - No commercial monetization of any kind. Donations for hosting are a grey area; paid features or sale are not.
 - No copied assets — sprites, audio, screenshots, or text from official Trek media are not committed to the repo.
-- AI-generated **visual assets** must avoid reproducing canonical Trek designs. Prompts describe styling and silhouette — *"Klingon-style raptor cruiser"* rather than *"D7"* — to keep the AI from outputting direct copies of copyrighted artwork. The risk lives at the prompt layer; see §7.2 for the prompt archival workflow.
+- AI-generated **visual assets** must avoid reproducing canonical Trek designs. Prompts describe styling and silhouette — _"Klingon-style raptor cruiser"_ rather than _"D7"_ — to keep the AI from outputting direct copies of copyrighted artwork. The risk lives at the prompt layer; see §7.2 for the prompt archival workflow.
 - Naming canonical classes, ships, characters, and concepts **in text** (UI labels, mission briefings, dialogue, comm log entries, NPC ship names) is acceptable under nominative fair use, as standard practice in non-commercial Trek fan works. The README disclaimer covers attribution; no obfuscation or rewording is needed in text content.
 - README discloses that visual assets are AI-generated.
 - `NOTICE.md` at the repo root documents the IP boundary for contributors and includes licenses for bundled assets (font licenses, any other third-party content).
@@ -1879,22 +1898,22 @@ These are aspirations, not commitments. Some may never happen. The v1.0 game is 
 
 ### Classic Trek Games (inspiration)
 
-- *Star Trek* (1971) — Mike Mayfield's original mainframe game
-- *Super Star Trek* (1973) — David Ahl's BASIC port
-- *Star Trek: 25th Anniversary* (1992) — adventure / strategy hybrid
-- *Star Trek: Starfleet Command* series — tactical ship combat
+- _Star Trek_ (1971) — Mike Mayfield's original mainframe game
+- _Super Star Trek_ (1973) — David Ahl's BASIC port
+- _Star Trek: 25th Anniversary_ (1992) — adventure / strategy hybrid
+- _Star Trek: Starfleet Command_ series — tactical ship combat
 
 ### Star Trek Universe
 
-- *Star Trek: The Original Series* (1966–1969) — primary era inspiration
+- _Star Trek: The Original Series_ (1966–1969) — primary era inspiration
 - Key episodes: "Balance of Terror", "Space Seed", "The Doomsday Machine"
 
 **Technical manuals:**
 
-- *Star Trek: The Original Series Sketchbook*
-- *Star Trek Starship Recognition Manual*
-- *Star Fleet Technical Manual* by Franz Joseph
-- *Mr. Scott's Guide to the Enterprise*
+- _Star Trek: The Original Series Sketchbook_
+- _Star Trek Starship Recognition Manual_
+- _Star Fleet Technical Manual_ by Franz Joseph
+- _Mr. Scott's Guide to the Enterprise_
 
 **Online:**
 
@@ -1903,11 +1922,11 @@ These are aspirations, not commitments. Some may never happen. The v1.0 game is 
 
 ### Game Design References
 
-- *XCOM* series — turn-based tactical mechanics
-- *FTL: Faster Than Light* — ship system management and events
-- *Into the Breach* — grid-based tactical gameplay
-- *Master of Orion* series — 4X space strategy
-- *Star Traders: Frontiers* — space RPG/strategy hybrid
+- _XCOM_ series — turn-based tactical mechanics
+- _FTL: Faster Than Light_ — ship system management and events
+- _Into the Breach_ — grid-based tactical gameplay
+- _Master of Orion_ series — 4X space strategy
+- _Star Traders: Frontiers_ — space RPG/strategy hybrid
 
 ### Technical Documentation
 
@@ -1922,9 +1941,9 @@ These are aspirations, not commitments. Some may never happen. The v1.0 game is 
 
 ### Books
 
-- *Game Programming Patterns* — Robert Nystrom
-- *Design Patterns* — Gamma, Helm, Johnson, Vlissides
-- *The Art of Game Design* — Jesse Schell
+- _Game Programming Patterns_ — Robert Nystrom
+- _Design Patterns_ — Gamma, Helm, Johnson, Vlissides
+- _The Art of Game Design_ — Jesse Schell
 
 ### Linux Development
 
@@ -2047,7 +2066,7 @@ These are aspirations, not commitments. Some may never happen. The v1.0 game is 
 - **HP:** Hull Points
 - **LoS:** Line of Sight
 - **NPC:** Non-Player Character
-- **TOS:** *The Original Series*
+- **TOS:** _The Original Series_
 - **UI:** User Interface
 - **UX:** User Experience
 - **XP:** Experience Points

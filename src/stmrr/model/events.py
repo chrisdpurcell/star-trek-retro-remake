@@ -1,7 +1,7 @@
 """Model-layer event bus: typed payload dataclasses + named blinker signals.
 
 Canonical declaration site for every signal and every payload dataclass
-in the model layer (umbrella spec §7 invariant 10). Enforced by:
+in the model layer (SPEC-ML01 C-004 and SPEC-S005 FR-008). Enforced by:
 
   1. `.importlinter` `blinker-only-in-events` forbidden contract — no
      other model module may import `blinker` directly.
@@ -18,11 +18,10 @@ Forward-referenced field types resolve under TYPE_CHECKING only — this
 module stays a runtime leaf alongside `exceptions.py` and
 `state.states`. `typing.get_type_hints()` on payloads with
 TYPE_CHECKING-only refs raises `NameError` at runtime; this is a
-feature locked by the test suite (umbrella spec §5.2 + step-5 spec §5.2).
+feature locked by the test suite (SPEC-S005 FR-007).
 
-See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md`
-§5 for the layered enforcement rationale and the per-payload
-`get_type_hints()` table.
+See SPEC-S005 D-002 for the layered enforcement rationale and
+SPEC-S005 FR-007 for the per-payload `get_type_hints()` contract.
 """
 
 from __future__ import annotations

@@ -1,3 +1,26 @@
+---
+schema_version: '1.1'
+id: 'runbook-5z891s-security-policy'
+title: 'Security Policy'
+description: 'Security scope, private vulnerability-reporting procedure, and response expectations for Star Trek Retro Remake.'
+doc_type: 'runbook'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'user'
+tags:
+  - 'policy'
+  - 'security'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # Security Policy
 
 ## Reporting a vulnerability

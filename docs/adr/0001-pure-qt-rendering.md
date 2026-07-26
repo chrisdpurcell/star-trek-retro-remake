@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0001-star-trek-retro-remake-pure-qt-rendering'
+title: 'Pure-Qt rendering, no pygame or SDL'
+description: 'Decision to use Qt exclusively for rendering and avoid pygame and SDL.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0001 — Pure-Qt rendering, no pygame or SDL
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

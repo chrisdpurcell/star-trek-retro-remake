@@ -1,11 +1,10 @@
 """Unit tests for TurnManager.
 
-Covers spec §5 + §7.2: construction validation (player_id + current_turn,
+Covers SPEC-S007 FR-011 through FR-014: construction validation (player_id + current_turn,
 each as non-bool int >= 1), advance_turn happy path (restore AP →
 increment → emit), advance_turn failure modes (None / non-Starship →
-InactiveEntityError; explicit defensive test for INACTIVE-but-Starship
-player succeeding per SA-001 lock + umbrella §5.6.3 "preconditions:
-none — always available"), ordering invariants, sequential turns,
+InactiveEntityError; explicit defensive test for an inactive Starship
+succeeding per SPEC-S007 FR-013), ordering invariants, sequential turns,
 import-structure positive assertion.
 """
 
@@ -124,9 +123,12 @@ def test_advance_turn_restores_player_ap_increments_counter_emits_event() -> Non
 
 
 def test_advance_turn_subscriber_sees_post_mutation_state() -> None:
-    """Umbrella invariant 3 + step-7 invariant 8: subscribers reading
+    """Prove SPEC-S007 FR-014 subscribers observe post-mutation state.
+
+    Subscribers reading
     manager.current_turn / player.ap_remaining inside the handler see
-    the new values."""
+    the new values.
+    """
     sector = SectorMap(width=10, height=10, depth=5)
     player = Starship(
         position=GridPosition(0, 0, 0),
@@ -218,18 +220,20 @@ def test_advance_turn_player_resolves_to_non_starship_raises() -> None:
     assert tm.current_turn == 1
 
 
-# ---- advance_turn: SA-001 lock — inactive player ship succeeds --------------
+# ---- advance_turn: inactive player succeeds (SPEC-S007 FR-013) ---------------
 
 
 def test_advance_turn_inactive_player_starship_succeeds() -> None:
-    """SA-001 lock + umbrella §5.6.3: 'Preconditions: none — End Turn is
-    always available.' Inactive (destroyed/deactivated) player ships
+    """Prove SPEC-S007 FR-013 keeps End Turn available to inactive players.
+
+    Inactive (destroyed/deactivated) player ships
     must still get AP restored, the counter incremented, and the event
     emitted. The controller detects game-over via state transitions,
     not by advance_turn refusing to run.
 
     Locks this behavior against a future regression toward an active
-    check (which would contradict the umbrella's locked design intent)."""
+    check.
+    """
     sector = SectorMap(width=10, height=10, depth=5)
     player = Starship(
         position=GridPosition(0, 0, 0),
@@ -274,8 +278,7 @@ def _turn_manager_source() -> str:
 
 
 def test_turn_manager_source_imports_starship_at_runtime() -> None:
-    """Umbrella §6 + step-7 invariant 9: combat.turn_manager has a runtime
-    edge to entities.starship (for isinstance), NOT under TYPE_CHECKING."""
+    """Prove the SPEC-S007 NFR-001 runtime Starship edge."""
     text = _turn_manager_source()
 
     starship_import_pos = text.find("from stmrr.model.entities.starship import")
@@ -287,11 +290,11 @@ def test_turn_manager_source_imports_starship_at_runtime() -> None:
 
 
 def test_turn_manager_imports_sector_map_only_under_type_checking() -> None:
-    """Step-7 spec §5.1 (umbrella §6 DAG): `world.sector_map` is TYPE_CHECKING-only
-    in `combat.turn_manager` (only used as a parameter annotation; the
-    runtime `sector_map.get(...)` call is duck-typed via the passed
-    instance). CR-005 review finding — tightens the existing import-
-    structure test to cover all DAG claims."""
+    """Prove the SPEC-S007 NFR-001 type-only SectorMap edge.
+
+    The runtime `sector_map.get(...)` call is duck-typed through the
+    passed instance.
+    """
     text = _turn_manager_source()
 
     sector_map_import_pos = text.find("from stmrr.model.world.sector_map import")
@@ -299,15 +302,16 @@ def test_turn_manager_imports_sector_map_only_under_type_checking() -> None:
     assert sector_map_import_pos != -1, "SectorMap import missing"
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert sector_map_import_pos > type_checking_pos, (
-        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per umbrella §6 DAG)"
+        "SectorMap import must be INSIDE TYPE_CHECKING block per SPEC-S007 NFR-001"
     )
 
 
 def test_turn_manager_imports_entity_id_only_under_type_checking() -> None:
-    """Step-7 spec §5.1 (umbrella §6 DAG): `entities.game_object` is TYPE_CHECKING-
-    only in `combat.turn_manager` (only used for the `EntityId` NewType
-    annotation on `__init__`; never minted or unwrapped at runtime).
-    CR-005 review finding."""
+    """Prove the SPEC-S007 NFR-001 type-only EntityId edge.
+
+    `EntityId` annotates `__init__`; TurnManager never mints or unwraps
+    it at runtime.
+    """
     text = _turn_manager_source()
 
     game_object_import_pos = text.find("from stmrr.model.entities.game_object import")
@@ -315,15 +319,14 @@ def test_turn_manager_imports_entity_id_only_under_type_checking() -> None:
     assert game_object_import_pos != -1, "game_object import missing"
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert game_object_import_pos > type_checking_pos, (
-        "game_object (EntityId) import must be INSIDE TYPE_CHECKING block "
-        "(annotation-only per umbrella §6 DAG)"
+        "game_object (EntityId) import must be INSIDE TYPE_CHECKING block per SPEC-S007 NFR-001"
     )
 
 
 def test_turn_manager_does_not_import_station_or_sector_map_at_runtime() -> None:
     """Defensive: combat.turn_manager has no runtime edge to entities.station
-    or world.sector_map (umbrella §6). Catches accidental TYPE_CHECKING-to-
-    runtime drift on either."""
+    or world.sector_map under SPEC-S007 NFR-001. Catches accidental
+    TYPE_CHECKING-to-runtime drift on either."""
     text = _turn_manager_source()
     type_checking_pos = text.find("if TYPE_CHECKING:")
 

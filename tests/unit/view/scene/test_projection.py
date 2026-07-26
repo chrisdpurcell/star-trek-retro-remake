@@ -1,7 +1,6 @@
 """Unit tests for `stmrr.view.scene.projection`.
 
-See `docs/specs/v0.1-step-4-projection.md` §7 for the test-obligation
-matrix this file implements.
+Implements the SPEC-S004 requirement-to-test traceability matrix.
 """
 
 from __future__ import annotations
@@ -296,7 +295,7 @@ def test_scene_to_world_active_z_passes_through_for_in_bounds_clicks(z: int) -> 
 
 
 # ---------------------------------------------------------------------------
-# Round-trip property — primary correctness gate per spec §7
+# Round-trip property — SPEC-S004 FR-002 through FR-006
 # ---------------------------------------------------------------------------
 
 
@@ -314,7 +313,7 @@ def test_round_trip_scene_to_world_of_world_to_scene_equals_original(
 
 
 # ---------------------------------------------------------------------------
-# Static AST import-purity — redundant with `.importlinter` per spec §7
+# Static AST import-purity — redundant with `.importlinter` per SPEC-S004 NFR-002
 # ---------------------------------------------------------------------------
 
 _PROJECTION_PATH = (
@@ -377,13 +376,13 @@ def test_projection_imports_no_other_view_subpackages_or_controller() -> None:
 
 
 # ---------------------------------------------------------------------------
-# z-headroom invariant per spec §8.5
+# z-headroom invariant per SPEC-S004 C-003 and FR-009
 # ---------------------------------------------------------------------------
 
 
 def test_max_z_depth_exceeds_sector_z_ceiling() -> None:
-    # Spec §8.5: for every GridPosition constructible under DESIGN.md §4.3's
+    # SPEC-S004 C-003: for every GridPosition constructible under DESIGN.md §4.3's
     # sector ceiling of z <= 6, pos.z < MAX_Z_DEPTH. A future ADR raising the
     # ceiling past z=9 must update MAX_Z_DEPTH or the painter-ordering
-    # invariants (§8.3, §8.4) silently break.
+    # SPEC-S004 FR-009 painter-order guarantee silently breaks.
     assert max(p.z for p in _FULL_DOMAIN) < MAX_Z_DEPTH

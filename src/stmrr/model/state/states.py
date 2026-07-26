@@ -1,18 +1,17 @@
 """GameState ABC + v0.1 concrete states for the hand-rolled state machine (ADR-0005).
 
-The ABC (step 5) supplies __init_subclass__ runtime enforcement of the
+The ABC (SPEC-S005) supplies __init_subclass__ runtime enforcement of the
 `allowed_transitions: ClassVar[frozenset[type[GameState]]]` contract.
-The two v0.1 concrete states MainMenuState and SectorMapState (step 8)
+The two v0.1 concrete states MainMenuState and SectorMapState (SPEC-S008)
 follow it; their mutual MainMenuState ↔ SectorMapState references are
 resolved by the post-class patch at the end of this file (see comment
 there). GameStateManager (the consumer that reads allowed_transitions)
 lives in the sibling module state.game_state_manager.
 
-See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md`
-§6 for the __init_subclass__ enforcement rationale and the
-inspect.isabstract(cls) vs cls.__abstractmethods__ ordering note;
-`docs/specs/v0.1-step-8-game-state-manager.md` §5 for the concrete
-states and the post-class patch idiom.
+See SPEC-S005 D-003 and FR-010 through FR-011 for the
+__init_subclass__ enforcement rationale and the inspect.isabstract(cls)
+vs cls.__abstractmethods__ ordering note; SPEC-S008 FR-011 and D-002
+define the concrete states and post-class patch idiom.
 """
 
 from __future__ import annotations
@@ -66,10 +65,10 @@ class MainMenuState(GameState):
     `allowed_transitions` is patched at module level below this class
     body (see end of file) to break the mutual MainMenuState ↔ SectorMapState
     forward-reference. The class-body declaration `frozenset()` satisfies
-    the step-5 `__init_subclass__` presence check; the patch replaces it
+    the SPEC-S005 FR-010 `__init_subclass__` presence check; the patch replaces it
     with `frozenset({SectorMapState})`.
 
-    Per umbrella spec §5.8, `enter`/`exit` do NOT instantiate world objects.
+    Per SPEC-ML01 FR-018 and SPEC-S008 D-004, `enter`/`exit` do NOT instantiate world objects.
     v0.1 bodies are `pass` — UI cueing is the bridge's job, not the
     state's, and the cueing channel is the `state_changed` event.
     """
@@ -78,7 +77,7 @@ class MainMenuState(GameState):
     # Patched below the class definitions: allowed_transitions = frozenset({SectorMapState})
 
     def enter(self) -> None:
-        # Empty per umbrella §5.8 — state hooks do not do world construction
+        # Empty per SPEC-S008 FR-012 — state hooks do not do world construction
         # or UI cueing; cueing flows through the state_changed event.
         pass
 
@@ -90,7 +89,7 @@ class SectorMapState(GameState):
     """Sector-map state — the v0.1 in-game session state.
 
     See MainMenuState docstring for the `allowed_transitions` patch
-    rationale. Per umbrella §5.8, `enter` MUST NOT construct a
+    rationale. Per SPEC-ML01 FR-018 and SPEC-S008 D-004, `enter` MUST NOT construct a
     `SectorMap` — `app.py` owns world construction.
     """
 
@@ -106,7 +105,7 @@ class SectorMapState(GameState):
 
 # Resolve the mutual MainMenuState ↔ SectorMapState forward reference.
 # Each class body declared `allowed_transitions = frozenset()` (satisfies
-# the step-5 __init_subclass__ presence check); the assignments below
+# the SPEC-S005 FR-010 __init_subclass__ presence check); the assignments below
 # replace those placeholders with the actual allowed sets now that both
 # classes exist as names. Deleting either of these two lines silently
 # reverts the allowed sets to empty — the smoke tests in

@@ -1,0 +1,16 @@
+name: Format
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  format:
+    uses: L3DigitalNet/project-standards/.github/workflows/format.yml@v5
+    with:
+      prettier: true
+      globs: "**/*.md\n**/*.json\n**/*.jsonc\n**/*.yml\n**/*.yaml"
+      exclusions: ".agents/**\n.claude/**\n.codex/**\n.github/PULL_REQUEST_TEMPLATE.md\n.github/workflows/format.yml\n.github/workflows/lint-markdown.yml\n.import_linter_cache/**\n.pytest_cache/**\n.standards/**\n.venv/**\nAGENTS.md\nCLAUDE.md\ndocs/STATUS.md\ndocs/TODO.md\ndocs/adr/template.md\ndocs/handoff/**"

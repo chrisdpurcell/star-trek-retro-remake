@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0006-star-trek-retro-remake-procedural-galaxy'
+title: 'Procedural galaxy from v1.0, no hand-crafted maps'
+description: 'Decision to generate galaxies procedurally from version 1.0 instead of authoring fixed maps.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0006 — Procedural galaxy from v1.0, no hand-crafted maps
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

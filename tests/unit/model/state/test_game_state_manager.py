@@ -1,13 +1,13 @@
 """Unit tests for GameStateManager.
 
-Covers spec §4 + §7.2: construction lifecycle (enter on init, no event
+Covers SPEC-S008 FR-001 through FR-013: construction lifecycle (enter on init, no event
 on init), read-only current_state property, transition_to five-step
 lifecycle (validate → exit → mutate → enter → emit), payload field
 ordering (from_state captured before mutation), lifecycle hook exception
 propagation policy (exit raise → no mutation, no event; enter raise →
 mutation committed, no event), composition-based self-transition
 rejection (no special-case code), identity-passthrough rejection (no
-short-circuit), receiver-exception propagation (umbrella §9 risk),
+short-circuit), receiver-exception propagation (SPEC-S008 ERR-004),
 repeated-transition counting (3 transitions / 4 states / 3 events),
 package re-export contract.
 """
@@ -284,7 +284,7 @@ def test_transition_to_identity_passthrough_raises_illegal_transition() -> None:
         manager.transition_to(initial)
 
 
-# ── Lifecycle hook exception policy (§6.5) ────────────────────────────────────
+# ── Lifecycle hook exception policy (SPEC-S008 FR-009 and FR-010) ─────────────
 
 
 def test_transition_to_exit_raise_propagates_no_mutation() -> None:
@@ -373,7 +373,7 @@ def test_transition_to_enter_raise_propagates_mutation_committed_no_event() -> N
     assert captured == []
 
 
-# ── Receiver exception propagation (umbrella §9) ─────────────────────────────
+# ── Receiver exception propagation (SPEC-S008 ERR-004) ────────────────────────
 
 
 def test_transition_to_receiver_exception_propagates_after_mutation() -> None:

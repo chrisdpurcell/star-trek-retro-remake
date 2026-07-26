@@ -1,4 +1,4 @@
-"""Three-layer enforcement of umbrella §7 invariant 10:
+"""Three-layer enforcement of SPEC-ML01 C-004 and SPEC-S005 FR-008:
 `events.py` is the canonical declaration site for every signal and
 every payload dataclass in the model layer.
 
@@ -19,9 +19,8 @@ A contributor who routes around all three layers via dynamic class
 creation or reflection-based signal construction is willfully bypassing
 the contract; that case is out of scope for v0.1 enforcement.
 
-See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md`
-§3 + §7.5 for the three-layer rationale and false-positive surface
-discussion.
+See SPEC-S005 D-002 and FR-008 for the three-layer rationale and
+false-positive surface discussion.
 """
 
 from __future__ import annotations
@@ -63,8 +62,8 @@ def test_no_signal_call_in_model_source_outside_events(
 
     assert not matches, (
         f"{source_path} contains {len(matches)} `.signal(` call(s); "
-        f"all signals must be declared in events.py per umbrella §7 "
-        f"invariant 10. Matched: "
+        f"all signals must be declared in events.py per SPEC-S005 FR-008. "
+        f"Matched: "
         f"{[text[m.start() : m.end() + 20] for m in matches]}"
     )
 
@@ -83,7 +82,7 @@ def test_no_payload_class_declaration_in_model_source_outside_events(
 
     assert not matches, (
         f"{source_path} declares {len(matches)} `*Payload` class(es); "
-        f"all payload dataclasses must live in events.py per umbrella "
-        f"§7 invariant 10. Matched: "
+        f"all payload dataclasses must live in events.py per SPEC-S005 FR-008. "
+        f"Matched: "
         f"{[text[m.start() : m.end()] for m in matches]}"
     )

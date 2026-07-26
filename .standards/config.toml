@@ -1,0 +1,159 @@
+[project_standards]
+schema_version = "1.0"
+catalog = "5"
+
+[standards.agent-handoff]
+enabled = true
+version = "1.4"
+
+[standards.agent-handoff.config]
+contract_version = "1.1"
+startup = "automatic"
+harnesses = ["claude-code", "codex"]
+
+[standards.project-spec]
+enabled = true
+version = "1.4"
+
+[standards.project-spec.config]
+contract_version = "1.1"
+workflow_mode = "caller"
+workflow_ownership = "managed"
+include_patterns = ["docs/specs/**/*.md", "docs/superpowers/specs/**/*.md"]
+reference_prefixes = ["RQ", "GAP", "SA", "CR"]
+default_profile = "standard"
+ci = true
+
+[standards.python-tooling]
+enabled = true
+version = "1.8"
+
+[standards.python-tooling.config]
+contract_version = "1.1"
+python_version = "3.14"
+build_backend = "hatchling"
+source_layout = "src"
+additional_source_roots = [{ path = "scripts", coverage = false }]
+additional_dev_dependencies = [
+  "pytest-qt>=4.4",
+  "pytest-mock>=3.12",
+  "pytest-env>=1.1",
+  "import-linter>=2.0",
+  "pre-commit>=3.7",
+]
+workflow_ownership = "consumer-owned"
+script_ownership = "consumer-owned"
+
+[standards.python-tooling.config.ruff]
+line_length = 100
+extend_exclude = [
+  ".claude",
+  ".agents",
+  ".codex",
+  ".continue",
+  ".venv",
+  "build",
+  "dist",
+]
+
+[standards.python-tooling.config.type_checker]
+name = "basedpyright"
+mode = "strict"
+
+[standards.python-tooling.config.pytest]
+fail_under = 85
+markers = []
+coverage_exclude_also = []
+test_paths = ["tests"]
+
+[standards.python-tooling.config.coverage]
+parallel = false
+patch = []
+
+[standards.python-tooling.config.pip_audit]
+ignore_vulnerabilities = []
+
+[standards.python-tooling.config.ci]
+enabled = true
+performance = false
+
+[standards.python-tooling.config.vscode]
+format_on_save = true
+
+[standards.python-tooling.config.agent_instructions]
+include_fix_commands = true
+
+[standards.markdown-frontmatter]
+enabled = true
+version = "1.5"
+
+[standards.markdown-frontmatter.config]
+contract_version = "1.1"
+workflow_mode = "caller"
+workflow_ownership = "managed"
+schema = "markdown-frontmatter"
+required = true
+include = [
+  "README.md",
+  "CHANGELOG.md",
+  "CONTRIBUTING.md",
+  "NOTICE.md",
+  "SECURITY.md",
+  "docs/**/*.md",
+]
+exclude = [
+  "**/*.template.md",
+  "AGENTS.md",
+  "CLAUDE.md",
+  ".agents/**",
+  ".claude/**",
+  ".codex/**",
+  ".github/**",
+  "docs/STATUS.md",
+  "docs/TODO.md",
+  "docs/adr/template.md",
+  "docs/handoff/**",
+  "docs/specs/**",
+  "docs/superpowers/specs/**",
+  "node_modules/**",
+]
+
+[standards.markdown-frontmatter.config.references]
+enabled = false
+
+[standards.markdown-tooling]
+enabled = true
+version = "1.8"
+
+[standards.markdown-tooling.config]
+contract_version = "1.1"
+workflow_mode = "caller"
+lint_workflow_ownership = "managed"
+format_workflow_ownership = "managed"
+markdownlint_config_ownership = "managed"
+lint = true
+format = true
+markdown_globs = ["**/*.md"]
+config_globs = ["**/*.json", "**/*.jsonc", "**/*.yml", "**/*.yaml"]
+exclusions = [
+  { glob = ".pytest_cache/**", applies_to = "both", reason = "Generated pytest cache content is not repository documentation." },
+  { glob = ".venv/**", applies_to = "both", reason = "The uv-managed virtual environment contains third-party package documentation." },
+  { glob = ".agents/**", applies_to = "both", reason = "Package-owned agent assets must retain their released bytes." },
+  { glob = ".claude/**", applies_to = "both", reason = "Harness configuration is outside the documentation corpus." },
+  { glob = ".codex/**", applies_to = "both", reason = "Harness configuration is outside the documentation corpus." },
+  { glob = ".standards/**", applies_to = "both", reason = "Control-plane outputs must retain their reconciled bytes." },
+  { glob = ".github/PULL_REQUEST_TEMPLATE.md", applies_to = "both", reason = "The GitHub interaction template is maintained separately." },
+  { glob = ".github/workflows/format.yml", applies_to = "format", reason = "The exclusive managed caller is not Prettier-stable in 5.8.0; see upstream issue 48." },
+  { glob = ".github/workflows/lint-markdown.yml", applies_to = "format", reason = "The exclusive managed caller is not Prettier-stable in 5.8.0; see upstream issue 48." },
+  { glob = ".import_linter_cache/**", applies_to = "format", reason = "Generated Import Linter cache content is not repository source." },
+  { glob = "AGENTS.md", applies_to = "both", reason = "Agent instructions contain package-managed envelopes." },
+  { glob = "CLAUDE.md", applies_to = "both", reason = "Agent instructions contain package-managed envelopes." },
+  { glob = "docs/STATUS.md", applies_to = "both", reason = "Agent Handoff owns the live status document." },
+  { glob = "docs/TODO.md", applies_to = "both", reason = "Agent Handoff owns the live task document." },
+  { glob = "docs/adr/template.md", applies_to = "both", reason = "The authoring template intentionally contains placeholders." },
+  { glob = "docs/handoff/**", applies_to = "both", reason = "Agent Handoff governs this knowledge corpus." },
+]
+
+[standards.markdown-tooling.config.ci]
+lint_caller = true
+format_caller = true

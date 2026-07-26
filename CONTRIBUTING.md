@@ -1,10 +1,34 @@
+---
+schema_version: '1.1'
+id: 'runbook-4gwdkg-contributing'
+title: 'Contributing'
+description: 'Contribution policy, local development setup, quality gates, and repository workflow for Star Trek Retro Remake.'
+doc_type: 'runbook'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'user'
+tags:
+  - 'onboarding'
+  - 'policy'
+  - 'tooling'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # Contributing
 
-Thanks for your interest in *Star Trek Retro Remake*. The project is a personal labor of love — currently pre-scaffold, not yet open for external code contributions, but issues and design discussions are welcome.
+Thanks for your interest in _Star Trek Retro Remake_. The project is a personal labor of love under active development. v0.1 steps 1–10 are complete; external code contributions are not yet open, but issues and design discussions are welcome.
 
 ## Project status
 
-The canonical game design lives in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); the scaffold-phase operational notes live in [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md). The v0.1 scaffold (`pyproject.toml`, `src/stmrr/` package skeleton, ADRs 0001–0012, CI/CD workflows) has landed; the standards below are in effect.
+The canonical game design lives in [`docs/design/DESIGN.md`](docs/design/DESIGN.md); supplementary operational notes live in [`docs/design/tech-stack-pyside6.md`](docs/design/tech-stack-pyside6.md). The v0.1 foundation and runnable MVC shell (steps 1–10) have landed, Step 11 is next, and the standards below are in effect.
 
 ## Reporting issues
 
@@ -35,54 +59,55 @@ uv python install 3.14
 
 # Per repo clone
 cd star-trek-retro-remake
-uv sync --all-extras
-uv run pre-commit install   # arm the local hooks
+uv sync --locked --all-groups
 ```
 
 After that, run the project with:
 
 ```bash
-uv run python -m stmrr      # (post-scaffold; entry point lands with v0.1 view shell)
+uv run python -m stmrr
 ```
 
 ### Running the full check suite locally
 
-Pre-commit hooks cover most of this, but the explicit run catches anything skipped:
+The repository-owned gate is the authoritative local and CI check:
 
 ```bash
-uv run ruff format --check . \
-  && uv run ruff check . \
-  && uv run mypy src/stmrr \
-  && uv run lint-imports \
-  && uv run pytest
+uv run python scripts/check.py
 ```
 
-CI (`.github/workflows/ci.yml`) re-runs the same five steps on every push and PR. A push to `main` should be CI-green locally before it leaves your machine.
+It runs Ruff formatting and linting, BasedPyright strict, the import-linter contracts, branch-aware coverage with an aggregate 85% floor, and pip-audit. CI (`.github/workflows/ci.yml`) runs the same script on every push and PR. A push to `main` should be green locally before it leaves your machine.
+
+Run the targeted hygiene and layer hooks directly when reviewing all tracked files; do not install them into `.git/hooks`:
+
+```bash
+uv run pre-commit run --all-files
+```
 
 ## Coding standards
 
-Standards are taken from `docs/design/DESIGN.md` §10.6.
+Standards are taken from `docs/design/DESIGN.md` §10.6. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. Its reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md) governs Python code shape. Python Coding is intentionally absent from `.standards/config.toml` because Catalog 5 marks it non-selectable.
 
 ### Formatting and linting (ruff)
 
 - **Line length:** 100 characters
 - **Quote style:** double quotes
 - **Import sorting:** ruff's isort-compatible rules (`I` rule set enabled)
-- **Rule sets enabled:** `E`, `F`, `W`, `I`, `B`, `UP`, `SIM`, `RUF`. Add `D` (pydocstyle) only if docstring discipline becomes a problem.
+- **Rule sets:** the managed `[tool.ruff.lint]` table in `pyproject.toml` is authoritative.
 - **Formatter:** `ruff format`. No black, no separate isort.
 
-### Typing (mypy)
+### Typing (BasedPyright)
 
-- **`model/`, `controller/`, `config/`** run under `strict = true`.
-- **`view/`** runs under a relaxed profile (`disallow_untyped_defs = true` but not full strict) — Qt's stub coverage has rough edges.
-- **`tests/`** runs unchecked except for `disallow_incomplete_defs = true`.
-- Configuration lives in `pyproject.toml` under `[tool.mypy]`.
+- `src/`, `tests/`, and `scripts/` run under BasedPyright strict mode.
+- Warnings fail the gate.
+- Configuration lives in `pyproject.toml` under `[tool.basedpyright]`.
+- Third-party dynamic boundaries use narrow casts or diagnostic-specific, justified `# pyright: ignore[...]` comments; broad ignores are not accepted.
 
 ### Type hints
 
 - All public APIs (anything not prefixed with `_`) require complete type hints on parameters and return values.
-- Internal helpers may omit hints where mypy can infer cleanly.
-- `from __future__ import annotations` at the top of every module.
+- Internal helpers are typed wherever strict checking cannot infer a precise contract.
+- On Python 3.14+, do not add `from __future__ import annotations` merely for ordinary forward references. Existing uses remain where their runtime annotation behavior is understood and tested.
 
 ### Docstrings
 
@@ -92,7 +117,7 @@ Standards are taken from `docs/design/DESIGN.md` §10.6.
 
 ### Module-level conventions
 
-- One class per module is *not* required. Group closely-related classes.
+- One class per module is _not_ required. Group closely-related classes.
 - `__all__` declared in modules with public APIs.
 - Avoid circular imports by routing through `events.py` in the model and `model_bridge.py` in the controller — both are explicit decoupling seams.
 
@@ -106,14 +131,12 @@ Standards are taken from `docs/design/DESIGN.md` §10.6.
 
 ### Pre-commit hooks
 
-`pre-commit install` after `uv sync`. Hooks run:
+After `uv sync --locked --all-groups`, run `uv run pre-commit run --all-files` directly. Do not install hooks. These supplementary hooks run:
 
-- `ruff format`
-- `ruff check --fix`
-- `mypy` (cached)
+- standard file-hygiene checks
 - `import-linter`
 
-CI re-runs all checks; pre-commit is a local convenience.
+The complete Python gate remains `uv run python scripts/check.py`.
 
 ## Architectural rules
 
@@ -141,7 +164,7 @@ Maintainer commits are GPG-signed. External contributors do not need signed comm
 PRs are welcome for documentation fixes, typos, and external contributions. PRs should:
 
 - Reference an issue (one of the templates in `.github/ISSUE_TEMPLATE/`) when fixing a tracked problem.
-- Pass CI (`ruff`, `mypy`, `import-linter`, `pytest`).
+- Pass the repository gate (`uv run python scripts/check.py`) and the standards/Markdown workflows.
 - Stay focused — one PR per logical change.
 
 ## Architecture Decision Records

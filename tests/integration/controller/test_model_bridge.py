@@ -1,11 +1,17 @@
-"""Tests for ModelBridge — the blinker→Qt MVC seam (spec §6.2)."""
+"""Tests for the SPEC-S009 ModelBridge contract."""
 
 from __future__ import annotations
 
+from collections.abc import Callable
+from contextlib import AbstractContextManager
+from typing import cast
+
 import pytest
-from PySide6.QtCore import QObject
-from pytestqt.exceptions import capture_exceptions
+from blinker import NamedSignal
+from PySide6.QtCore import QObject, SignalInstance
+from pytestqt.exceptions import CapturedExceptions, capture_exceptions
 from pytestqt.qtbot import QtBot
+from pytestqt.wait_signal import SignalBlocker
 
 from stmrr.controller.model_bridge import ModelBridge
 from stmrr.model.entities.game_object import EntityId
@@ -22,6 +28,11 @@ from stmrr.model.events import (
 from stmrr.model.state.game_state_manager import GameStateManager
 from stmrr.model.state.states import MainMenuState, SectorMapState
 from stmrr.model.world.grid_position import GridPosition
+
+
+def _emitted_arg(blocker: SignalBlocker) -> object:
+    """Return the first argument from a successfully completed signal wait."""
+    return cast(list[object], blocker.args)[0]
 
 
 def _ship_moved_payload() -> ShipMovedPayload:
@@ -45,7 +56,8 @@ def test_construction_is_a_qobject(bridge: ModelBridge) -> None:
 
 
 def test_current_state_delegates_and_is_read_only(qtbot: QtBot) -> None:
-    # CR-003: prove DELEGATION (same instance, not a fresh MainMenuState) and
+    # SPEC-S009 FR-006, FR-008, and DR-002 require delegation to the retained
+    # manager (same instance, not a fresh MainMenuState) and
     # read-only (no setter). `isinstance` alone would pass a broken impl that
     # returns `MainMenuState()` instead of `self._manager.current_state`.
     manager = GameStateManager(MainMenuState())
@@ -53,7 +65,7 @@ def test_current_state_delegates_and_is_read_only(qtbot: QtBot) -> None:
     try:
         assert bridge.current_state is manager.current_state
         with pytest.raises(AttributeError):
-            bridge.current_state = MainMenuState()  # type: ignore[misc]
+            bridge.current_state = MainMenuState()  # pyright: ignore[reportAttributeAccessIssue]  # This test assigns through the read-only API to prove no setter exists.
     finally:
         bridge.teardown()
 
@@ -63,28 +75,28 @@ def test_ship_moved_reemitted_with_same_payload(bridge: ModelBridge, qtbot: QtBo
     with qtbot.waitSignal(bridge.ship_moved, timeout=1000) as blocker:
         ship_moved.send(object(), payload=payload)
     # Qt slot receives the EXACT instance the model sent — no copy/unpack.
-    assert blocker.args[0] is payload
+    assert _emitted_arg(blocker) is payload
 
 
 def test_docked_reemitted_with_same_payload(bridge: ModelBridge, qtbot: QtBot) -> None:
     payload = _docked_payload()
     with qtbot.waitSignal(bridge.docked, timeout=1000) as blocker:
         docked.send(object(), payload=payload)
-    assert blocker.args[0] is payload
+    assert _emitted_arg(blocker) is payload
 
 
 def test_turn_advanced_reemitted_with_same_payload(bridge: ModelBridge, qtbot: QtBot) -> None:
     payload = _turn_advanced_payload()
     with qtbot.waitSignal(bridge.turn_advanced, timeout=1000) as blocker:
         turn_advanced.send(object(), payload=payload)
-    assert blocker.args[0] is payload
+    assert _emitted_arg(blocker) is payload
 
 
 def test_state_changed_reemitted_with_same_payload(bridge: ModelBridge, qtbot: QtBot) -> None:
     payload = StateChangedPayload(from_state=MainMenuState, to_state=SectorMapState)
     with qtbot.waitSignal(bridge.state_changed, timeout=1000) as blocker:
         state_changed.send(object(), payload=payload)
-    assert blocker.args[0] is payload
+    assert _emitted_arg(blocker) is payload
 
 
 def test_state_changed_end_to_end_via_real_transition(qtbot: QtBot) -> None:
@@ -93,7 +105,7 @@ def test_state_changed_end_to_end_via_real_transition(qtbot: QtBot) -> None:
     try:
         with qtbot.waitSignal(bridge.state_changed, timeout=1000) as blocker:
             manager.transition_to(SectorMapState())
-        payload = blocker.args[0]
+        payload = _emitted_arg(blocker)
         assert isinstance(payload, StateChangedPayload)
         assert payload.from_state is MainMenuState
         assert payload.to_state is SectorMapState
@@ -103,7 +115,8 @@ def test_state_changed_end_to_end_via_real_transition(qtbot: QtBot) -> None:
 
 @pytest.mark.parametrize("target", ["ship_moved", "docked", "turn_advanced", "state_changed"])
 def test_each_connection_uses_weak_false(qtbot: QtBot, target: str) -> None:
-    # CR-NEW-002: prove EACH of the four connections is weak=False, not merely
+    # SPEC-S009 FR-007 and DR-003 require EACH connection to use weak=False,
+    # not merely
     # "at least one". A single weak=False anywhere keeps the bridge alive after
     # refs drop, so the survival check must ISOLATE one connection at a time:
     # disconnect the other three handlers, leaving only `target` connected,
@@ -145,7 +158,7 @@ def test_each_connection_uses_weak_false(qtbot: QtBot, target: str) -> None:
     payload = payloads[target]()
     with qtbot.waitSignal(getattr(recovered, target), timeout=1000) as blocker:
         signals[target].send(object(), payload=payload)
-    assert blocker.args[0] is payload
+    assert _emitted_arg(blocker) is payload
     recovered.teardown()  # idempotent for the three already-disconnected handlers
 
 
@@ -163,9 +176,13 @@ def test_each_connection_uses_weak_false(qtbot: QtBot, target: str) -> None:
     ],
 )
 def test_teardown_disconnects_each_signal(
-    bridge: ModelBridge, qtbot: QtBot, model_signal, qt_signal_name, payload_factory
+    bridge: ModelBridge,
+    qtbot: QtBot,
+    model_signal: NamedSignal,
+    qt_signal_name: str,
+    payload_factory: Callable[[], object],
 ) -> None:
-    qt_signal = getattr(bridge, qt_signal_name)
+    qt_signal = cast(SignalInstance, getattr(bridge, qt_signal_name))
     bridge.teardown()
     # After teardown the blinker send must NOT reach the Qt signal.
     with qtbot.assertNotEmitted(qt_signal):
@@ -190,9 +207,11 @@ def test_teardown_is_idempotent(bridge: ModelBridge) -> None:
     ],
 )
 def test_owner_side_teardown_then_destruction_is_safe(
-    qtbot: QtBot, model_signal, payload_factory
+    qtbot: QtBot,
+    model_signal: NamedSignal,
+    payload_factory: Callable[[], object],
 ) -> None:
-    # Owner-side pattern (spec §5.7): teardown() BEFORE destruction, never
+    # Owner-side pattern (SPEC-S009 IR-004): teardown() BEFORE destruction, never
     # destroyed.connect(teardown). A post-teardown send must reach no handler
     # and raise nothing (no "Signal source has been deleted").
     manager = GameStateManager(MainMenuState())
@@ -205,7 +224,8 @@ def test_owner_side_teardown_then_destruction_is_safe(
 
 
 def test_slot_exception_does_not_propagate(bridge: ModelBridge) -> None:
-    # Spec §4.6 / SA-001: a raising Qt slot is routed to sys.excepthook on
+    # SPEC-S009 FR-011 and NFR-004: a raising Qt slot is routed to
+    # sys.excepthook on
     # PySide6 6.11.0; blinker send() returns normally. Do NOT use pytest.raises
     # around send(). capture_exceptions() intercepts so pytest-qt doesn't fail
     # the test on the captured exception.
@@ -213,7 +233,7 @@ def test_slot_exception_does_not_propagate(bridge: ModelBridge) -> None:
         raise RuntimeError("slot boom")
 
     bridge.ship_moved.connect(boom)
-    with capture_exceptions() as exceptions:
+    with cast(AbstractContextManager[CapturedExceptions], capture_exceptions()) as exceptions:
         result = ship_moved.send(object(), payload=_ship_moved_payload())
     assert isinstance(result, list)  # send() returned a result list — did not propagate/raise
     assert any(isinstance(exc, RuntimeError) for (_type, exc, _tb) in exceptions)

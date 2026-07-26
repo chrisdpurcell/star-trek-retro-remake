@@ -1,10 +1,10 @@
 """SectorMap: dict-backed bounded entity container for the v0.1 model layer.
 
-Owned by the wire-up layer (umbrella spec §5.8), passed by reference into
+Owned by the wire-up layer (SPEC-ML01 FR-018), passed by reference into
 action methods (Starship.move_to, Starship.dock_at, TurnManager.advance_turn).
 Owns no game logic — it is the storage + spatial-bounds primitive.
 
-Error semantics are asymmetric per umbrella §5.7 + step-6 spec §4.3.1:
+Error semantics are asymmetric per SPEC-S006 FR-003 and FR-004:
 - ``add(entity)`` raises ``ValueError`` (wrong-value condition) on either
   out-of-bounds position OR duplicate EntityId; checks bounds before
   duplicate-ID, first failure wins, no mutation on failure.
@@ -46,7 +46,9 @@ class SectorMap:
 
     def __init__(self, width: int, height: int, depth: int) -> None:
         for axis_name, value in (("width", width), ("height", height), ("depth", depth)):
-            if not isinstance(value, int) or isinstance(value, bool):
+            # Runtime callers can bypass annotations; reject invalid dimensions
+            # before the map exposes any partially initialized state.
+            if not isinstance(value, int) or isinstance(value, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
                 raise TypeError(f"{axis_name} must be int, got {type(value).__name__}")
             if value < 1:
                 raise ValueError(f"{axis_name} must be >= 1, got {value}")

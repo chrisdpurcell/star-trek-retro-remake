@@ -16,7 +16,7 @@ src/stmrr/
 └── app.py        # Entry point: build QApplication, wire MVC, show MainWindow.
 ```
 
-**Single seam rule:** `controller/model_bridge.py` is the only module that imports both `model.events` and `PySide6`. Enforced mechanically by `import-linter` (config in `.importlinter` at repo root) running in CI alongside ruff + mypy + pytest. See `docs/design/DESIGN.md` §9.1 "Layer Enforcement" for the contract.
+**Single seam rule:** `controller/model_bridge.py` is the only module that imports both `model.events` and `PySide6`. Enforced mechanically by `import-linter` (config in `.importlinter` at repo root) inside the consumer-owned `scripts/check.py` gate alongside Ruff, BasedPyright strict, branch-aware coverage, and pip-audit. See `docs/design/DESIGN.md` §9.1 "Layer Enforcement" for the contract.
 
 ## Map rendering
 

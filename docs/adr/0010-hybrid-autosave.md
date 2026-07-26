@@ -1,7 +1,30 @@
+---
+schema_version: '1.1'
+id: 'adr-0010-star-trek-retro-remake-hybrid-autosave'
+title: 'Hybrid auto-save: mode transitions plus N-turn fallback'
+description: 'Decision to auto-save on mode transitions with a turn-count fallback.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0010 — Hybrid auto-save: mode transitions plus N-turn fallback
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

@@ -1,6 +1,29 @@
+---
+schema_version: '1.1'
+id: 'log-rqgl55-changelog'
+title: 'Changelog'
+description: 'Chronological record of notable changes and release history for Star Trek Retro Remake.'
+doc_type: 'log'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'changelog'
+  - 'release'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # Changelog
 
-All notable changes to *Star Trek Retro Remake* are documented in this file.
+All notable changes to _Star Trek Retro Remake_ are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/) once the first release lands.
 
@@ -31,6 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- Migrated the repository from legacy Agent Handoff v3 authority to Project Standards release 5.8.0 using Catalog 5, with Agent Handoff 1.4, Project Spec 1.4, Python Tooling 1.8, Markdown Frontmatter 1.5, and Markdown Tooling 1.8. The Python gate now uses Python 3.14, uv locked dependency groups, Ruff, BasedPyright strict, import-linter, branch-aware coverage.py (85% aggregate floor), and pip-audit.
 - Moved `DESIGN.md` and `tech-stack-pyside6.md` from the repo root into `docs/design/`. All cross-references in `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `CLAUDE.md`, the LLM-internal `docs/` tree, and the GitHub issue templates updated to the new paths.
 
 ### Repository Configuration (applied via gh API after first CI run)

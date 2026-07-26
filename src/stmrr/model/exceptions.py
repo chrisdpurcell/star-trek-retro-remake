@@ -4,11 +4,10 @@ Single-file hierarchy used by every action method and the state-machine
 transition guard. Pure-Python runtime leaf — only stdlib runtime imports.
 Forward-referenced types (`EntityId`, `GridPosition`, `GameState`) live
 under `if TYPE_CHECKING:` to preserve the no-cycles property of the
-model-layer DAG (umbrella spec §6).
+model-layer DAG (SPEC-S005 D-004).
 
-See spec `docs/specs/v0.1-step-5-exceptions-events-and-state-stub.md` §4
-for the hierarchy contract, kwargs-only signature rationale, and locked
-__str__ format strings.
+See SPEC-S005 FR-001 through FR-003 for the hierarchy contract,
+kwargs-only signature rationale, and locked __str__ format strings.
 """
 
 from __future__ import annotations
@@ -65,7 +64,7 @@ class InactiveEntityError(IllegalActionError):
 
 
 class NotDockableError(IllegalActionError):
-    """Raised when a dock target is unavailable. Conflated check per spec §5.6.2."""
+    """Raised when a dock target is unavailable; SPEC-ML01 FR-007 conflates its causes."""
 
     def __init__(self, *, ship_id: EntityId, station_id: EntityId) -> None:
         self.ship_id: EntityId = ship_id

@@ -1,7 +1,31 @@
+---
+schema_version: '1.1'
+id: 'adr-0002-star-trek-retro-remake-linux-only'
+title: 'Linux-only, no Windows or macOS support'
+description: 'Decision to support Linux only and exclude Windows and macOS.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+  - 'policy'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0002 — Linux-only, no Windows or macOS support
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 

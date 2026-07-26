@@ -1,7 +1,31 @@
+---
+schema_version: '1.1'
+id: 'adr-0003-star-trek-retro-remake-model-layer-qt-free'
+title: 'Model layer has zero Qt imports, enforced by import-linter'
+description: 'Decision to keep the model layer free of Qt imports and enforce the boundary with import-linter.'
+doc_type: 'adr'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'adr'
+  - 'architecture'
+  - 'decision'
+  - 'testing'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # ADR-0003 — Model layer has zero Qt imports, enforced by import-linter
 
-**Status:** Accepted
-**Date:** 2026-04-26
+**Status:** Accepted **Date:** 2026-04-26
 
 ## Context
 
@@ -9,7 +33,7 @@ The model layer is the testable core of the game — turn logic, combat resoluti
 
 ## Decision
 
-`src/stmrr/model/` must not import `PySide6`, `shiboken6`, or any other Qt module. Model events use `blinker` signals, not Qt signals. The single seam is `src/stmrr/controller/model_bridge.py`, which is the only module that imports both `model.events` and `PySide6`. The rule is enforced mechanically by `import-linter` running in CI alongside `ruff`, `mypy`, and `pytest`. The contract config lives at `.importlinter` in the repo root.
+`src/stmrr/model/` must not import `PySide6`, `shiboken6`, or any other Qt module. Model events use `blinker` signals, not Qt signals. The single seam is `src/stmrr/controller/model_bridge.py`, which is the only module that imports both `model.events` and `PySide6`. The rule is enforced mechanically by `import-linter` inside the consumer-owned CI gate alongside Ruff, BasedPyright strict, branch-aware coverage.py/pytest, and pip-audit. The contract config lives at `.importlinter` in the repo root.
 
 A secondary contract forbids `view/` from importing `model.events` directly, ensuring all model→view communication goes through the bridge.
 

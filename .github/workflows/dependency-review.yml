@@ -6,7 +6,7 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write  # let the action post a summary comment
+  pull-requests: write # let the action post a summary comment
 
 jobs:
   review:
@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Review added/changed dependencies
         uses: actions/dependency-review-action@v4

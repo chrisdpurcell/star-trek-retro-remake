@@ -1,8 +1,31 @@
+---
+schema_version: '1.1'
+id: 'prompt-fzfbcw-tos-style-starship-asset-prompts'
+title: 'TOS-style starship asset prompts for ChatGPT Images 2.0'
+description: 'Paste-ready prompts and generation guidance for TOS-inspired isometric starship placeholder assets.'
+doc_type: 'prompt'
+status: 'review'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'agent'
+tags:
+  - 'agent'
+  - 'research'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # TOS-style starship asset prompts for ChatGPT Images 2.0
 
 A complete, paste-ready prompt kit for generating placeholder isometric sprites and supporting art for an unofficial 23rd-century-style fan strategy game, built around the **`gpt-image-2`** model released by OpenAI on April 21, 2026. Every prompt below uses **descriptive visual-language only** — no copyrighted vessel names, registries, or class designators — keeping the asset set clearly derivative-not-copy for IP defensibility.
 
-One critical finding up front: **OpenAI's official docs state `gpt-image-2` does *not* currently support transparent backgrounds** (a regression from `gpt-image-1.5`). The recommended workflow below generates each sprite on a flat keyable background and removes it in post (or falls back to `gpt-image-1.5` when native alpha is required). Treat any "transparent background" line in the prompts as a best-effort hint plus a planning instruction for the model to leave clean cuttable edges.
+One critical finding up front: **OpenAI's official docs state `gpt-image-2` does _not_ currently support transparent backgrounds** (a regression from `gpt-image-1.5`). The recommended workflow below generates each sprite on a flat keyable background and removes it in post (or falls back to `gpt-image-1.5` when native alpha is required). Treat any "transparent background" line in the prompts as a best-effort hint plus a planning instruction for the model to leave clean cuttable edges.
 
 ---
 
@@ -18,7 +41,7 @@ For game-asset work specifically: always say **"isometric, 2:1 dimetric, paralle
 
 This block locks the visual language across the entire asset set. **Copy it verbatim into every prompt below** — never paraphrase, never trim. Style drift is silent and cumulative; the only defense is a literal repeated paragraph plus reference-image conditioning on the first approved hero asset.
 
-```
+```text
 STYLE ANCHOR — paste verbatim at the top of every prompt:
 
 Rendering style: 1966–1969 television-era science-fiction filming-miniature
@@ -57,7 +80,7 @@ will be downscaled to 256×256 for in-game use, so silhouette must read
 clearly at small sizes.
 ```
 
-When you generate the **first** approved asset (recommended: the Federation-style cruiser NE facing — see C1 below), save it as `_hero_reference.png` and **pass it as a reference image on every subsequent prompt** with an added line: *"Match the palette, brushwork, lighting angle, surface finish, and overall era of reference image #1 exactly."* This is the single biggest consistency win available in the April 2026 model.
+When you generate the **first** approved asset (recommended: the Federation-style cruiser NE facing — see C1 below), save it as `_hero_reference.png` and **pass it as a reference image on every subsequent prompt** with an added line: _"Match the palette, brushwork, lighting angle, surface finish, and overall era of reference image #1 exactly."_ This is the single biggest consistency win available in the April 2026 model.
 
 ---
 
@@ -67,9 +90,9 @@ Filenames follow the project convention `{category}_{name}_{variant}.png` in low
 
 ---
 
-### C1. Federation-style cruiser — NE facing  →  `ship_federation_cruiser_facing_ne.png`
+### C1. Federation-style cruiser — NE facing → `ship_federation_cruiser_facing_ne.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 Subject: A mid-23rd-century human-coalition exploratory cruiser, rendered
@@ -133,9 +156,9 @@ not glossy; no chrome highlights, no plastic sheen, no AI-airbrush look.
 
 ---
 
-### C2. Federation-style cruiser — SE facing  →  `ship_federation_cruiser_facing_se.png`
+### C2. Federation-style cruiser — SE facing → `ship_federation_cruiser_facing_se.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match its
@@ -166,9 +189,9 @@ materials, same lighting direction. Bow pointing toward lower-right.
 
 ---
 
-### C3. Federation-style cruiser — SW facing  →  `ship_federation_cruiser_facing_sw.png`
+### C3. Federation-style cruiser — SW facing → `ship_federation_cruiser_facing_sw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match
@@ -193,9 +216,9 @@ same materials, same lighting direction. Bow pointing toward lower-left.
 
 ---
 
-### C4. Federation-style cruiser — NW facing  →  `ship_federation_cruiser_facing_nw.png`
+### C4. Federation-style cruiser — NW facing → `ship_federation_cruiser_facing_nw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match
@@ -219,9 +242,9 @@ same materials, same lighting direction. Bow pointing toward upper-left.
 
 ---
 
-### C5. Klingon-style warship — NE facing  →  `ship_klingon_warship_facing_ne.png`
+### C5. Klingon-style warship — NE facing → `ship_klingon_warship_facing_ne.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match the
@@ -286,9 +309,9 @@ a uniformly dark-green ship.
 
 ---
 
-### C6. Klingon-style warship — SE facing  →  `ship_klingon_warship_facing_se.png`
+### C6. Klingon-style warship — SE facing → `ship_klingon_warship_facing_se.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match
@@ -315,9 +338,9 @@ Constraints: identical to C5. Bow pointing toward lower-right.
 
 ---
 
-### C7. Klingon-style warship — SW facing  →  `ship_klingon_warship_facing_sw.png`
+### C7. Klingon-style warship — SW facing → `ship_klingon_warship_facing_sw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png]
 [Reference image #2: ship_klingon_warship_facing_ne.png — match exactly.]
@@ -335,9 +358,9 @@ pointing toward lower-left.
 
 ---
 
-### C8. Klingon-style warship — NW facing  →  `ship_klingon_warship_facing_nw.png`
+### C8. Klingon-style warship — NW facing → `ship_klingon_warship_facing_nw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png]
 [Reference image #2: ship_klingon_warship_facing_ne.png — match exactly.]
@@ -355,9 +378,9 @@ Constraints identical to C5. Bow pointing toward upper-left.
 
 ---
 
-### C9. Romulan-style warbird — NE facing  →  `ship_romulan_warbird_facing_ne.png`
+### C9. Romulan-style warbird — NE facing → `ship_romulan_warbird_facing_ne.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match the
 overall era, miniature aesthetic, and 1960s color-television look.]
@@ -422,9 +445,9 @@ companion ships, no shadow, no environment.
 
 ---
 
-### C10. Romulan-style warbird — SE facing  →  `ship_romulan_warbird_facing_se.png`
+### C10. Romulan-style warbird — SE facing → `ship_romulan_warbird_facing_se.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png]
 [Reference image #2: ship_romulan_warbird_facing_ne.png — match palette,
@@ -445,9 +468,9 @@ pointing toward lower-right.
 
 ---
 
-### C11. Romulan-style warbird — SW facing  →  `ship_romulan_warbird_facing_sw.png`
+### C11. Romulan-style warbird — SW facing → `ship_romulan_warbird_facing_sw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png]
 [Reference image #2: ship_romulan_warbird_facing_ne.png — match exactly.]
@@ -465,9 +488,9 @@ pointing toward lower-left.
 
 ---
 
-### C12. Romulan-style warbird — NW facing  →  `ship_romulan_warbird_facing_nw.png`
+### C12. Romulan-style warbird — NW facing → `ship_romulan_warbird_facing_nw.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png]
 [Reference image #2: ship_romulan_warbird_facing_ne.png — match exactly.]
@@ -485,9 +508,9 @@ Constraints identical to C9. Bow pointing toward upper-left.
 
 ---
 
-### C13. Asteroid  →  `anomaly_asteroid.png`
+### C13. Asteroid → `anomaly_asteroid.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 Subject: A single irregular space asteroid, rendered as a hand-sculpted
@@ -519,9 +542,9 @@ no AI airbrush look. No text, no labels.
 
 ---
 
-### C14. Debris field  →  `anomaly_debris_field.png`
+### C14. Debris field → `anomaly_debris_field.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match the
 hull palette and miniature finish so the wreckage clearly reads as
@@ -556,9 +579,9 @@ debris, not a ship.
 
 ---
 
-### C15. Nebula  →  `anomaly_nebula.png`
+### C15. Nebula → `anomaly_nebula.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 Subject: A 1960s television-effects nebula, rendered as a back-lit
@@ -590,9 +613,9 @@ text. No ship, no debris.
 
 ---
 
-### C16. Black hole / spatial anomaly  →  `anomaly_black_hole.png`
+### C16. Black hole / spatial anomaly → `anomaly_black_hole.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 
 Subject: A 1960s television-effects spatial anomaly, rendered as a
@@ -626,9 +649,9 @@ scientifically accurate black hole. No text, no labels.
 
 ---
 
-### C17. Starbase  →  `station_starbase.png`
+### C17. Starbase → `station_starbase.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B]
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match the
 hull palette, paint finish, and miniature aesthetic so the starbase
@@ -677,9 +700,9 @@ No environment, no stars, no shadow.
 
 ---
 
-### C18. App icon  →  `icon_app.png`
+### C18. App icon → `icon_app.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B — but override the "framing" line:
 this asset is the game's identity icon, not a unit sprite.]
 [Reference image #1: ship_federation_cruiser_facing_ne.png — match the
@@ -720,9 +743,9 @@ but stylized enough to be clearly derivative-not-copy. Generate at
 
 ---
 
-### C19. Splash background  →  `bg_splash_main.png`
+### C19. Splash background → `bg_splash_main.png`
 
-```
+```text
 [PASTE STYLE ANCHOR FROM SECTION B — but override the "framing" and
 "output" lines: this asset is a 16:9 splash background, not a centered
 sprite. Do NOT generate on a magenta keying background; this is a
@@ -785,7 +808,7 @@ For every generation, eyeball a checklist in this order: **silhouette, palette, 
 
 ### How to maintain visual consistency across the set
 
-Generate the **Federation cruiser NE facing first** (C1), iterate it until it's the best example of your style anchor in practice, save it as `_hero_reference.png`, and then **pass it as reference image #1 on every subsequent prompt** including all the non-Federation ships, the starbase, the icon, and the splash. The hero reference is what locks the era and palette across the set; the literal repeated style anchor paragraph is what locks the framing rules. Then for each of the three ship lines (Federation, Klingon-style, Romulan-style), generate the NE facing first, approve it, and use *that* as a second reference image for the other three facings of the same ship. This two-tier reference structure (universe hero → ship hero → facings) is the difference between a coherent placeholder set and a Frankenstein gallery.
+Generate the **Federation cruiser NE facing first** (C1), iterate it until it's the best example of your style anchor in practice, save it as `_hero_reference.png`, and then **pass it as reference image #1 on every subsequent prompt** including all the non-Federation ships, the starbase, the icon, and the splash. The hero reference is what locks the era and palette across the set; the literal repeated style anchor paragraph is what locks the framing rules. Then for each of the three ship lines (Federation, Klingon-style, Romulan-style), generate the NE facing first, approve it, and use _that_ as a second reference image for the other three facings of the same ship. This two-tier reference structure (universe hero → ship hero → facings) is the difference between a coherent placeholder set and a Frankenstein gallery.
 
 ### April 2026 release quirks to watch for
 

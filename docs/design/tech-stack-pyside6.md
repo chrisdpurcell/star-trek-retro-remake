@@ -1,8 +1,30 @@
+---
+schema_version: '1.1'
+id: 'decision-k83804-pure-pyside6-tech-stack'
+title: 'Tech Stack: Pure PySide6'
+description: 'Supplementary PySide6 stack decision and scaffold-era operational reference, subordinate to the canonical game design document.'
+doc_type: 'decision'
+status: 'active'
+created: '2026-04-26'
+updated: '2026-07-26'
+reviewed: null
+owner: 'project-maintainer'
+consumer: 'mix'
+tags:
+  - 'architecture'
+  - 'decision'
+  - 'tooling'
+aliases: []
+related: []
+source: []
+confidence: 'unknown'
+visibility: 'public'
+license: null
+---
+
 # Tech Stack: Pure PySide6 (Replaces §6.2 visual notes, §9.1, §9.2)
 
-**Project:** Star Trek Retro Remake (rewrite)
-**Status:** Tech stack decision, pre-scaffold
-**Audience:** Claude Code as implementer
+**Project:** Star Trek Retro Remake (rewrite) **Status:** Living supplementary operational reference **Audience:** Claude Code as implementer
 
 > **Note (April 2026):** `DESIGN.md` is now the canonical project document. It absorbs and supersedes most of this tech-stack artifact's content. This document is retained for the scaffold-phase operational content it contains — the repo-prep steps in §13, the full library-exploration rationale in §15, and the scaffold step order in §11 — which `DESIGN.md` doesn't duplicate. Where this doc and `DESIGN.md` disagree, `DESIGN.md` wins.
 
@@ -10,13 +32,7 @@
 
 ## 1. Stack Decision
 
-**Language:** Python 3.14+
-**UI + Rendering:** PySide6 (Qt 6.5+) — single framework, single event loop
-**Map rendering:** `QGraphicsView` + `QGraphicsScene` with custom `QGraphicsItem` subclasses
-**Config / save format:** TOML (`tomllib` read, `tomli_w` write); `QSettings` INI for window/dock layout state (binary `QByteArray` doesn't fit cleanly in TOML)
-**Package manager:** `uv`
-**Test framework:** `pytest` + `pytest-qt` + `pytest-cov`
-**Distribution:** AppImage via `python-appimage` or `briefcase`; `pyproject.toml`-based install for dev
+**Language:** Python 3.14+ **UI + Rendering:** PySide6 (Qt 6.5+) — single framework, single event loop **Map rendering:** `QGraphicsView` + `QGraphicsScene` with custom `QGraphicsItem` subclasses **Config / save format:** TOML (`tomllib` read, `tomli_w` write); `QSettings` INI for window/dock layout state (binary `QByteArray` doesn't fit cleanly in TOML) **Package manager:** `uv` **Test framework:** `pytest` + `pytest-qt` + coverage.py **Distribution:** AppImage via `python-appimage` or `briefcase`; `pyproject.toml`-based install for dev
 
 **Dropped from prior stack:** `pygame-ce`, SDL window embedding, dual event-loop bridging, libsdl2-dev system dep.
 
@@ -30,7 +46,7 @@ Hybrid State Machine + GameObject + Component + MVC. **Conceptually unchanged fr
 
 ### 2.1 Layer Boundaries (strict)
 
-```
+```text
 src/stmrr/
 ├── model/          # Pure Python. No Qt, no PySide6 imports. Headless-testable.
 │   ├── state/      # GameStateManager, GameState subclasses
@@ -98,7 +114,7 @@ The map is the central element. This subsystem deserves more design weight than 
 ### 3.2 Custom `QGraphicsItem` Subclasses
 
 | Item | Role | Notes |
-|------|------|-------|
+| --- | --- | --- |
 | `GridCellItem` | One per grid cell, manages hover/select highlight | Pooled. Reused on mode switch. |
 | `GridLineItem` | Iso grid lines per z-level | Dashed pattern denotes z-distance from active layer (already in v0.0.13–v0.0.15 — preserve behavior). |
 | `StarshipItem` | Renders ship sprite + faction color + facing arrow | Subscribes to model events for hull/shield/position updates. |
@@ -141,7 +157,7 @@ Transitions emit a Python event (`StateChanged`); the model bridge converts to a
 
 ### 5.1 Event Flow (input → model → view)
 
-```
+```text
 User clicks grid cell
     ↓
 QGraphicsView.mousePressEvent
@@ -173,7 +189,7 @@ For UI-driven actions, controller calls model methods directly (synchronous). Mo
 
 ### 6.1 Aesthetic Target
 
-Mid-1990s "game in an application window" — think *Master of Orion 2*, *Heroes of Might and Magic 2*, *X-COM UFO Defense*, MUSHclient, zMUD. Characteristics:
+Mid-1990s "game in an application window" — think _Master of Orion 2_, _Heroes of Might and Magic 2_, _X-COM UFO Defense_, MUSHclient, zMUD. Characteristics:
 
 - Resizable application window with full chrome (menu bar, toolbar, status bar, dockable panels).
 - Chunky 3D-bevel buttons (raised/pressed states clearly visible).
@@ -186,27 +202,27 @@ Mid-1990s "game in an application window" — think *Master of Orion 2*, *Heroes
 
 ### 6.2 Color Palette
 
-| Token | Hex | Usage |
-|-------|-----|-------|
-| `bg.deep` | `#0A0E1A` | Outer window background, scene background |
-| `bg.panel` | `#1A1F2E` | Dock panel backgrounds |
-| `bg.raised` | `#2A3142` | Button face (default) |
-| `bg.sunken` | `#0F1320` | Pressed button, input field background |
-| `border.bright` | `#4A5878` | Top/left bevel highlight |
-| `border.dark` | `#0A0E1A` | Bottom/right bevel shadow |
-| `accent.federation` | `#4DD0E1` | Federation cyan, primary accent |
-| `accent.amber` | `#FFAA00` | LCARS-adjacent amber, secondary accent, warnings |
-| `text.primary` | `#D4DCE8` | Default panel text |
-| `text.dim` | `#7A8499` | Secondary labels, disabled |
-| `status.shield` | `#4DD0E1` | Shield bars |
-| `status.hull` | `#7CFC00` | Hull integrity (green→yellow→red gradient by %) |
-| `status.energy` | `#FFEE00` | Energy bars |
-| `alert.red` | `#FF3030` | Red alert, hull critical |
-| `faction.klingon` | `#CC2020` | |
-| `faction.romulan` | `#208030` | |
-| `faction.gorn` | `#A06030` | |
-| `faction.orion` | `#90D000` | |
-| `faction.tholian` | `#E040E0` | |
+| Token               | Hex       | Usage                                            |
+| ------------------- | --------- | ------------------------------------------------ |
+| `bg.deep`           | `#0A0E1A` | Outer window background, scene background        |
+| `bg.panel`          | `#1A1F2E` | Dock panel backgrounds                           |
+| `bg.raised`         | `#2A3142` | Button face (default)                            |
+| `bg.sunken`         | `#0F1320` | Pressed button, input field background           |
+| `border.bright`     | `#4A5878` | Top/left bevel highlight                         |
+| `border.dark`       | `#0A0E1A` | Bottom/right bevel shadow                        |
+| `accent.federation` | `#4DD0E1` | Federation cyan, primary accent                  |
+| `accent.amber`      | `#FFAA00` | LCARS-adjacent amber, secondary accent, warnings |
+| `text.primary`      | `#D4DCE8` | Default panel text                               |
+| `text.dim`          | `#7A8499` | Secondary labels, disabled                       |
+| `status.shield`     | `#4DD0E1` | Shield bars                                      |
+| `status.hull`       | `#7CFC00` | Hull integrity (green→yellow→red gradient by %)  |
+| `status.energy`     | `#FFEE00` | Energy bars                                      |
+| `alert.red`         | `#FF3030` | Red alert, hull critical                         |
+| `faction.klingon`   | `#CC2020` |                                                  |
+| `faction.romulan`   | `#208030` |                                                  |
+| `faction.gorn`      | `#A06030` |                                                  |
+| `faction.orion`     | `#90D000` |                                                  |
+| `faction.tholian`   | `#E040E0` |                                                  |
 
 Palette stored in `view/theme/palette.py` as constants, **not** scattered through QSS literals. QSS files reference token names via Python f-string preprocessing at app startup.
 
@@ -222,7 +238,7 @@ Register via `QFontDatabase.addApplicationFont()` at startup. Never rely on syst
 
 - Single root stylesheet `view/theme/retro.qss` applied via `QApplication.setStyleSheet()`.
 - Per-widget overrides via `setObjectName()` + ID selectors, not inline styles.
-- Force consistent style across platforms with `QApplication.setStyle("Fusion")` *before* loading QSS — Fusion is the most QSS-receptive built-in style and ignores OS theming.
+- Force consistent style across platforms with `QApplication.setStyle("Fusion")` _before_ loading QSS — Fusion is the most QSS-receptive built-in style and ignores OS theming.
 - Key selectors to author:
   - `QMainWindow`, `QDockWidget`, `QDockWidget::title` (panel title bars with faction-colored stripe)
   - `QPushButton`, `QPushButton:pressed`, `QPushButton:disabled` (3D bevel via `border-style: outset/inset`)
@@ -237,7 +253,7 @@ Register via `QFontDatabase.addApplicationFont()` at startup. Never rely on syst
 
 - **Default:** windowed, resizable, 1600×1000 minimum (matches existing spec).
 - **Fullscreen:** opt-in toggle via `View` menu (`F11`). Borderless fullscreen, not exclusive.
-- **No native window decoration override** — let the user's WM/DE draw the title bar. The retro feel comes from the *interior* chrome (menu bar, dock title bars, button bevels), not from custom-painted window borders.
+- **No native window decoration override** — let the user's WM/DE draw the title bar. The retro feel comes from the _interior_ chrome (menu bar, dock title bars, button bevels), not from custom-painted window borders.
 - **Dock arrangement and window geometry:** persisted via `QSettings` to an INI file at `~/.config/star_trek_retro_remake/window_state.ini`. `QSettings` handles `QMainWindow.saveState()` (a binary `QByteArray`) natively without base64 encoding. Game settings, key bindings, and save data stay in TOML.
 
 ---
@@ -259,15 +275,19 @@ tomli-w = ">=1.0"   # writing TOML; tomllib in stdlib for reading
 ### 7.2 Dev
 
 ```toml
-# [project.optional-dependencies] dev
-pytest = ">=8.0"
-pytest-qt = ">=4.4"
-pytest-cov = ">=5.0"
-pytest-mock = ">=3.12"
-pytest-env = ">=1.1"        # for QT_QPA_PLATFORM=offscreen — see DESIGN.md §10.3
-ruff = ">=0.6"
-mypy = ">=1.10"
-import-linter = ">=2.0"     # enforces the model-is-Qt-free contract — see DESIGN.md §9.1
+# [dependency-groups]
+dev = [
+    "basedpyright",
+    "coverage[toml]",
+    "pip-audit",
+    "pytest>=9.0",
+    "pytest-qt>=4.4",
+    "pytest-mock>=3.12",
+    "pytest-env>=1.1",      # QT_QPA_PLATFORM=offscreen — see DESIGN.md §10.3
+    "ruff>=0.14.11",
+    "import-linter>=2.0",   # enforces layer contracts — see DESIGN.md §9.1
+    "pre-commit>=3.7",
+]
 ```
 
 ### 7.3 System
@@ -281,7 +301,7 @@ import-linter = ">=2.0"     # enforces the model-is-Qt-free contract — see DES
 
 ## 8. Distribution
 
-- **Dev:** `uv sync`, `uv run python -m stmrr`. Bootstrap step on a fresh machine: `curl -LsSf https://astral.sh/uv/install.sh | sh && uv python install 3.14`. Python 3.14 is not yet packaged in Debian 13 / Ubuntu 24.04 default repos, so `uv` provisions the interpreter itself rather than depending on system Python. See `DESIGN.md` §9.3 for full toolchain bootstrap.
+- **Dev:** `uv sync --locked --all-groups`, `uv run python -m stmrr`. Bootstrap step on a fresh machine: `curl -LsSf https://astral.sh/uv/install.sh | sh && uv python install 3.14`. Python 3.14 is not yet packaged in Debian 13 / Ubuntu 24.04 default repositories, so uv provisions the interpreter itself rather than depending on system Python. See `DESIGN.md` §9.3 for full toolchain bootstrap.
 - **Release v1.0:** AppImage via `python-appimage` (single-file Linux binary, no system Qt dep). Bundle Python interpreter + PySide6 + game.
 - **Future:** Flatpak via `org.flatpak.Builder` for sandboxed distribution; `.deb` via `dh-python` for native package.
 - **No PyPI distribution** for the game itself (it's not a library).
@@ -291,7 +311,7 @@ import-linter = ">=2.0"     # enforces the model-is-Qt-free contract — see DES
 ## 9. Testing Strategy
 
 | Layer | Framework | Notes |
-|-------|-----------|-------|
+| --- | --- | --- |
 | Model (pure Python) | `pytest` | Headless, no `QApplication`. Fast. Run on every commit. |
 | Controller bridges | `pytest` + mocks | Mock the Qt signal layer; verify model events translate correctly. |
 | View widgets | `pytest-qt` | `qtbot` fixture for widget interaction. |
@@ -299,11 +319,11 @@ import-linter = ">=2.0"     # enforces the model-is-Qt-free contract — see DES
 | AI behavior | `pytest` | Deterministic seeds; assert state-machine transitions and target selection. |
 | TOML round-trip | `pytest` | Save → load → assert deep equality. Catches schema drift. |
 
-**Coverage target:** 80%+ on `model/`, 60%+ on `view/`, 70%+ on `controller/`. Don't chase 100%.
+**Coverage gate:** coverage.py collects branch-aware coverage across `src/`; the aggregate floor is 85%. Targeted suites may remain at 100% where that is inexpensive, but the gate does not encode separate per-layer thresholds.
 
 **Headless Qt:** `pytest-qt` and `QImage` snapshot tests need a Qt platform plugin. CI and local headless runs use `QT_QPA_PLATFORM=offscreen`, configured in `pyproject.toml` via `pytest-env`. `xvfb-run` is the fallback for any test that genuinely needs a display server. See `DESIGN.md` §10.3 for full details.
 
-**Layer enforcement:** The "model has zero Qt imports" rule is enforced mechanically by `import-linter` running in CI alongside ruff/mypy/pytest. The contract config lives at `.importlinter` in the repo root. See `DESIGN.md` §9.1.
+**Layer enforcement:** The "model has zero Qt imports" rule is enforced mechanically by `import-linter` inside the repository's `scripts/check.py` gate alongside Ruff, BasedPyright strict, coverage.py, pytest, and pip-audit. The contract config lives at `.importlinter` in the repo root. See `DESIGN.md` §9.1.
 
 ---
 
@@ -355,7 +375,7 @@ Build vertically through the stack early (steps 1–8) rather than building each
 ## 12. Resolved Decisions
 
 | Item | Resolution |
-|------|-----------|
+| --- | --- |
 | Repo | Delete old `L3DigitalNet/Star-Trek-Retro-Remake`, create fresh repo at `github.com/chrisdpurcell/star-trek-retro-remake` (kebab-case-lowercase to match modern GitHub convention and the `stmrr` package style) |
 | Org / brand | Personal project on personal GitHub (`chrisdpurcell`). No L3Digital LLC affiliation. |
 | License | MIT for code. See §13.3 for IP disclaimer requirement. |
@@ -400,24 +420,26 @@ MIT covers your code. It does **not** cover Star Trek IP — names, ships, facti
 Required:
 
 - **README disclaimer** near the top:
-  > This is an unofficial, non-commercial fan project. *Star Trek* and all related marks, characters, ships, and concepts are trademarks of CBS Studios Inc. / Paramount Global. This project is not affiliated with, endorsed by, or sponsored by CBS Studios or Paramount.
+  > This is an unofficial, non-commercial fan project. _Star Trek_ and all related marks, characters, ships, and concepts are trademarks of CBS Studios Inc. / Paramount Global. This project is not affiliated with, endorsed by, or sponsored by CBS Studios or Paramount.
 - **No commercial monetization.** Donations for hosting are a grey area; paid features or sale of the game are not.
 - **No copied assets.** Do not commit sprites, audio, screenshots, or text lifted from official Trek media. Original "inspired by the era" art is fine.
-- **AI-generated visual assets must avoid reproducing canonical Trek designs.** Prompts describe styling and silhouette — *"Klingon-style raptor cruiser"* rather than *"D7"* — to keep the AI from outputting direct copies of copyrighted artwork. The risk lives at the prompt/visual layer; archive every prompt under `assets/prompts/` for IP defensibility and provenance (see §14.4).
+- **AI-generated visual assets must avoid reproducing canonical Trek designs.** Prompts describe styling and silhouette — _"Klingon-style raptor cruiser"_ rather than _"D7"_ — to keep the AI from outputting direct copies of copyrighted artwork. The risk lives at the prompt/visual layer; archive every prompt under `assets/prompts/` for IP defensibility and provenance (see §14.4).
 - **Naming canonical classes, ships, characters, and concepts in text** (UI labels, mission briefings, dialogue, comm log entries, NPC ship names) is acceptable under nominative fair use, as standard practice in non-commercial Trek fan works. The README disclaimer covers attribution; no obfuscation in text content is needed.
 - **Bundled fonts.** JetBrains Mono and VT323 ship under the SIL Open Font License 1.1. Their license text travels in `NOTICE.md` alongside the Trek IP boundary documentation.
 - **AI-generation disclosure.** README must note that visual assets are AI-generated. This is good practice generally and increasingly expected/required in some jurisdictions.
 - **Tool-license check.** OpenAI's current terms grant output ownership to the generating user; reconfirm at time of generation since policies change. Record tool/version per-asset in §14.4 prompt files.
 - **`NOTICE.md`** at repo root documenting the IP boundary for contributors. One short page.
 
-### 13.4 Required root files at first scaffold push
+### 13.4 Root files established at the first scaffold push
 
-```
+This records the first-scaffold layout rather than the complete current tree. The tooling annotations have been refreshed for the Project Standards migration; use the repository itself for the current inventory.
+
+```text
 .
-├── .github/workflows/ci.yml    # ruff + mypy + import-linter + pytest on push
+├── .github/workflows/ci.yml    # Consumer-owned scripts/check.py gate on push
 ├── .gitignore                  # Python + uv + IDE
 ├── .importlinter               # Layer-enforcement contracts — see DESIGN.md §9.1
-├── .pre-commit-config.yaml     # ruff format/check + mypy + import-linter
+├── .pre-commit-config.yaml     # Targeted hygiene + import-linter; run directly
 ├── LICENSE                     # MIT, © Chris Purcell
 ├── NOTICE.md                   # IP boundary + bundled font licenses
 ├── README.md                   # With IP disclaimer (§13.3)
@@ -452,7 +474,7 @@ Required:
 
 ### 14.1 Directory layout
 
-```
+```text
 assets/
 ├── sprites/
 │   ├── ships/          # Faction ship sprites with facing variants
@@ -500,9 +522,7 @@ Template:
 ```markdown
 # {asset_name}
 
-**Tool:** ChatGPT Images 2.0
-**Date:** YYYY-MM-DD
-**Reference images:** none | path/to/ref.png
+**Tool:** ChatGPT Images 2.0 **Date:** YYYY-MM-DD **Reference images:** none | path/to/ref.png
 
 ## Prompt
 
@@ -531,18 +551,18 @@ Single `view/theme/asset_loader.py` module. `QPixmap` cache keyed by relative pa
 
 ### 14.7 v0.1 minimum asset list
 
-| Asset | Variants | Size |
-|-------|----------|------|
-| Federation cruiser (player ship) | 4 facings | 256×256 |
-| Klingon-style ship | 4 facings | 256×256 |
-| Romulan-style ship | 4 facings | 256×256 |
-| Asteroid | 1 | 128×128 |
-| Debris field | 1 | 128×128 |
-| Nebula | 1 | 256×256 |
-| Black hole | 1 | 256×256 |
-| Starbase | 1 | 256×256 |
-| App icon | 1 | 256×256 |
-| Splash background | 1 | 1920×1080 |
+| Asset                            | Variants  | Size      |
+| -------------------------------- | --------- | --------- |
+| Federation cruiser (player ship) | 4 facings | 256×256   |
+| Klingon-style ship               | 4 facings | 256×256   |
+| Romulan-style ship               | 4 facings | 256×256   |
+| Asteroid                         | 1         | 128×128   |
+| Debris field                     | 1         | 128×128   |
+| Nebula                           | 1         | 256×256   |
+| Black hole                       | 1         | 256×256   |
+| Starbase                         | 1         | 256×256   |
+| App icon                         | 1         | 256×256   |
+| Splash background                | 1         | 1920×1080 |
 
 Approximately 19 generated assets for v0.1. Toolbar and UI iconography come from QtAwesome at no generation cost (per §15.5). Generate in batches; archive prompts as you go.
 
@@ -583,7 +603,7 @@ Latest version 21.2.0 (April 2026), actively maintained, ships manylinux/PyPy wh
 
 **Cost:** pulls NumPy as transitive dep (~30 MB). Reasonable trade for replacing several hundred lines of bespoke pathfinding/LoS code that would otherwise need to be written, tested, and maintained.
 
-**Replaces:** hand-rolled Bresenham LoS, A*/Dijkstra implementations, FOV calculation, NPC name generation.
+**Replaces:** hand-rolled Bresenham LoS, A\*/Dijkstra implementations, FOV calculation, NPC name generation.
 
 ### 15.3 Event bus / observer pattern
 
@@ -654,7 +674,7 @@ Defer until you actually need the tooling — easy to add later, no cost to leav
 ### 15.9 Skip list
 
 | Library | Reason to skip |
-|---------|---------------|
+| --- | --- |
 | `transitions`, `python-statemachine` | Hand-rolled `GameStateManager` with ~7 states is simpler than configuring a generic FSM library. Revisit only if state count grows past ~15 or transition callbacks/hooks become unwieldy. |
 | `numpy` (as direct dep) | Pulled in transitively via `tcod`. Don't add to `pyproject.toml` as a direct dep unless you need it outside tcod-mediated code. |
 | `py_trees`, `owyl`, behavior-tree libraries | Premature for the simple PATROL/ATTACK/FLEE state-machine AI in §5.6 of DESIGN.md. Revisit at v0.3+ when "advanced tactical planning, formations, learning AI" becomes scoped work. |
@@ -682,8 +702,8 @@ dependencies = [
 ]
 ```
 
-Note `faker` is *not* in this list — §15.6 was resolved in favor of `tcod.namegen` (already pulled in via tcod), removing what would have been a redundant dependency.
+Note `faker` is _not_ in this list — §15.6 was resolved in favor of `tcod.namegen` (already pulled in via tcod), removing what would have been a redundant dependency.
 
-Dev deps include `pytest`, `pytest-qt`, `pytest-cov`, `pytest-mock`, `pytest-env`, `ruff`, `mypy`, and `import-linter`; add `hypothesis>=6` if §15.7 is taken. See `DESIGN.md` §10.3 for the full dev tooling rationale.
+Dev dependencies include `pytest`, `pytest-qt`, coverage.py, `pytest-mock`, `pytest-env`, Ruff, BasedPyright, pip-audit, pre-commit, and import-linter; add `hypothesis>=6` if §15.7 is taken. See `DESIGN.md` §10.3 for the full dev tooling rationale.
 
 **Total additional install size:** roughly 50 MB on top of PySide6 (dominant cost is NumPy from tcod). For an asset-bearing AppImage that will already be 100+ MB from Qt and Python interpreter, this is rounding error.

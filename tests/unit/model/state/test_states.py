@@ -1,6 +1,6 @@
 """Unit tests for the GameState ABC stub.
 
-Covers spec §6: ABC abstractness, __init_subclass__ enforcement of
+Covers SPEC-S005 FR-009 through FR-011: ABC abstractness, __init_subclass__ enforcement of
 allowed_transitions via inspect.isabstract(cls) + vars(cls) checks,
 and the abstract intermediate / concrete-via-intermediate / inherit-only
 edge cases.
@@ -16,7 +16,7 @@ from stmrr.model.state.states import GameState, MainMenuState, SectorMapState
 
 def test_gamestate_cannot_be_instantiated_directly() -> None:
     with pytest.raises(TypeError):
-        GameState()  # type: ignore[abstract]
+        GameState()  # pyright: ignore[reportAbstractUsage]  # This test intentionally instantiates the ABC to verify runtime rejection.
 
 
 def test_concrete_subclass_with_all_declarations_instantiates() -> None:
@@ -44,6 +44,8 @@ def test_concrete_subclass_missing_allowed_transitions_fails_at_class_def() -> N
             def exit(self) -> None:
                 pass
 
+        _ = _Bad
+
 
 def test_intermediate_abstract_subclass_skips_check() -> None:
     # Override only enter; exit remains abstract — class is still abstract.
@@ -54,7 +56,7 @@ def test_intermediate_abstract_subclass_skips_check() -> None:
 
     # Verify it remains abstract (cannot instantiate)
     with pytest.raises(TypeError):
-        _Intermediate()  # type: ignore[abstract]
+        _Intermediate()  # pyright: ignore[reportAbstractUsage]  # This test intentionally instantiates the abstract intermediate class.
 
 
 def test_concrete_via_intermediate_with_allowed_transitions_instantiates() -> None:
@@ -94,6 +96,8 @@ def test_concrete_subclass_inheriting_allowed_transitions_from_parent_fails() ->
             def exit(self) -> None:
                 pass
 
+        _ = _Child
+
 
 def test_enter_is_abstract_method() -> None:
     assert getattr(GameState.enter, "__isabstractmethod__", False) is True
@@ -104,7 +108,7 @@ def test_exit_is_abstract_method() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Concrete state tests (spec §7.1)
+# Concrete state tests (SPEC-S008 FR-011 and FR-012)
 # ---------------------------------------------------------------------------
 
 

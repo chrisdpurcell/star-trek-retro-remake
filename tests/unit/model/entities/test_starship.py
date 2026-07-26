@@ -1,6 +1,6 @@
 """Unit tests for Starship.
 
-Covers spec §4 + §7.1: construction validation (per-field type + range +
+Covers SPEC-S007 FR-001 through FR-010: construction validation (per-field type + range +
 EntityId-non-consumption), _debit_ap helper (cost-domain + happy + short),
 move_to action (precondition order + happy + zero-distance + no-mutation-
 on-failure + payload), dock_at action (precondition order + happy +
@@ -85,7 +85,7 @@ def test_construction_positional_raises_type_error() -> None:
     pos = GridPosition(0, 0, 0)
 
     with pytest.raises(TypeError):
-        Starship(pos, "x", 1)  # type: ignore[misc]
+        Starship(pos, "x", 1)  # pyright: ignore[reportCallIssue]  # This runtime test intentionally violates the keyword-only constructor contract.
 
 
 # ---- Construction: ship_class validation ------------------------------------
@@ -105,7 +105,7 @@ def test_construction_positional_raises_type_error() -> None:
 )
 def test_construction_ship_class_non_str_raises_type_error(bad_value: object, name: str) -> None:
     with pytest.raises(TypeError, match=f"ship_class must be str, got {name}"):
-        Starship(position=GridPosition(0, 0, 0), ship_class=bad_value, hull=1)  # type: ignore[arg-type]
+        Starship(position=GridPosition(0, 0, 0), ship_class=bad_value, hull=1)  # pyright: ignore[reportArgumentType]  # This runtime-validation test intentionally passes a non-string ship class.
 
 
 def test_construction_ship_class_empty_raises_value_error() -> None:
@@ -131,7 +131,7 @@ def test_construction_ship_class_empty_raises_value_error() -> None:
 )
 def test_construction_hull_non_int_raises_type_error(bad_value: object, name: str) -> None:
     with pytest.raises(TypeError, match=f"hull must be int, got {name}"):
-        Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=bad_value)  # type: ignore[arg-type]
+        Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=bad_value)  # pyright: ignore[reportArgumentType]  # This runtime-validation test intentionally passes a non-integer hull.
 
 
 @pytest.mark.parametrize("bad", [0, -1, -100], ids=["zero", "neg-1", "neg-100"])
@@ -159,7 +159,7 @@ def test_construction_ap_max_non_int_raises_type_error(bad_value: object, name: 
             position=GridPosition(0, 0, 0),
             ship_class="x",
             hull=1,
-            ap_max=bad_value,  # type: ignore[arg-type]
+            ap_max=bad_value,  # pyright: ignore[reportArgumentType]  # This runtime-validation test intentionally passes an invalid AP maximum.
         )
 
 
@@ -188,7 +188,7 @@ def test_construction_ap_remaining_non_int_raises_type_error(bad_value: object, 
             ship_class="x",
             hull=1,
             ap_max=5,
-            ap_remaining=bad_value,  # type: ignore[arg-type]
+            ap_remaining=bad_value,  # pyright: ignore[reportArgumentType]  # This runtime-validation test intentionally passes an invalid remaining AP value.
         )
 
 
@@ -257,7 +257,7 @@ def test_failed_construction_does_not_consume_entity_id_ap_remaining() -> None:
 def test_debit_ap_cost_equals_ap_remaining_zeroes_pool() -> None:
     ship = Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=1, ap_max=3)
 
-    ship._debit_ap(3)
+    ship._debit_ap(3)  # pyright: ignore[reportPrivateUsage]  # White-box test pins the AP helper contract.
 
     assert ship.ap_remaining == 0
 
@@ -265,7 +265,7 @@ def test_debit_ap_cost_equals_ap_remaining_zeroes_pool() -> None:
 def test_debit_ap_partial_cost_subtracts_exactly() -> None:
     ship = Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=1, ap_max=5)
 
-    ship._debit_ap(2)
+    ship._debit_ap(2)  # pyright: ignore[reportPrivateUsage]  # White-box test pins the AP helper contract.
 
     assert ship.ap_remaining == 3
 
@@ -280,7 +280,7 @@ def test_debit_ap_cost_greater_than_remaining_raises_and_preserves_pool() -> Non
     )
 
     with pytest.raises(InsufficientAPError) as exc_info:
-        ship._debit_ap(3)
+        ship._debit_ap(3)  # pyright: ignore[reportPrivateUsage]  # White-box test pins the AP helper contract.
 
     assert exc_info.value.required == 3
     assert exc_info.value.available == 2
@@ -292,7 +292,7 @@ def test_debit_ap_cost_below_one_raises_value_error_no_mutation(bad: int) -> Non
     ship = Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=1, ap_max=5)
 
     with pytest.raises(ValueError, match=f"cost must be >= 1, got {bad}"):
-        ship._debit_ap(bad)
+        ship._debit_ap(bad)  # pyright: ignore[reportPrivateUsage]  # White-box test pins the AP helper contract.
 
     assert ship.ap_remaining == 5
 
@@ -312,7 +312,7 @@ def test_debit_ap_cost_non_int_raises_type_error_no_mutation(bad_value: object, 
     ship = Starship(position=GridPosition(0, 0, 0), ship_class="x", hull=1, ap_max=5)
 
     with pytest.raises(TypeError, match=f"cost must be int, got {name}"):
-        ship._debit_ap(bad_value)  # type: ignore[arg-type]
+        ship._debit_ap(bad_value)  # pyright: ignore[reportArgumentType, reportPrivateUsage]  # Runtime-validation test intentionally crosses both contracts.
 
     assert ship.ap_remaining == 5
 
@@ -364,7 +364,7 @@ def test_move_to_payload_from_position_captured_before_mutation() -> None:
 
 
 def test_move_to_subscriber_sees_post_mutation_position() -> None:
-    """Umbrella invariant 3: events fire after the state mutation."""
+    """SPEC-S007 FR-007: subscribers observe the post-mutation position."""
     sector = SectorMap(width=10, height=10, depth=5)
     ship = Starship(position=GridPosition(1, 1, 0), ship_class="x", hull=1, ap_max=5)
     sector.add(ship)
@@ -382,7 +382,7 @@ def test_move_to_subscriber_sees_post_mutation_position() -> None:
     assert observed_positions == [GridPosition(1, 2, 0)]
 
 
-# ---- move_to: preconditions in spec order -----------------------------------
+# ---- move_to: SPEC-S007 FR-006 precondition order ----------------------------
 
 
 def test_move_to_inactive_ship_raises_inactive_entity_error() -> None:
@@ -400,7 +400,7 @@ def test_move_to_inactive_ship_raises_inactive_entity_error() -> None:
 
 
 def test_move_to_inactive_ship_out_of_bounds_raises_inactive_entity_error() -> None:
-    """Dual-violation witness for spec §4.5 precondition order:
+    """Witness the SPEC-S007 FR-006 precondition order:
     active → bounds. An inactive ship targeting an out-of-bounds cell
     must raise InactiveEntityError (the FIRST guard), not OutOfBoundsError.
     Locks the ordering against inversion regressions."""
@@ -444,7 +444,7 @@ def test_move_to_non_adjacent_raises_not_adjacent_error() -> None:
 
 def test_move_to_zero_distance_raises_not_adjacent_error() -> None:
     """Chebyshev distance 0 is NOT adjacent. Roguelike convention per
-    research [spec-assumptions §B] (step-7 spec §4.5 move_to)."""
+    research [spec-assumptions §B] and SPEC-S007 FR-006."""
     sector = SectorMap(width=10, height=10, depth=5)
     ship = Starship(position=GridPosition(1, 1, 0), ship_class="x", hull=1, ap_max=5)
     sector.add(ship)
@@ -529,7 +529,7 @@ def test_dock_at_happy_path_debits_ap_emits_docked_no_station_mutation() -> None
     assert station.position == station_position_before
 
 
-# ---- dock_at: preconditions in spec order -----------------------------------
+# ---- dock_at: SPEC-S007 FR-008 precondition order ----------------------------
 
 
 def test_dock_at_inactive_ship_raises_inactive_entity_error() -> None:
@@ -549,7 +549,7 @@ def test_dock_at_inactive_ship_raises_inactive_entity_error() -> None:
 
 
 def test_dock_at_inactive_ship_missing_station_raises_inactive_entity_error() -> None:
-    """Dual-violation witness for spec §4.6 precondition order:
+    """Witness the SPEC-S007 FR-008 precondition order:
     active → resolve-target. An inactive ship trying to dock at a
     non-existent station ID must raise InactiveEntityError (the FIRST
     guard), not NotDockableError. Locks the ordering against inversion."""
@@ -715,8 +715,7 @@ def _starship_source() -> str:
 
 
 def test_starship_module_does_not_import_turn_manager() -> None:
-    """Step-7 spec invariant 9 (umbrella §6 "No cycles" runtime DAG): no
-    back-edge from entities.starship to combat.turn_manager."""
+    """Prove the SPEC-S007 NFR-001 runtime DAG has no TurnManager back-edge."""
     text = _starship_source()
 
     assert "combat.turn_manager" not in text
@@ -724,12 +723,13 @@ def test_starship_module_does_not_import_turn_manager() -> None:
 
 
 def test_starship_imports_station_at_runtime() -> None:
-    """Step-7 spec §3 + §10 (umbrella §6 DAG, entities.starship row):
+    """Prove the SPEC-S007 NFR-001 runtime Station edge.
+
     `entities.station` is a RUNTIME
     import in `entities.starship` because `dock_at` does
-    `isinstance(target, Station)` (a runtime expression). Research
-    finding D blocker — original umbrella had it as TYPE_CHECKING-only,
-    which contradicted the runtime isinstance. CR-005 review finding."""
+    `isinstance(target, Station)` (a runtime expression); making it
+    TYPE_CHECKING-only would contradict that nominal check.
+    """
     text = _starship_source()
 
     station_import_pos = text.find("from stmrr.model.entities.station import")
@@ -741,13 +741,13 @@ def test_starship_imports_station_at_runtime() -> None:
 
 
 def test_starship_imports_sector_map_only_under_type_checking() -> None:
-    """Step-7 spec §3 + §10 (umbrella §6 DAG, entities.starship row):
+    """Prove the SPEC-S007 NFR-001 type-only SectorMap edge.
+
     `world.sector_map` is TYPE_CHECKING-only in `entities.starship` (only
     used as a parameter
     annotation; the actual `sector_map.get(...)` / `sector_map.bounds_check(...)`
-    calls are duck-typed at runtime). CR-005 review finding — tightens
-    the existing back-edge test to cover all DAG claims, not just the
-    Station + TurnManager edges."""
+    calls are duck-typed at runtime).
+    """
     text = _starship_source()
 
     sector_map_import_pos = text.find("from stmrr.model.world.sector_map import")
@@ -755,5 +755,5 @@ def test_starship_imports_sector_map_only_under_type_checking() -> None:
     assert sector_map_import_pos != -1, "SectorMap import missing"
     assert type_checking_pos != -1, "TYPE_CHECKING guard missing"
     assert sector_map_import_pos > type_checking_pos, (
-        "SectorMap import must be INSIDE TYPE_CHECKING block (annotation-only per umbrella §6 DAG)"
+        "SectorMap import must be INSIDE TYPE_CHECKING block per SPEC-S007 NFR-001"
     )

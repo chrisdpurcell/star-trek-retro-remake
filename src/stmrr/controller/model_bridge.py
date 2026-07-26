@@ -7,18 +7,19 @@ dataclass instance. This is the ONLY module that imports both `PySide6` and
 `controller-events-via-bridge-only` contract); it is what keeps ADR-0003's
 model-is-Qt-free rule satisfiable.
 
-Holds the GameStateManager (umbrella §8.1) so the view can read the initial
+Holds the GameStateManager (SPEC-S009 FR-006 and DR-002) so the view can read the initial
 `current_state` on startup — before the first `state_changed` transition.
 
 NOT an ABC: subclassing `QObject` alongside `abc.ABC` raises a Shiboken
 metaclass TypeError. Plain QObject subclass only.
 
-Error policy (spec §4.6): the bridge catches nothing. On PySide6 6.11.0 a
+Error policy (SPEC-S009 FR-011, D-004, and ERR-001): the bridge catches nothing.
+On PySide6 6.11.0 a
 raising Qt slot is routed to `sys.excepthook`; `emit()` and the model's blinker
 `send()` return normally — there is NO propagation back to model/controller
 callers.
 
-Teardown (spec §5.7): `teardown()` disconnects the blinker subscriptions and
+Teardown (SPEC-S009 FR-009 and IR-004): `teardown()` disconnects the blinker subscriptions and
 must be called owner-side (e.g. `MainWindow.closeEvent`) BEFORE the bridge is
 destroyed — never via `self.destroyed.connect(self.teardown)`, which does not
 perform the disconnect.
@@ -32,7 +33,7 @@ from PySide6.QtCore import QObject, Signal
 
 # Bare `ship_moved` etc. below are the BLINKER signals (module globals).
 # `self.ship_moved` etc. are the Qt Signals declared on the class. Same names
-# by design (umbrella §5.2 mechanical mapping) — always use `self.` for Qt.
+# by design (SPEC-S009 FR-005 mechanical mapping) — always use `self.` for Qt.
 from stmrr.model.events import docked, ship_moved, state_changed, turn_advanced
 
 if TYPE_CHECKING:
@@ -75,7 +76,8 @@ class ModelBridge(QObject):
         state_changed.disconnect(self._on_state_changed)
 
     def _on_ship_moved(self, _sender: object, *, payload: ShipMovedPayload) -> None:
-        # blinker receiver — not a Qt slot; @Slot not applicable (spec §5.6).
+        # This is a blinker receiver under SPEC-S009 IR-003, not a Qt slot;
+        # @Slot is therefore inapplicable.
         self.ship_moved.emit(payload)
 
     def _on_docked(self, _sender: object, *, payload: DockedPayload) -> None:

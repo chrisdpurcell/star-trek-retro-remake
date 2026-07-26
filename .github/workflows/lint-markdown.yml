@@ -1,0 +1,15 @@
+name: Lint Markdown
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint-markdown:
+    uses: L3DigitalNet/project-standards/.github/workflows/lint-markdown.yml@v5
+    with:
+      markdownlint: true
+      globs: "**/*.md\n!.agents/**\n!.claude/**\n!.codex/**\n!.github/PULL_REQUEST_TEMPLATE.md\n!.pytest_cache/**\n!.standards/**\n!.venv/**\n!AGENTS.md\n!CLAUDE.md\n!docs/STATUS.md\n!docs/TODO.md\n!docs/adr/template.md\n!docs/handoff/**"
