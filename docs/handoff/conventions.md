@@ -17,7 +17,7 @@ LLM-targeted pattern library. Each convention follows the six-field schema (Appl
 | 5 | ADRs in `docs/adr/`, ISO-prefixed, neutralizer banner on completed | Recording an architectural decision |
 | 6 | Every committed asset has a prompt file | Adding any sprite/icon/background under `assets/` |
 | 7 | Star Trek IP boundary | Naming ships, factions, characters; generating art |
-| 8 | Specs/plans live in `docs/superpowers/{specs,plans}/` | Writing a spec or plan |
+| 8 | Project specs live in `docs/specs/`; plans remain in `docs/superpowers/plans/` | Writing a spec or plan |
 
 ---
 
@@ -174,16 +174,24 @@ env = [
 
 ---
 
-## 8. Specs and plans live in `docs/superpowers/{specs,plans}/`
+## 8. Project specs live in `docs/specs/`
 
 **Applies when:** writing any design spec or implementation plan.
 
-**Rule:** Specs go in `docs/superpowers/specs/`, plans in `docs/superpowers/plans/`. ISO-8601 filename prefix (`YYYY-MM-DD-kebab-title.md`). Completed plans get the neutralizer banner so a future session sees `✅ Complete — DO NOT EXECUTE` before any imperative content.
+**Rule:** Specifications governed by the Project Specification Standard go in `docs/specs/` and
+follow the repository's Project Spec metadata and lifecycle. Implementation plans remain in
+`docs/superpowers/plans/` with an ISO-8601 filename prefix (`YYYY-MM-DD-kebab-title.md`).
+Completed plans get the neutralizer banner so a future session sees
+`✅ Complete — DO NOT EXECUTE` before any imperative content.
 
-**Why:** Same reason as §5 (ADRs). Frozen point-in-time docs without a neutralizer get re-executed by an unwary future agent. The pointer table at `docs/handoff/specs-plans.md` is what surfaces them; the directory is the storage, not the index.
+**Why:** Project Standards adoption established `docs/specs/` as the authoritative specification
+corpus. Plans are frozen execution records and retain the neutralizer convention so an unwary
+future agent does not re-execute them. The pointer table at `docs/handoff/specs-plans.md` surfaces
+both corpora.
 
 **Sources:**
-- `~/.claude/CLAUDE.md` "Frozen planning docs rule"
-- Claude Handoff System spec §2.1 — `/mnt/share/claude-handoff-system.md`
+- `.standards/config.toml`
+- Project Specification Standard 1.4
+- `docs/handoff/specs-plans.md`
 
 **Related:** §5 (ADRs follow the same neutralizer pattern but live elsewhere).

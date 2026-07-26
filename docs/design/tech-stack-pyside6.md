@@ -58,7 +58,7 @@ src/stmrr/
 │   ├── resources/  # ResourceManager (energy, supplies, morale)
 │   └── events.py   # Pure-Python observer/event bus (no Qt signals here)
 │
-├── view/           # PySide6-only. Subscribes to model events, renders state.
+├── view/           # PySide6-only. Consumes controller Qt signals, renders state.
 │   ├── main_window.py        # QMainWindow shell
 │   ├── docks/                # QDockWidget panels (status, actions, comm log, mini-map)
 │   ├── dialogs/              # QDialog subclasses (mission, settings, save/load)
@@ -107,7 +107,9 @@ The map is the central element. This subsystem deserves more design weight than 
 
 ### 3.1 Scene Composition
 
-- **One `QGraphicsScene` per game mode** (Galaxy / Sector / Combat). The active scene is set on a single shared `QGraphicsView` when modes change. Inactive scenes remain in memory with state intact for fast switching.
+- **Two `QGraphicsScene` instances serve the three game modes:** one Galaxy scene and one shared
+  Sector/Combat scene, as required by ADR-0008. The active scene is set on a single shared
+  `QGraphicsView`; the sector scene retains its state when combat overlays are shown or removed.
 - **Logical coordinates are cartesian `(x, y, z)`** stored on items. Scene coordinates are isometric-projected pixels. Conversion in `projection.py`.
 - **Z-levels** rendered as item `zValue` (Qt's painter ordering) plus per-level opacity. Active level: opacity 1.0; non-active: 0.35. Configurable in settings.
 
@@ -117,7 +119,7 @@ The map is the central element. This subsystem deserves more design weight than 
 | --- | --- | --- |
 | `GridCellItem` | One per grid cell, manages hover/select highlight | Pooled. Reused on mode switch. |
 | `GridLineItem` | Iso grid lines per z-level | Dashed pattern denotes z-distance from active layer (already in v0.0.13–v0.0.15 — preserve behavior). |
-| `StarshipItem` | Renders ship sprite + faction color + facing arrow | Subscribes to model events for hull/shield/position updates. |
+| `StarshipItem` | Renders ship sprite + faction color + facing arrow | Consumes Qt signals emitted by `controller/model_bridge.py` for hull/shield/position updates. |
 | `AnomalyItem` | Black holes, nebulae, wormholes | Optional animated glow via `QPropertyAnimation`. |
 | `EnvironmentItem` | Asteroids, debris, ion storms | Static; affects movement cost from model side. |
 | `ProjectileItem` | Phaser beams, torpedoes during combat | Pooled (~100 pre-allocated). Animated via `QPropertyAnimation` along path. |
@@ -127,16 +129,20 @@ The map is the central element. This subsystem deserves more design weight than 
 
 - `setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)`
 - Mouse wheel: zoom via `scale()`, clamped 0.25×–4.0× (matches existing spec).
-- Middle-mouse drag: pan via `setDragMode(ScrollHandDrag)` toggle.
+- Middle-mouse drag: pan through explicit scrollbar deltas so left-button selection remains
+  available to sector items.
 - Left click: hit-test via `itemAt()`, dispatch to controller.
 - Right click: context menu (deferred per existing spec).
 - `PageUp` / `PageDown`: change active z-level → updates opacity per item.
 - Arrow keys: pan camera by N pixels.
-- Apply isometric transform once at scene level via `QTransform` rather than per-item; cleaner and faster.
+- Project world coordinates into item geometry through `view/scene/projection.py`; reserve the
+  view transform for uniform camera zoom and scrollbar-based pan. Do not apply a second
+  isometric `QTransform`.
 
 ### 3.4 Performance Notes
 
-- Turn-based + small grids (15×15×7 max) means even naive repainting is well under 16ms per frame.
+- The v0.1 default test sector is 15×15×7; reusable scenes support the canonical maximum
+  20×20×7. Performance is qualified by the owning milestone rather than assumed from size.
 - `QGraphicsItem.setCacheMode(DeviceCoordinateCache)` for static items (asteroids, grid lines).
 - Object pool `StarshipItem` and `ProjectileItem` — creation/destruction of `QGraphicsItem` has measurable cost in tight loops.
 - No threading needed for AI; AI turns process synchronously in <200ms per ship per the existing perf spec. If multi-AI batches exceed budget, move to `QThreadPool` later.

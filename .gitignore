@@ -1,3 +1,5 @@
+.import_linter_cache/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -230,3 +232,4 @@ __marimo__/
 # Local-only experiments and notes
 /scratch/
 /.local/
+/.project-pipeline/

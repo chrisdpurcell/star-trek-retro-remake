@@ -20,7 +20,10 @@ src/stmrr/
 
 ## Map rendering
 
-`QGraphicsView` + `QGraphicsScene` with custom `QGraphicsItem` subclasses; isometric projection isolated in `view/scene/projection.py`. One scene per game mode (Galaxy / Sector / Combat); the active scene is swapped on the shared view. Z-levels rendered as item `zValue` plus per-level opacity.
+`QGraphicsView` + `QGraphicsScene` with custom `QGraphicsItem` subclasses; isometric projection
+isolated in `view/scene/projection.py`. One shared view swaps between a Galaxy scene and a
+Sector/Combat scene; combat reuses the sector scene per ADR-0008. Z-levels render as item
+`zValue` plus per-level opacity.
 
 Full rendering subsystem design: `docs/design/tech-stack-pyside6.md` §3.
 
