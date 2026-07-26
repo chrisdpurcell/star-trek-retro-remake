@@ -50,33 +50,17 @@ related:
 | 0.3 | 2026-07-26 | Codex | Resolved Opus round-one SA-001 through SA-014: bound tracked promotion, added campaign entry and terminal-state ownership, made balance normative, and completed performance, licensing, geometry, workflow, and data-policy contracts. |
 | 0.4 | 2026-07-26 | Codex | Promoted the Codex-ready and Opus-converged normative content to the tracked Project Spec corpus; adjusted only lifecycle, status, and location-relative links. |
 
-**Spec lifecycle:** This tracked document is `approved` and change-controlled. Changes to scope,
-requirements, architecture, release gates, or milestone boundaries require a revision row and
-renewed owner approval. Implementation deviations belong in the
-[Deviations Log](#deviations-log), not in silent requirement edits.
+**Spec lifecycle:** This tracked document is `approved` and change-controlled. Changes to scope, requirements, architecture, release gates, or milestone boundaries require a revision row and renewed owner approval. Implementation deviations belong in the [Deviations Log](#deviations-log), not in silent requirement edits.
 
 ---
 
 ## 1. Purpose & Background
 
-Star Trek Retro Remake is an unofficial, non-commercial, Linux desktop strategy game that
-reimagines the 1971 _Star Trek_ and 1973 _Super Star Trek_ games as a deliberate,
-information-dense, mid-1990s-style graphical application. The player acts as a Starfleet
-captain: exploring a generated galaxy, managing a ship and crew, completing missions, and
-resolving tactical combat on an isometric sector grid.
+Star Trek Retro Remake is an unofficial, non-commercial, Linux desktop strategy game that reimagines the 1971 _Star Trek_ and 1973 _Super Star Trek_ games as a deliberate, information-dense, mid-1990s-style graphical application. The player acts as a Starfleet captain: exploring a generated galaxy, managing a ship and crew, completing missions, and resolving tactical combat on an isometric sector grid.
 
-The canonical game design defines the complete product vision, but it does not by itself give
-implementers a compact chronological contract from the current scaffold through v1.0.0.
-Earlier work therefore accumulated milestone-level specifications for v0.1 Steps 3 through 10.
-This master specification supplies the missing release-wide authority: it states the product
-boundary, preserves the accepted architecture, defines release-blocking outcomes, and
-decomposes the remaining work into bounded sub-specifications.
+The canonical game design defines the complete product vision, but it does not by itself give implementers a compact chronological contract from the current scaffold through v1.0.0. Earlier work therefore accumulated milestone-level specifications for v0.1 Steps 3 through 10. This master specification supplies the missing release-wide authority: it states the product boundary, preserves the accepted architecture, defines release-blocking outcomes, and decomposes the remaining work into bounded sub-specifications.
 
-Successful completion produces a playable, distributable v1.0.0 game with the full roadmap
-capabilities from v0.1 through v1.0, while preserving the Qt-free simulation model and the
-single audited model-event-to-Qt seam. The chronological decomposition is intentionally
-incremental: each sub-spec must be independently reviewable, implementable, and verifiable,
-and no later release may begin until the prior release gate passes.
+Successful completion produces a playable, distributable v1.0.0 game with the full roadmap capabilities from v0.1 through v1.0, while preserving the Qt-free simulation model and the single audited model-event-to-Qt seam. The chronological decomposition is intentionally incremental: each sub-spec must be independently reviewable, implementable, and verifiable, and no later release may begin until the prior release gate passes.
 
 ## 2. Scope
 
@@ -84,18 +68,13 @@ and no later release may begin until the prior release gate passes.
 
 - A Linux-only, single-player, turn-based strategy game through the v1.0.0 release.
 - Galaxy, sector, and combat gameplay modes, with combat occurring on the active sector grid.
-- An isometric Qt graphics view with bounded zoom, pan, z-level presentation, entity rendering,
-  selection, movement, and action feedback.
-- Starship combat, AI, missions, resource management, mutable faction relations, hailing,
-  diplomacy, economy/trading, starbase services, reputation, difficulty modes, procedural
-  galaxy generation, captain and crew progression, and ship upgrades.
+- An isometric Qt graphics view with bounded zoom, pan, z-level presentation, entity rendering, selection, movement, and action feedback.
+- Starship combat, AI, missions, resource management, mutable faction relations, hailing, diplomacy, economy/trading, starbase services, reputation, difficulty modes, procedural galaxy generation, captain and crew progression, and ship upgrades.
 - Human-inspectable TOML configuration and save data validated through pydantic models.
 - Hybrid autosave, five manual slots, and one rolling autosave slot.
-- Retro visual theming, generated visual assets with prompt provenance, licensed/attributed
-  bundled assets, a full audio pass at v1.0, and AppImage distribution.
+- Retro visual theming, generated visual assets with prompt provenance, licensed/attributed bundled assets, a full audio pass at v1.0, and AppImage distribution.
 - A chronological sub-specification catalog from the completed scaffold through v1.0.0.
-- Automated acceptance through the repository verification gate plus milestone-specific
-  behavior, rendering, round-trip, and packaging checks.
+- Automated acceptance through the repository verification gate plus milestone-specific behavior, rendering, round-trip, and packaging checks.
 
 ### 2.2 Out of Scope (Non-Goals — never)
 
@@ -131,24 +110,13 @@ and no later release may begin until the prior release gate passes.
 
 ### 3.1 Current State
 
-v0.1 scaffold Steps 1 through 10 are implemented on `main`. The repository has a runnable
-`python -m stmrr` shell, a Qt-free model foundation, isometric projection, a model-state
-manager, the Blinker-to-Qt `ModelBridge`, a `QMainWindow`, and strict automated gates. The
-central window still contains a placeholder; no graphics scene renders the sector grid.
+v0.1 scaffold Steps 1 through 10 are implemented on `main`. The repository has a runnable `python -m stmrr` shell, a Qt-free model foundation, isometric projection, a model-state manager, the Blinker-to-Qt `ModelBridge`, a `QMainWindow`, and strict automated gates. The central window still contains a placeholder; no graphics scene renders the sector grid.
 
-Existing milestone specifications cover the model umbrella and Steps 3 through 10. The
-canonical product design is `docs/design/DESIGN.md`; accepted ADRs own hard-to-reverse
-decisions when a design paragraph conflicts with an ADR. The next chronological milestone is
-Step 11: `MapView` and `GridScene`.
+Existing milestone specifications cover the model umbrella and Steps 3 through 10. The canonical product design is `docs/design/DESIGN.md`; accepted ADRs own hard-to-reverse decisions when a design paragraph conflicts with an ADR. The next chronological milestone is Step 11: `MapView` and `GridScene`.
 
 ### 3.2 Target State
 
-At v1.0.0, a player can start or load a local game, navigate a procedurally generated galaxy,
-enter sectors, explore and fight on a z-aware isometric grid, complete missions, hail and
-negotiate with factions, trade and use starbase services, manage resources, progress a captain
-and crew, upgrade a ship, hear the finished audio presentation, and run the game from an
-AppImage. All release gates pass on the supported Linux baseline, and the project documentation
-describes the shipped behavior.
+At v1.0.0, a player can start or load a local game, navigate a procedurally generated galaxy, enter sectors, explore and fight on a z-aware isometric grid, complete missions, hail and negotiate with factions, trade and use starbase services, manage resources, progress a captain and crew, upgrade a ship, hear the finished audio presentation, and run the game from an AppImage. All release gates pass on the supported Linux baseline, and the project documentation describes the shipped behavior.
 
 ### 3.3 Assumptions
 
@@ -206,10 +174,7 @@ describes the shipped behavior.
 
 ## 7. Requirements
 
-Every requirement in §7, §10.2, §10.3, and §12.1 is normative and release-blocking unless its
-row explicitly states otherwise. Interface, data, workflow, edge-case, and expected-failure
-requirements therefore have Must priority even where the canonical table shape has no Priority
-column.
+Every requirement in §7, §10.2, §10.3, and §12.1 is normative and release-blocking unless its row explicitly states otherwise. Interface, data, workflow, edge-case, and expected-failure requirements therefore have Must priority even where the canonical table shape has no Priority column.
 
 ### 7.1 Functional Requirements
 
@@ -271,16 +236,9 @@ column.
 
 ### 8.1 Architecture Summary
 
-The application uses a hand-rolled game-state machine, game objects composed with system
-components, and MVC separation. `stmrr.model` is pure Python and owns simulation rules.
-`stmrr.view` owns PySide6 widgets and graphics items. `stmrr.controller` translates input and
-bridges pure-Python model events into Qt signals. `stmrr.config` validates TOML configuration,
-`stmrr.persistence` owns save/load, and `stmrr.app` composes the layers.
+The application uses a hand-rolled game-state machine, game objects composed with system components, and MVC separation. `stmrr.model` is pure Python and owns simulation rules. `stmrr.view` owns PySide6 widgets and graphics items. `stmrr.controller` translates input and bridges pure-Python model events into Qt signals. `stmrr.config` validates TOML configuration, `stmrr.persistence` owns save/load, and `stmrr.app` composes the layers.
 
-The application runs one Qt event loop and one shared `MapView`. The view swaps between a
-galaxy scene and a sector scene. Combat is a mode of the sector scene, not a third scene:
-positions and items remain intact while combat overlays and actions change. World-to-scene
-math remains isolated in `view/scene/projection.py`.
+The application runs one Qt event loop and one shared `MapView`. The view swaps between a galaxy scene and a sector scene. Combat is a mode of the sector scene, not a third scene: positions and items remain intact while combat overlays and actions change. World-to-scene math remains isolated in `view/scene/projection.py`.
 
 ### 8.2 Architecture Views
 
@@ -336,38 +294,25 @@ flowchart LR
 
 - No sub-spec may weaken or bypass the import-linter architecture contracts.
 - No view object may subscribe directly to the Blinker bus.
-- No model module may import persistence or perform filesystem I/O; application/controller
-  orchestration invokes persistence only after model mutation reaches a coherent checkpoint.
+- No model module may import persistence or perform filesystem I/O; application/controller orchestration invokes persistence only after model mutation reaches a coherent checkpoint.
 - No release may add a separate combat scene.
 - No configuration or persistence sub-spec may introduce executable deserialization.
 - All random behavior that affects tests or persisted worlds must accept a deterministic seed.
 - All generated assets must preserve prompt provenance and the documented IP boundary.
-- Release sub-specs may refine implementation details but may not silently change master scope,
-  release requirements, accepted ADRs, or milestone order.
+- Release sub-specs may refine implementation details but may not silently change master scope, release requirements, accepted ADRs, or milestone order.
 
-> **§8.4 (Solution Alternatives Considered) is Full-tier** and is intentionally omitted at the Standard profile.
-
-> **§8.6 (Dependency Policy) is Full-tier** and is intentionally omitted at the Standard profile.
+> **§8.4 (Solution Alternatives Considered) and §8.6 (Dependency Policy) are Full-tier** and are intentionally omitted at the Standard profile.
 
 ## 9. Data Model
 
-The authoritative field-level schemas are delegated to the bounded sub-specs that introduce
-each subsystem. Across releases, four durable groups must compose into one validated save:
+The authoritative field-level schemas are delegated to the bounded sub-specs that introduce each subsystem. Across releases, four durable groups must compose into one validated save:
 
-- **Campaign:** game version, schema version, seed, difficulty, turn/time, active mode, sector,
-  mission state, and autosave metadata.
-- **World:** galaxy sectors, generated-content provenance, active sector entities, faction
-  relations, anomalies, and environmental state.
-- **Player:** captain XP/skills, reputation, crew roster/progression, ship class, components,
-  resources, upgrades, inventory, hull, shields, AP, and position.
-- **Content references:** stable identifiers for config-defined ships, missions, factions,
-  upgrades, and rules. Saves store identifiers and state, not Python class objects.
+- **Campaign:** game version, schema version, seed, difficulty, turn/time, active mode, sector, mission state, and autosave metadata.
+- **World:** galaxy sectors, generated-content provenance, active sector entities, faction relations, anomalies, and environmental state.
+- **Player:** captain XP/skills, reputation, crew roster/progression, ship class, components, resources, upgrades, inventory, hull, shields, AP, and position.
+- **Content references:** stable identifiers for config-defined ships, missions, factions, upgrades, and rules. Saves store identifiers and state, not Python class objects.
 
-Every state-adding milestone extends the save/configuration schema and its deep-equality
-round-trip evidence under FR-015. The autosave is a rolling single slot and does not target
-manual slots. Write/recovery, cross-version compatibility, concurrent-instance, and
-terminal-campaign slot policies are consequential decisions intentionally left to OQ-001
-through OQ-004 before `SPEC-S021` approval.
+Every state-adding milestone extends the save/configuration schema and its deep-equality round-trip evidence under FR-015. The autosave is a rolling single slot and does not target manual slots. Write/recovery, cross-version compatibility, concurrent-instance, and terminal-campaign slot policies are consequential decisions intentionally left to OQ-001 through OQ-004 before `SPEC-S021` approval.
 
 ## 10. Behavior and Workflows
 
@@ -399,14 +344,12 @@ Steps:
 2. Receive a mission and navigate the galaxy to its target sector.
 3. Explore the sector grid, manage resources, interact, dock, or enter combat.
 4. Resolve turns through player action, NPC/environment action, and consequence resolution.
-5. After coherent mutation, application/controller orchestration persists at approved mode
-   transitions, docking, and the N-turn fallback.
+5. After coherent mutation, application/controller orchestration persists at approved mode transitions, docking, and the N-turn fallback.
 6. Progress the captain, crew, reputation, and ship across completed missions.
 
 Expected result:
 
-> The player can continue an open-ended campaign whose strategic, tactical, resource, mission,
-> and progression systems remain coherent across saves and releases.
+> The player can continue an open-ended campaign whose strategic, tactical, resource, mission, and progression systems remain coherent across saves and releases.
 
 ### 10.2 Alternate Workflows
 
@@ -454,9 +397,7 @@ Expected result:
 | Settings and controls | Configure supported game, display, audio, and input options. | Edit, validate, apply, restore defaults. | Local player. |
 | Save/load dialog | Manage five manual slots and one autosave. | Save, load, inspect metadata, confirm overwrite. | Local player. |
 
-The v1.0.0 interface is English-only. Critical feedback must remain visible with audio disabled.
-Core actions must expose keyboard paths; final accessibility claims are limited to the
-documented behaviors rather than an unapproved WCAG conformance level.
+The v1.0.0 interface is English-only. Critical feedback must remain visible with audio disabled. Core actions must expose keyboard paths; final accessibility claims are limited to the documented behaviors rather than an unapproved WCAG conformance level.
 
 ## 12. Error Handling and Recovery
 
@@ -472,17 +413,11 @@ documented behaviors rather than an unapproved WCAG conformance level.
 
 ### 12.2 Retry and Idempotency
 
-User-initiated actions are not automatically retried. A rejected model action is atomic and may
-be resubmitted after its precondition changes. Manual save is repeatable for one chosen slot;
-autosave triggers coalesce into the single rolling slot. Seeded generation is deterministic and
-re-running the same version/rules/seed produces the same initial world.
+User-initiated actions are not automatically retried. A rejected model action is atomic and may be resubmitted after its precondition changes. Manual save is repeatable for one chosen slot; autosave triggers coalesce into the single rolling slot. Seeded generation is deterministic and re-running the same version/rules/seed produces the same initial world.
 
 ### 12.3 Rollback / Recovery
 
-Source changes roll back to the prior verified Git revision. A release rolls back by retaining
-and launching the prior versioned AppImage. The persistence sub-spec must resolve OQ-001 and
-OQ-002 before it can define write-failure recovery or whether older/newer saves are migrated,
-rejected, or otherwise handled.
+Source changes roll back to the prior verified Git revision. A release rolls back by retaining and launching the prior versioned AppImage. The persistence sub-spec must resolve OQ-001 and OQ-002 before it can define write-failure recovery or whether older/newer saves are migrated, rejected, or otherwise handled.
 
 ## 13. Security and Privacy
 
@@ -537,8 +472,7 @@ The shipped game requires no credentials, tokens, or secret-manager access.
 - [ ] Every milestone has an approved, self-contained sub-spec and completed traceability.
 - [ ] The complete repository gate exits successfully.
 - [ ] Clean-system AppImage launch and packaged-resource checks pass.
-- [ ] Save round-trip, corruption, unsupported-input, and the approved OQ-001 through OQ-004
-  policy checks pass.
+- [ ] Save round-trip, corruption, unsupported-input, and the approved OQ-001 through OQ-004 policy checks pass.
 - [ ] Audio-disabled visual feedback and core keyboard interaction checks pass.
 - [ ] Documentation, changelog, status, specs index, and release metadata describe v1.0.0.
 - [ ] Deviations are owner-reviewed and no blocking open question or defect remains.
@@ -558,9 +492,7 @@ The shipped game requires no credentials, tokens, or secret-manager access.
 
 ### 17.3 Requirement-to-Test Traceability
 
-The owning sub-specs below are defined in the chronological catalog in §19. A status of
-Partially Passing means the implemented foundation has current passing evidence but later
-cataloged behavior remains unimplemented.
+The owning sub-specs below are defined in the chronological catalog in §19. A status of Partially Passing means the implemented foundation has current passing evidence but later cataloged behavior remains unimplemented.
 
 | Requirement ID | Owning Sub-spec(s) | Test / Verification Method | Status |
 | --- | --- | --- | --- |
@@ -645,24 +577,17 @@ Environment matrix:
 4. Launch on clean supported Linux baselines and complete the release smoke path.
 5. Verify changelog, version, user docs, checksums, and rollback artifact.
 6. Tag and publish only under a separately authorized release action.
-7. Roll back by distributing or launching the prior verified AppImage without initiating an
-   automatic save rewrite.
+7. Roll back by distributing or launching the prior verified AppImage without initiating an automatic save rewrite.
 
 > **§18.4 (Rollout Controls) is Full-tier** and is intentionally omitted at the Standard profile.
 
 ### 18.5 Observability
 
-The local game uses Loguru logs, user-visible dialogs, the communications log, deterministic
-test outputs, and process exit status. It does not expose health endpoints, metrics, alerts, or
-remote tracing. Startup, save/load, config validation, mode transitions, and unexpected model
-failures must record enough local context to diagnose the failure without logging unnecessary
-player-authored text.
+The local game uses Loguru logs, user-visible dialogs, the communications log, deterministic test outputs, and process exit status. It does not expose health endpoints, metrics, alerts, or remote tracing. Startup, save/load, config validation, mode transitions, and unexpected model failures must record enough local context to diagnose the failure without logging unnecessary player-authored text.
 
 ### 18.6 Backup and Disaster Recovery
 
-The application exposes manual and hybrid autosave slots but does not own workstation backup.
-The user owns off-machine backup and retention. `SPEC-S021` must resolve OQ-001 before claiming
-an interrupted-write recovery point or prior-slot preservation guarantee.
+The application exposes manual and hybrid autosave slots but does not own workstation backup. The user owns off-machine backup and retention. `SPEC-S021` must resolve OQ-001 before claiming an interrupted-write recovery point or prior-slot preservation guarantee.
 
 | Asset | Backup Method | Frequency | Retention | Restore Test Cadence |
 | --- | --- | --- | --- | --- |
@@ -681,15 +606,11 @@ an interrupted-write recovery point or prior-slot preservation guarantee.
 
 ## 19. Implementation Plan
 
-This section defines milestone-depth sequencing only. Detailed test-first task plans are separate
-artifacts and are out of scope for this specification.
+This section defines milestone-depth sequencing only. Detailed test-first task plans are separate artifacts and are out of scope for this specification.
 
 ### MS-0 — Completed Scaffold Foundation
 
-Sub-specs `SPEC-S003` through `SPEC-S010` and umbrella `SPEC-ML01` define the implemented
-coordinate, model, state, bridge, and window foundation. Steps 1 and 2 established repository
-tooling and accepted ADRs before the first module spec. Exit evidence is the current runnable
-shell and green repository gate.
+Sub-specs `SPEC-S003` through `SPEC-S010` and umbrella `SPEC-ML01` define the implemented coordinate, model, state, bridge, and window foundation. Steps 1 and 2 established repository tooling and accepted ADRs before the first module spec. Exit evidence is the current runnable shell and green repository gate.
 
 ### MS-1 — Complete v0.1 Vertical Slice
 
@@ -762,8 +683,7 @@ shell and green repository gate.
 
 ## 21. Open Questions and Decisions
 
-No blocking product or architecture question is known for the Step 11 milestone. The following
-questions block approval of the named future sub-spec, not approval of this master or Step 11:
+No blocking product or architecture question is known for the Step 11 milestone. The following questions block approval of the named future sub-spec, not approval of this master or Step 11:
 
 | ID | Question | Current Assumption | Blocking? | Owner | Decision Needed By | Status |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -772,8 +692,7 @@ questions block approval of the named future sub-spec, not approval of this mast
 | OQ-003 | Which ship-loss scenarios are no-respawn campaign endings, and does any Admiral rule extend beyond canonical crew-member permadeath? | Admiral affects crew-member death only; ship loss remains ordinary recovery unless an explicit no-respawn scenario is approved. | Yes | Project maintainer | Before `SPEC-S021` approval | Open |
 | OQ-004 | After crew permadeath or a terminal campaign condition, what may manual slots and the rolling autosave load, overwrite, preserve, or invalidate? | No slot is invalidated and no terminal autosave is written until the policy is approved. | Yes | Project maintainer | Before `SPEC-S021` approval | Open |
 
-Later sub-specs must record any release-specific balance, content, or packaging question when it
-becomes decision-relevant; they may not invent an answer in this master specification.
+Later sub-specs must record any release-specific balance, content, or packaging question when it becomes decision-relevant; they may not invent an answer in this master specification.
 
 ## Deviations Log
 
@@ -797,27 +716,26 @@ No implementation deviation has been recorded against this master specification.
 
 ## Appendix A: ID Conventions
 
-| Prefix | Meaning | Defined In |
-| --- | --- | --- |
-| `G-` | Goal | §4 |
-| `NG-` | Non-goal (never) | §2.2 |
-| `WH-` | Won't have in v1 (deferred) | §2.3 |
-| `A-` | Assumption | §3.3 |
-| `C-` | Constraint | §3.4 |
-| `FR-` | Functional requirement | §7.1 |
-| `NFR-` | Non-functional requirement | §7.2 |
-| `IR-` | Interface requirement | §7.3 |
-| `DR-` | Data requirement | §7.4 |
-| `D-` | Design decision | §8.3 |
-| `AW-` | Alternate workflow | §10.2 |
-| `EC-` | Edge case | §10.3 |
-| `ERR-` | Error-handling requirement | §12.1 |
-| `MS-` | Milestone | §19 |
-| `OQ-` | Open question | §21 |
-| `DEV-` | Deviation | Deviations Log |
+| Prefix | Meaning                     | Defined In     |
+| ------ | --------------------------- | -------------- |
+| `G-`   | Goal                        | §4             |
+| `NG-`  | Non-goal (never)            | §2.2           |
+| `WH-`  | Won't have in v1 (deferred) | §2.3           |
+| `A-`   | Assumption                  | §3.3           |
+| `C-`   | Constraint                  | §3.4           |
+| `FR-`  | Functional requirement      | §7.1           |
+| `NFR-` | Non-functional requirement  | §7.2           |
+| `IR-`  | Interface requirement       | §7.3           |
+| `DR-`  | Data requirement            | §7.4           |
+| `D-`   | Design decision             | §8.3           |
+| `AW-`  | Alternate workflow          | §10.2          |
+| `EC-`  | Edge case                   | §10.3          |
+| `ERR-` | Error-handling requirement  | §12.1          |
+| `MS-`  | Milestone                   | §19            |
+| `OQ-`  | Open question               | §21            |
+| `DEV-` | Deviation                   | Deviations Log |
 
-Priority values (`Must`, `Should`, `Could`) are column values, not ID prefixes. IDs remain
-stable when status or priority changes.
+Priority values (`Must`, `Should`, `Could`) are column values, not ID prefixes. IDs remain stable when status or priority changes.
 
 ## Appendix B: Agent Implementation Contract
 
@@ -842,8 +760,7 @@ The implementer shall not:
 - Implement a milestone without an approved self-contained sub-spec.
 - Begin a later release while the prior release gate is incomplete.
 - Invent product requirements or alter accepted architecture to simplify implementation.
-- Add a second rendering event loop, Qt imports to the model, direct view Blinker
-  subscriptions, a separate combat scene, or executable save serialization.
+- Add a second rendering event loop, Qt imports to the model, direct view Blinker subscriptions, a separate combat scene, or executable save serialization.
 - Add dependencies without an approved requirement and repository workflow.
 - Mark work complete without mapped verification evidence.
 
@@ -861,9 +778,7 @@ At each milestone completion, provide:
 
 ### B.4 Session Handoff
 
-Record current milestone, active requirement IDs, and unresolved `OQ-`/`DEV-` items in the
-repository handoff documents. The master and sub-specs define what and why; handoff records
-where implementation stands.
+Record current milestone, active requirement IDs, and unresolved `OQ-`/`DEV-` items in the repository handoff documents. The master and sub-specs define what and why; handoff records where implementation stands.
 
 ---
 
@@ -871,8 +786,4 @@ where implementation stands.
 
 ## Appendix D: Tailoring
 
-The Standard profile is selected because this is one local desktop application with durable
-data but no external services or multiple operational stakeholders. Sub-specs use the same
-profile unless a narrower explicit project decision selects another. Upgrade to Full only if
-the project gains multiple services/stakeholders, paid or rate-limited external integrations,
-or another Full-tier trigger from Project Specification Standard 1.4.
+The Standard profile is selected because this is one local desktop application with durable data but no external services or multiple operational stakeholders. Sub-specs use the same profile unless a narrower explicit project decision selects another. Upgrade to Full only if the project gains multiple services/stakeholders, paid or rate-limited external integrations, or another Full-tier trigger from Project Specification Standard 1.4.

@@ -792,10 +792,7 @@ The application uses a single PySide6 main window with the following structure:
 
 **Toolbar (`QToolBar`):** Mode-switcher buttons (Galaxy / Sector / Combat), zoom controls (in / out / reset), z-level navigation (visible in Sector and Combat modes). Icons sourced from QtAwesome (see §9.2).
 
-**Central map (`QGraphicsView` + `QGraphicsScene`):** The isometric grid with all entities. One
-shared view swaps between a galaxy scene and a sector scene; combat reuses the sector scene per
-ADR-0008. Mouse wheel zooms; middle-mouse drag pans; left-click selects/moves; PageUp/PageDown
-changes active z-level.
+**Central map (`QGraphicsView` + `QGraphicsScene`):** The isometric grid with all entities. One shared view swaps between a galaxy scene and a sector scene; combat reuses the sector scene per ADR-0008. Mouse wheel zooms; middle-mouse drag pans; left-click selects/moves; PageUp/PageDown changes active z-level.
 
 **Right dock (`QDockWidget` with `QTabWidget`):**
 
@@ -1291,9 +1288,7 @@ Components are simple objects with their own state and behavior, composed onto e
 
 The map is the central game element and gets the most architectural weight.
 
-- **Two `QGraphicsScene` instances serve the three game modes:** one Galaxy scene and one shared
-  Sector/Combat scene, as required by ADR-0008. The active scene is set on a single shared
-  `QGraphicsView`; the sector scene retains its state when combat overlays are shown or removed.
+- **Two `QGraphicsScene` instances serve the three game modes:** one Galaxy scene and one shared Sector/Combat scene, as required by ADR-0008. The active scene is set on a single shared `QGraphicsView`; the sector scene retains its state when combat overlays are shown or removed.
 - **Logical coordinates are cartesian `(x, y, z)`** stored on items. Scene coordinates are isometric-projected pixels. All conversion lives in `view/scene/projection.py` and is fully unit-tested.
 - **Z-levels** rendered as `QGraphicsItem.zValue` (Qt's painter ordering) plus per-level opacity. Active level: opacity 1.0; non-active: 0.35. Configurable in settings.
 
@@ -1312,8 +1307,7 @@ Custom `QGraphicsItem` subclasses. All items receive state updates via the model
 The `MapView` (a `QGraphicsView` subclass) handles input:
 
 - Mouse wheel: zoom via `scale()`, clamped 0.25× to 4.0×
-- Middle-mouse drag: pan through explicit scrollbar deltas so left-button selection remains
-  available to sector items
+- Middle-mouse drag: pan through explicit scrollbar deltas so left-button selection remains available to sector items
 - Left click: hit-test via `itemAt()`, dispatch to controller
 - Page Up / Page Down: change active z-level
 - Arrow keys: pan camera
