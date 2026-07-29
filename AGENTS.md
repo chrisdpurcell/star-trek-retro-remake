@@ -11,7 +11,7 @@
 - Canonical design: `docs/design/DESIGN.md`; `docs/design/tech-stack-pyside6.md` is supplementary and operational.
 - Before implementation work, read the relevant spec or plan from `docs/handoff/specs-plans.md` and any ADR that would be contradicted.
 - The model layer stays Qt-free; see convention 1 and `.importlinter`.
-- Python code is governed by the immutable [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md); it is reference-only and intentionally not enabled in `.standards/`.
+- Python code is governed by the immutable [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.11.0/standards/python-coding/versions/0.6/README.md); it is reference-only and intentionally not enabled in `.standards/`.
 - Do not run `uv run pre-commit install`; run `uv run pre-commit run --all-files` directly.
 
 ## Session End
