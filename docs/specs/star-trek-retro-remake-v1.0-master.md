@@ -702,8 +702,8 @@ No implementation deviation has been recorded against this master specification.
 
 ### Standards
 
-- [Project Specification Standard 1.4](https://github.com/L3DigitalNet/project-standards/tree/v5.8.0/standards/project-spec/versions/1.4)
-- [Python Coding 0.6](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md)
+- [Project Specification Standard 1.4](https://github.com/L3DigitalNet/project-standards/tree/v5.11.0/standards/project-spec/versions/1.4)
+- [Python Coding 0.6](https://github.com/L3DigitalNet/project-standards/blob/v5.11.0/standards/python-coding/versions/0.6/README.md)
 
 ### Project References
 

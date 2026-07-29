@@ -1736,7 +1736,7 @@ Solo developer time. Asset generation uses an existing ChatGPT Plus subscription
 
 ### 10.6 Coding Standards
 
-A short, mechanically-enforced standard. Documented in full in `CONTRIBUTING.md`; the canonical decisions live here. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. The reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md) governs code shape but is not selectable and therefore has no enabled `.standards/config.toml` table or lock ownership.
+A short, mechanically-enforced standard. Documented in full in `CONTRIBUTING.md`; the canonical decisions live here. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. The reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.11.0/standards/python-coding/versions/0.6/README.md) governs code shape but is not selectable and therefore has no enabled `.standards/config.toml` table or lock ownership.
 
 **Formatting and linting (Ruff):**
 

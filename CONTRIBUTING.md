@@ -86,7 +86,7 @@ uv run pre-commit run --all-files
 
 ## Coding standards
 
-Standards are taken from `docs/design/DESIGN.md` §10.6. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. Its reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md) governs Python code shape. Python Coding is intentionally absent from `.standards/config.toml` because Catalog 5 marks it non-selectable.
+Standards are taken from `docs/design/DESIGN.md` §10.6. Project Standards Python Tooling 1.8 defines the executable gate contract; consumer-owned `scripts/check.py` and `.github/workflows/ci.yml` implement it. Its reference-only [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.11.0/standards/python-coding/versions/0.6/README.md) governs Python code shape. Python Coding is intentionally absent from `.standards/config.toml` because Catalog 5 marks it non-selectable.
 
 ### Formatting and linting (ruff)
 

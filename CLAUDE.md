@@ -17,7 +17,7 @@
 
 v0.1 steps 1–10 are complete and the MVC triad is runnable. Step 11—planning and implementing `MapView`/`GridScene`—is next. The canonical design remains `docs/design/DESIGN.md`.
 
-Python code is governed by the immutable [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.8.0/standards/python-coding/versions/0.6/README.md). It is reference-only and intentionally not enabled in `.standards/`.
+Python code is governed by the immutable [Python Coding 0.6 companion](https://github.com/L3DigitalNet/project-standards/blob/v5.11.0/standards/python-coding/versions/0.6/README.md). It is reference-only and intentionally not enabled in `.standards/`.
 
 <!-- prettier-ignore-start -->
 
